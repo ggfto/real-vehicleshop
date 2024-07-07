@@ -1,0 +1,41 @@
+@font-face {
+    src: url("../html/fonts/Poppins-Regular.ttf");
+    font-family: "regular";
+}
+
+@font-face {
+    src: url("../html/fonts/Poppins-Medium.ttf");
+    font-family: "medium";
+} 
+
+@font-face {
+    src: url("../html/fonts/Poppins-Bold.ttf");
+    font-family: "bold";
+}
+
+*{
+    overflow: hidden !important;
+}
+
+html {
+    user-select: none;  
+}
+  
+body {
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0vw;
+    background: transparent;
+}
+
+.color-text {
+    color: #FFF;
+    font-family: regular;
+    text-align: center;
+    font-size: .7292vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

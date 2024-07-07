@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>codeReal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="w-full h-[100vh] flex flex-col left-0 top-0 absolute" v-if="Show" style="background: url('./img/background.png'); background-size: cover; background-repeat: no-repeat;">
+            <div class="w-full h-[8.5%] flex items-center justify-center left-0 top-0 absolute"> <!-- Header -->
+                <div class="w-[97%] h-full flex justify-between">
+                    <div class="w-[50%] h-full flex items-end justify-end">
+                        <div class="w-full h-[49%] flex items-center">
+                            <span class="w-full text-white text-[2.6042vw] font-normal font-['regular']">{{ VehicleShopName }}</span>
+                        </div>
+                    </div>
+                    <div class="w-[20%] h-full flex items-end">
+                        <div class="w-full h-[68%] flex justify-end">
+                            <div class="w-[80%] h-full flex flex-col items-end justify-center">
+                                <span class="w-full text-white text-[.8333vw] text-end font-semibold font-['medium']">{{ PlayerName }}</span>
+                                <span class="w-full text-white text-[.8333vw] text-end font-semibold font-['regular']"><span class="text-[#00F0FF] text-[.8333vw] font-semibold font-['regular'] mr-[.2vw]" style="filter: drop-shadow(0px 0px 8.3px rgba(0, 240, 255, 0.66));">$</span>{{ FormatMoney(PlayerMoney) }}</span>
+                            </div>
+                            <div class="w-[3.5%] h-full"></div>
+                            <div class="w-[16.5%] h-full flex items-center justify-center">
+                                <div class="w-[97%] h-[95%] flex items-center justify-center border-[.1vw] border-[#00F0FF] justify-center rounded-[50%]">
+                                    <img :src="PlayerPfp" class="w-full h-full">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full h-[60%] flex items-center justify-center top-[8.5%] absolute">
+                <div class="w-[96.5%] h-full flex flex-wrap justify-between absolute">
+                    <div class="w-[33.3%] h-full flex flex-col">
+                        <div class="w-full h-[7%] flex justify-start">
+                            <span class="w-full text-stone-300 text-[.7813vw] font-medium font-['regular']">{{ VehicleshopDescription }}</span>
+                        </div>
+                        <div class="w-full h-[7.6%] flex flex-wrap items-end justify-start">
+                            <svg class="mr-[.4vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38" fill="none">
+                                <path opacity="0.33" d="M20 0L24.7148 14.5106H39.9722L27.6287 23.4787L32.3435 37.9894L20 29.0213L7.65651 37.9894L12.3713 23.4787L0.027813 14.5106H15.2852L20 0Z" fill="white"/>
+                            </svg>
+                            <svg class="mr-[.4vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38" fill="none">
+                                <path opacity="0.33" d="M20 0L24.7148 14.5106H39.9722L27.6287 23.4787L32.3435 37.9894L20 29.0213L7.65651 37.9894L12.3713 23.4787L0.027813 14.5106H15.2852L20 0Z" fill="white"/>
+                            </svg>
+                            <svg class="mr-[.4vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38" fill="none">
+                                <path opacity="0.33" d="M20 0L24.7148 14.5106H39.9722L27.6287 23.4787L32.3435 37.9894L20 29.0213L7.65651 37.9894L12.3713 23.4787L0.027813 14.5106H15.2852L20 0Z" fill="white"/>
+                            </svg>
+                            <svg class="mr-[.4vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38" fill="none">
+                                <path opacity="0.33" d="M20 0L24.7148 14.5106H39.9722L27.6287 23.4787L32.3435 37.9894L20 29.0213L7.65651 37.9894L12.3713 23.4787L0.027813 14.5106H15.2852L20 0Z" fill="white"/>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38" fill="none">
+                                <path opacity="0.33" d="M20 0L24.7148 14.5106H39.9722L27.6287 23.4787L32.3435 37.9894L20 29.0213L7.65651 37.9894L12.3713 23.4787L0.027813 14.5106H15.2852L20 0Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="w-full h-[9%]"></div>
+                        <div class="w-full h-[11.5%] flex flex-col">
+                            <div class="w-full h-[30%] flex items-center justify-start">
+                                <span class="w-full text-white text-[.8854vw] font-semibold font-['medium']">{{ Language['vehicle_setup_and_information'] }}</span>
+                            </div>
+                            <div class="w-full h-[10%]"></div>
+                            <div class="w-full h-[60%] flex flex-wrap items-start justify-start">
+                                <div class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ 6.500<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
+                            </div>
+                        </div>
+                        <div class="w-full h-[8%] flex items-start justify-start">
+                            <span class="text-white text-[2.0833vw] font-normal font-['regular'] italic">Lampadati <span class="text-cyan-300 text-[1.4063vw] font-semibold font-['medium'] not-italic">Delorean</span></span>
+                        </div>
+                        <div class="w-full h-[6%]"></div>
+                        <div class="w-full h-[50.9%] flex flex-wrap justify-between">
+                            <div class="w-[58.8%] h-full flex flex-col">
+                                <div class="w-full h-[9%]"></div>
+                                <div class="w-full h-[42%] flex flex-col">
+                                    <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer">
+                                        <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['medium']">{{ Language['buy_this_car'] }}</span>
+                                    </div>
+                                    <div class="w-full h-[4.5%]"></div>
+                                    <div class="w-full h-[26%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="TestDrive()">
+                                        <div class="w-full text-center"><span class="text-white text-[.7813vw] font-semibold font-['regular']">{{ Language['test_drive'] }}</span> <span class="text-cyan-300 text-[.7813vw] font-semibold font-['medium']">${{ TestDrivePrice }}</span></div>
+                                    </div>
+                                    <div class="w-full h-[4.5%]"></div>
+                                    <div class="w-full h-[26%] flex items-center justify-between">
+                                        <div class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                                            <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['regular']">{{ Language['preview'] }}</div>
+                                        </div>
+                                        <div class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                                            <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['regular']">{{ Language['change_plate'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full h-[17%]"></div>
+                                <div class="w-full h-[10%] flex items-center justify-between">
+                                    <span class="text-white text-[.8854vw] font-semibold font-['medium']">{{ Language['colors'] }}</span>
+                                    <div class="w-[25%] h-full flex items-center justify-end">
+                                        <img src="./img/color-settings.png" class="w-[1.1458vw] h-[1.25vw] cursor-pointer" @click="SetColorPicker()">
+                                    </div>
+                                </div>
+                                <div class="w-full h-[3%]"></div>
+                                <div class="w-full h-[19%] block overflow-y-hidden overflow-x-hidden">
+                                    <div v-for="(v, k) in ColorsTable" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k, 'mb-[.2vw]': k < 11 }" :style="{ backgroundColor: v.color }" @click="SelectedColor = k">
+                                        <svg v-if="SelectedColor == k" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 16 12" fill="none">
+                                            <path d="M5.43431 11.6971L0.234305 6.49706C-0.0781016 6.18465 -0.0781016 5.67812 0.234305 5.36568L1.36565 4.23431C1.67806 3.92187 2.18462 3.92187 2.49703 4.23431L6 7.73725L13.503 0.234305C13.8154 -0.0781016 14.3219 -0.0781016 14.6344 0.234305L15.7657 1.36568C16.0781 1.67809 16.0781 2.18462 15.7657 2.49706L6.56569 11.6971C6.25325 12.0095 5.74672 12.0095 5.43431 11.6971Z" fill="white"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-[40%] h-full flex">
+                                <div class="w-full h-full bg-[#000000CC] rounded-[.5vw]" v-if="ShowColorPicker">
+                                    <div class="w-full h-[12%] flex flex-wrap">
+                                        <div class="w-[23.5%] h-full"></div>
+                                        <div class="w-[52.5%] h-full flex items-end justify-center">
+                                            <div class="text-cyan-400 text-[.9375vw] font-semibold font-['regular']">{{ Language['color_settings'] }}</div>
+                                        </div>
+                                        <div class="w-[13%] h-full"></div>
+                                        <div class="w-[7.5%] h-full flex items-center justify-center">
+                                            <div class="w-full h-[50%] flex items-center justify-center mb-[.2vw] cursor-pointer" @click="SetColorPicker()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
+                                                    <path d="M14.5 0H1.5C0.671875 0 0 0.716667 0 1.6V13.3333C0 14.2167 0.671875 14.9333 1.5 14.9333H14.5C15.3281 14.9333 16 14.2167 16 13.3333V1.6C16 0.716667 15.3281 0 14.5 0ZM11.8875 9.68333C12.0375 9.84333 12.0375 10.1033 11.8875 10.2633L10.6219 11.6133C10.4719 11.7733 10.2281 11.7733 10.0781 11.6133L8 9.37667L5.92188 11.6133C5.77187 11.7733 5.52813 11.7733 5.37813 11.6133L4.1125 10.2633C3.9625 10.1033 3.9625 9.84333 4.1125 9.68333L6.20937 7.46667L4.1125 5.25C3.9625 5.09 3.9625 4.83 4.1125 4.67L5.37813 3.32C5.52813 3.16 5.77187 3.16 5.92188 3.32L8 5.55667L10.0781 3.32C10.2281 3.16 10.4719 3.16 10.6219 3.32L11.8875 4.67C12.0375 4.83 12.0375 5.09 11.8875 5.25L9.79062 7.46667L11.8875 9.68333Z" fill="white"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="w-[3.5%] h-full"></div>
+                                    </div>
+                                    <div class="w-full h-[4%]"></div>
+                                    <div class="w-full h-[47.5%] flex items-center justify-center">
+                                        <div class="w-[64%] h-full flex items-center justify-center rounded-[50%]">
+                                            <div class="w-full h-full">
+                                                <div id="color-picker"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-[.8%]"></div>
+                                    <div class="w-full h-[18%] flex flex-col items-center">
+                                        <div class="w-[92%] h-[22%] flex items-center justify-start">
+                                            <span class="w-full text-white text-[.625vw] font-medium font-['medium']">{{ Language['color_hex'] }}</span>
+                                        </div>
+                                        <div class="w-full h-[6%]"></div>
+                                        <div class="w-[92%] h-[72%] flex items-center justify-center rounded-[.5208vw] bg-[#404040E5]">
+                                            <span class="w-full color-text">{{ ColorPickerColor }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-[3%]"></div>
+                                    <div class="w-full h-[9%] flex items-center justify-center">
+                                        <div class="w-[58%] h-full flex items-center justify-center bg-[#4E4E4E] rounded-[.3125vw] cursor-pointer">
+                                            <span class="w-full text-center text-white text-xs font-medium font-['medium']">{{ Language['change_color'] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-[5%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-[17.7%] h-full border-[.1vw] border-[#FFF]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</body>
+</html>
