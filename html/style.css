@@ -30,6 +30,26 @@ body {
     background: transparent;
 }
 
+.feedback-container::-webkit-scrollbar {
+    width: .3vw;
+    border-radius: 1vw;
+}
+
+.feedback-container::-webkit-scrollbar-track {
+    background: #7B7B7BCC;
+    border-radius: 1vw;
+}
+
+.feedback-container::-webkit-scrollbar-thumb {
+    background: white; 
+    border-radius: 1vw;
+}
+
+.feedback-container::-webkit-scrollbar-thumb:hover {
+  background: white; 
+  border-radius: 1vw;
+}
+
 .color-text {
     color: #FFF;
     font-family: regular;
@@ -38,4 +58,43 @@ body {
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.plate-input {
+    color: rgb(22, 103, 255);
+    font-family: medium;
+    text-align: center;
+    font-size: 1.5vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.plate-input::placeholder {
+    color: rgba(22, 104, 255, 0.541);
+    font-family: medium;
+    text-align: center;
+    font-size: 1.5vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.search-input {
+    color: #FFF;
+    font-family: regular;
+    font-size: .8333vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.search-input::placeholder {
+    color: #ffffff;
+    font-family: regular;
+    font-size: .8333vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    opacity:  0.74;
 }

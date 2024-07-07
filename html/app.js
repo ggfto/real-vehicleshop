@@ -22,7 +22,7 @@ const app = Vue.createApp({
     data: () => ({
         Show: true,
         activePage: false,
-        HasOwner: false,
+        HasOwner: true,
 
         // Player Information
         PlayerName: "Oph3Z Second",
@@ -32,6 +32,7 @@ const app = Vue.createApp({
         // Vehicleshop Variables
         VehicleShopName: "Oph3Z's Dealership",
         VehicleshopDescription: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat illum aperiam neque nisi nemo itaque error voluptatem, ut minus, eaque ex similique maxime!",
+        VehicleShopStar: 4,
         TestDrivePrice: 7500,
         ShowColorPicker: false,
         ColorPickerColor: "#FFF",
@@ -60,6 +61,111 @@ const app = Vue.createApp({
             { color: "#33FF33" },
             { color: "#FF3333" }
         ],
+        AllowPlateChange: true,
+        ShowPlateChange: false,
+        PlateInput: "",
+        CategoryList: [
+            {
+                name: 'all',
+                label: 'All'
+            },
+            {
+                name: 'sports',
+                label: 'Sports'
+            },
+            {
+                name: 'sedans',
+                label: 'Sedans'
+            },
+            {
+                name: 'suv',
+                label: 'SUVs'
+            },
+            {
+                name: 'trucks',
+                label: 'Trucks'
+            },
+        ],
+        SelectedVehicleCategory: 'all',
+        VehiclesTable: [
+            {
+                name: 't20',
+                label: 'T20',
+                model: 'Super',
+                category: 'sports',
+                price: 1000000,
+                stock: 20,
+                img: 'https://docs.fivem.net/vehicles/t20.webp',
+            },
+            {
+                name: 'elegy',
+                label: 'Elegy',
+                model: 'Custom',
+                category: 'sports',
+                price: 2500000,
+                stock: 0,
+                img: 'https://docs.fivem.net/vehicles/elegy.webp',
+            },
+            {
+                name: 'sultanrs',
+                label: 'Sultan RS',
+                model: 'Normal',
+                category: 'sedans',
+                price: 1000000,
+                stock: 2,
+                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+            },
+            {
+                name: 'sultanrs',
+                label: 'Sultan RS',
+                model: 'Normal',
+                category: 'sedans',
+                price: 1000000,
+                stock: 2,
+                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+            },
+            {
+                name: 'sultanrs',
+                label: 'Sultan RS',
+                model: 'Normal',
+                category: 'sedans',
+                price: 1000000,
+                stock: 2,
+                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+            },
+            {
+                name: 'sultanrs',
+                label: 'Sultan RS',
+                model: 'Normal',
+                category: 'sedans',
+                price: 1000000,
+                stock: 2,
+                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+            },
+        ],
+        SelectedVehicleTable: {
+            VehicleIndex: -1,
+            VehicleLabel: "",
+            VehicleModel: "",
+            VehiclePrice: 0,
+        },
+        SearchInput: "",
+        IsSearching: false,
+        ShowFeedback: false,
+        Feedbacks: [
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 4,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 2,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+        ],
 
         // Language
         Language: {
@@ -74,6 +180,10 @@ const app = Vue.createApp({
             ['color_settings']: "Color Settings",
             ['color_hex']: "Color Hex",
             ['change_color']: "Change Color",
+            ['search']: "Search",
+            ['type']: "Type",
+            ['car_list']: "Car List",
+            ['stock']: "Stock"
         },
     }),
 
@@ -93,6 +203,12 @@ const app = Vue.createApp({
 
         SetColorPicker() {
             this.ShowColorPicker = !this.ShowColorPicker
+
+            if (this.ShowPlateChange) {
+                this.ShowPlateChange = false
+                this.PlateInput = ""
+            }
+
             if (this.ShowColorPicker) {
                 this.OpenColorPicker()
             }
@@ -115,10 +231,92 @@ const app = Vue.createApp({
                 });
             });
         },
+
+        ChangePlateStatus() {
+            this.ShowPlateChange = !this.ShowPlateChange
+
+            if (this.ShowColorPicker) {
+                this.ShowColorPicker = false
+            }
+
+            if (!this.ShowPlateChange) {
+                if (this.PlateInput.length >= 6) {
+                    // Change Plate Functions
+                }
+            }
+        },
+
+        SelectVehicle(index, v) {
+            if (this.SelectedVehicleTable.VehicleIndex != index && v.stock > 0) {
+                this.SelectedVehicleTable.VehicleIndex = index
+                this.SelectedVehicleTable.VehicleLabel = v.label
+                this.SelectedVehicleTable.VehicleModel = v.model
+                this.SelectedVehicleTable.VehiclePrice = v.price
+            } 
+        },
+
+        ShowMoreCar(type) {
+            const div = this.$refs.vc
+            if (type == 'left') {
+                div.scrollBy({ left: -window.innerWidth * 1.7, behavior: 'smooth' })
+            } else if (type == 'right') {
+                div.scrollBy({ left: window.innerWidth * 1.7, behavior: 'smooth' })
+            }
+        },
+
+        Searching() {
+            if (this.SearchInput != '') {
+                this.IsSearching = true
+            } else {
+                this.IsSearching = false
+            }
+        },
+
+        OpenFeedbacks() {
+            this.ShowFeedback = !this.ShowFeedback
+
+            if (this.ShowFeedback) {
+                this.$nextTick(() => {
+                    const divs = this.$refs.FeedbackScrollContainer
+                    if (divs) {
+                        divs.forEach(div => {
+                            div.addEventListener('wheel', this.HandleFeedbackScroll)
+                        });
+                    }
+                });
+            } else {
+                const divs = this.$refs.FeedbackScrollContainer
+                if (divs) {
+                    divs.forEach(div => {
+                        div.removeEventListener('wheel', this.HandleFeedbackScroll)
+                    });
+                }
+            }
+        },
+
+        HandleFeedbackScroll(event) {
+            event.preventDefault();
+            event.currentTarget.scrollBy({
+                top: event.deltaY * 0.2,
+                behavior: 'smooth'
+            });
+        }
     },  
     
     computed: {
-        
+        FilterVehicles() {
+            let x = this.VehiclesTable
+
+            if (this.SelectedVehicleCategory !== 'all') {
+                x = x.filter(v => v.category == this.SelectedVehicleCategory)
+            }
+
+            if (this.IsSearching && this.SearchInput != '') {
+                return x.filter(v => v.name.toLowerCase().includes(this.SearchInput.toLowerCase()) || v.label.toLowerCase().includes(this.SearchInput.toLowerCase()) || v.model.toLowerCase().includes(this.SearchInput.toLowerCase()))
+            }
+
+            return x
+        }
     },
 
     watch: {
@@ -141,6 +339,10 @@ const app = Vue.createApp({
             if (event.key == 'Escape') {
                 if (this.Show) {
                     postNUI('CloseUI')
+                }
+                if (this.ShowPlateChange) {
+                    this.ShowPlateChange = false
+                    this.PlateInput = ""
                 }
             } 
         });
