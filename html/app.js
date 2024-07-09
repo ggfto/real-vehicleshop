@@ -1,3 +1,6 @@
+import inlinesvg from './inlineSvg.js';
+console.log(inlinesvg)
+
 async function importTemplate(name) {
     const res = await fetch(name);
     const html = await res.text();
@@ -16,7 +19,8 @@ const store = Vuex.createStore({
 
 const app = Vue.createApp({
     components: {
-        preview
+        preview,
+        inlinesvg
     },
     
     data: () => ({
