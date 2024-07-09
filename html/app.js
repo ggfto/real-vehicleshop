@@ -4,8 +4,8 @@ async function importTemplate(name) {
     return html;
 }
 
-const pagesone = {
-    template: await importTemplate('./pages/pagesone.html')
+const preview = {
+    template: await importTemplate('./pages/preview.html')
 }
 
 const store = Vuex.createStore({
@@ -16,12 +16,13 @@ const store = Vuex.createStore({
 
 const app = Vue.createApp({
     components: {
-        pagesone
+        preview
     },
     
     data: () => ({
         Show: true,
-        activePage: false,
+        MainPage: 'Component', // 'Normal', 'Preview'
+        activePage: 'preview', // 'preview'
         HasOwner: true,
 
         // Player Information
@@ -166,6 +167,13 @@ const app = Vue.createApp({
                 message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
             },
         ],
+        VehicleStatisticMaxValues: {
+            MaxSpeed: 500,
+            MaxBrake: 300,
+            MaxAcceleration: 250,
+            MaxSuspension: 400,
+            MaxHandling: 100
+        },
 
         // Language
         Language: {
@@ -183,7 +191,17 @@ const app = Vue.createApp({
             ['search']: "Search",
             ['type']: "Type",
             ['car_list']: "Car List",
-            ['stock']: "Stock"
+            ['stock']: "Stock",
+            ['kits']: "Kits",
+            ['top_speed']: "Top Speed",
+            ['braking']: "Braking",
+            ['acceleration']: "Acceleration",
+            ['suspension']: "Suspension",
+            ['handling']: "Handling",
+            ['exit_preview']: "Exit Preview",
+            ['inspect_exterior']: "Inspect Exterior",
+            ['inspect_interior']: "Inspect Interior",
+            ['preview_mode_information_text']: "Rotate the car for better view!",
         },
     }),
 
@@ -300,6 +318,23 @@ const app = Vue.createApp({
                 top: event.deltaY * 0.2,
                 behavior: 'smooth'
             });
+        },
+
+        CalculateVehicleStatistic(type) {
+            let value
+            if (type === 'speed') {
+              value = Math.round((20 / this.VehicleStatisticMaxValues.MaxSpeed) * 100);
+            } else if (type === 'brake') {
+              value = Math.round((125 / this.VehicleStatisticMaxValues.MaxBrake) * 100);
+            } else if (type === 'acceleration') {
+              value = Math.round((87 / this.VehicleStatisticMaxValues.MaxAcceleration) * 100);
+            } else if (type === 'suspension') {
+              value = Math.round((100 / this.VehicleStatisticMaxValues.MaxSuspension) * 100);
+            } else if (type === 'handling') {
+              value = Math.round((54 / this.VehicleStatisticMaxValues.MaxHandling) * 100);
+            }
+
+            return value < 60 ? 67 : value;
         }
     },  
     
@@ -351,7 +386,7 @@ const app = Vue.createApp({
 
 app.use(store).mount("#app");
 
-const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : "real-scriptismi"; // BURAYA SCRİPTİN İSMİNİ YAZ
+const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : "real-vehicleshop";
 
 window.postNUI = async (name, data) => {
     try {
