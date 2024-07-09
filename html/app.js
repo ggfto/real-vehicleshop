@@ -1,39 +1,5 @@
-async function importTemplate(name) {
-    const res = await fetch(name);
-    const html = await res.text();
-    return html;
-}
-
-const InlineSvg = {
-    props: {
-        src: {
-            type: String,
-            required: true
-        },
-        fill: {
-            type: String,
-            default: 'currentColor'
-        }
-    },
-    data() {
-        return {
-            svg: ''
-        }
-    },
-    async mounted() {
-        const res = await fetch(this.src);
-        const html = await res.text();
-        this.svg = html;
-    },
-    async updated() {
-        const res = await fetch(this.src);
-        const html = await res.text();
-        this.svg = html; 
-    },
-    template: `
-        <div v-html="svg" :style="{fill:fill}" />
-    `
-}
+import importTemplate from './utils/importTemplate.js';
+import inlinesvg from './utils/inlineSvg.js';
 
 const preview = {
     template: await importTemplate('./pages/preview.html')
@@ -48,12 +14,12 @@ const store = Vuex.createStore({
 const app = Vue.createApp({
     components: {
         preview,
-        InlineSvg
+        inlinesvg
     },
     
     data: () => ({
         Show: true,
-        MainPage: 'Component', // 'Normal', 'Preview'
+        MainPage: 'Component', // 'Normal', 'Component'
         activePage: 'preview', // 'preview'
         HasOwner: true,
 
@@ -363,11 +329,11 @@ const app = Vue.createApp({
             } else if (type === 'suspension') {
               value = Math.round((100 / this.VehicleStatisticMaxValues.MaxSuspension) * 100);
             } else if (type === 'handling') {
-              value = Math.round((54 / this.VehicleStatisticMaxValues.MaxHandling) * 100);
+              value = Math.round((100 / this.VehicleStatisticMaxValues.MaxHandling) * 100);
             }
             
             return value < 60 ? 67 : value;
-        }
+        },
     },  
     
     computed: {
@@ -415,6 +381,8 @@ const app = Vue.createApp({
         });
     },
 });
+
+app.component('inlinesvg', inlinesvg);
 
 app.use(store).mount("#app");
 
