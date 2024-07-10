@@ -45,7 +45,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('speed') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('speed')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">60 km/h</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleTopSpeed + ' km/h' }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>
@@ -64,7 +64,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('brake') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('brake')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">100</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleBraking }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>
@@ -83,7 +83,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('acceleration') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('acceleration')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">100</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleAcceleration }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>
@@ -102,7 +102,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('suspension') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('suspension')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">111</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleSuspension }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>
@@ -121,7 +121,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('handling') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('handling')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">100%</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[1.7vw] absolute">{{ $root.SelectedVehicleTable.VehicleHandling + '%' }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>
@@ -144,16 +144,16 @@
     <div class="w-full h-[40.5%]"></div>
     <div class="w-full h-[5.4%] flex flex-wrap">
         <div class="w-[1.7%] h-full"></div>
-        <div class="w-[11.2%] h-full flex items-center justify-center border-[.1042vw] border-[#FFFFFF] cursor-pointer">
+        <div class="w-[11.2%] h-full flex items-center justify-center border-[.1042vw] border-[#FFFFFF] cursor-pointer hover:scale-[.97]" @click="$root.MainPage = 'Normal'; $root.setActivePage(false)">
             <span class="w-full text-white text-[.9375vw] text-center font-normal font-['medium']" style="text-shadow: 0vw 0vw .4656vw rgba(255, 255, 255, 0.38);">{{ $root.Language['exit_preview'] }}</span>
         </div>
         <div class="w-[61.85%] h-full"></div>
-        <div class="w-[11.2%] h-full flex items-center justify-evenly border-[.1042vw] border-[#FFFFFF] cursor-pointer">
+        <div class="w-[11.2%] h-full flex items-center justify-evenly border-[.1042vw] border-[#FFFFFF] cursor-pointer hover:scale-[.97]" @click="$root.InspectExterior()">
             <inlinesvg class="ml-[.6vw] w-[19%]" src="./img/svg/car.svg"></inlinesvg>
             <span class="w-full text-white text-[.9375vw] text-center font-normal font-['medium']" style="text-shadow: 0vw 0vw .4656vw rgba(255, 255, 255, 0.38);">{{ $root.Language['inspect_exterior'] }}</span>
         </div>
         <div class="w-[1.15%] h-full"></div>
-        <div class="w-[11.2%] h-full flex items-center justify-evenly bg-[#00F0FF] cursor-pointer">
+        <div class="w-[11.2%] h-full flex items-center justify-evenly bg-[#00F0FF] cursor-pointer hover:scale-[.97]" @click="$root.InspectInterior()">
             <inlinesvg class="ml-[.7vw] w-[18%]" src="./img/svg/seat.svg"></inlinesvg>
             <span class="w-full text-black text-[.9375vw] text-center font-normal font-['medium']" style="text-shadow: 0vw 0vw .4656vw rgba(255, 255, 255, 0.38);">{{ $root.Language['inspect_interior'] }}</span>
         </div>

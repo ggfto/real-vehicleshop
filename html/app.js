@@ -19,9 +19,9 @@ const app = Vue.createApp({
     
     data: () => ({
         Show: true,
-        MainPage: 'Component', // 'Normal', 'Component'
-        activePage: 'preview', // 'preview'
-        HasOwner: true,
+        MainPage: 'Normal', // 'Normal', 'Component'
+        activePage: '', // 'preview'
+        HasOwner: false,
 
         // Player Information
         PlayerName: "Oph3Z Second",
@@ -92,9 +92,16 @@ const app = Vue.createApp({
                 label: 'T20',
                 model: 'Super',
                 category: 'sports',
-                price: 1000000,
+                price: 13000000,
                 stock: 20,
                 img: 'https://docs.fivem.net/vehicles/t20.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
             },
             {
                 name: 'elegy',
@@ -104,6 +111,13 @@ const app = Vue.createApp({
                 price: 2500000,
                 stock: 0,
                 img: 'https://docs.fivem.net/vehicles/elegy.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
             },
             {
                 name: 'sultanrs',
@@ -113,6 +127,13 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                information: {
+                    TopSpeed: 123,
+                    Braking: 75,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 45
+                }
             },
             {
                 name: 'sultanrs',
@@ -122,6 +143,13 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
             },
             {
                 name: 'sultanrs',
@@ -131,6 +159,13 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
             },
             {
                 name: 'sultanrs',
@@ -140,6 +175,13 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
             },
         ],
         SelectedVehicleTable: {
@@ -147,6 +189,11 @@ const app = Vue.createApp({
             VehicleLabel: "",
             VehicleModel: "",
             VehiclePrice: 0,
+            VehicleTopSpeed: 0,
+            VehicleBraking: 0,
+            VehicleAcceleration: 0,
+            VehicleSuspension: 0,
+            VehicleHandling: 0,
         },
         SearchInput: "",
         IsSearching: false,
@@ -171,6 +218,20 @@ const app = Vue.createApp({
             MaxAcceleration: 250,
             MaxSuspension: 400,
             MaxHandling: 100
+        },
+        
+        // Notify
+        NotifySettings: {
+            Show: false,
+            Type: 'success', // success, information, error
+            Header: '',
+            Message: '',
+            NotifyColor: '#ffffff',
+            NotifyStrokeColor: '#0000ff',
+            gradientOffset: 0,
+            intervalId: null,
+            Time: 0,
+
         },
 
         // Language
@@ -268,6 +329,11 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleLabel = v.label
                 this.SelectedVehicleTable.VehicleModel = v.model
                 this.SelectedVehicleTable.VehiclePrice = v.price
+                this.SelectedVehicleTable.VehicleTopSpeed = v.information.TopSpeed
+                this.SelectedVehicleTable.VehicleBraking = v.information.Braking
+                this.SelectedVehicleTable.VehicleAcceleration = v.information.Acceleration
+                this.SelectedVehicleTable.VehicleSuspension = v.information.Suspension
+                this.SelectedVehicleTable.VehicleHandling = v.information.Handling
             } 
         },
 
@@ -320,20 +386,56 @@ const app = Vue.createApp({
 
         CalculateVehicleStatistic(type) {
             let value
-            if (type === 'speed') {
-              value = Math.round((20 / this.VehicleStatisticMaxValues.MaxSpeed) * 100);
-            } else if (type === 'brake') {
-              value = Math.round((125 / this.VehicleStatisticMaxValues.MaxBrake) * 100);
-            } else if (type === 'acceleration') {
-              value = Math.round((87 / this.VehicleStatisticMaxValues.MaxAcceleration) * 100);
-            } else if (type === 'suspension') {
-              value = Math.round((100 / this.VehicleStatisticMaxValues.MaxSuspension) * 100);
-            } else if (type === 'handling') {
-              value = Math.round((100 / this.VehicleStatisticMaxValues.MaxHandling) * 100);
+            if (type == 'speed') {
+              value = Math.round((this.SelectedVehicleTable.VehicleTopSpeed / this.VehicleStatisticMaxValues.MaxSpeed) * 100);
+              return value < 60 ? 67 : value;
+            } else if (type == 'brake') {
+              value = Math.round((this.SelectedVehicleTable.VehicleBraking / this.VehicleStatisticMaxValues.MaxBrake) * 100);
+              return value < 50 ? 58 : value;
+            } else if (type == 'acceleration') {
+              value = Math.round((this.SelectedVehicleTable.VehicleAcceleration / this.VehicleStatisticMaxValues.MaxAcceleration) * 100);
+              return value < 50 ? 62 : value;
+            } else if (type == 'suspension') {
+              value = Math.round((this.SelectedVehicleTable.VehicleSuspension / this.VehicleStatisticMaxValues.MaxSuspension) * 100);
+              return value < 50 ? 62 : value;
+            } else if (type == 'handling') {
+              value = Math.round((this.SelectedVehicleTable.VehicleHandling / this.VehicleStatisticMaxValues.MaxHandling) * 100);
+              return value < 50 ? 55 : value;
             }
-            
-            return value < 60 ? 67 : value;
         },
+
+        InspectExterior() {
+            // Code
+        },
+
+        InspectInterior() {
+            // Code
+        },
+
+        ShowNotify(type, header, text, ms) {
+            if (type && header && text && ms) {
+                this.NotifySettings.Show = true
+                this.NotifySettings.Type = type
+                this.NotifySettings.Header = header
+                this.NotifySettings.Message = text
+                this.NotifySettings.Time = ms
+                this.StartNotifyTimer()
+            }
+        },
+
+        // @click="ShowNotify('success', 'asd', 'asd', 10000)"
+
+        StartNotifyTimer() {
+            const duration = this.NotifySettings.Time;
+            const stepTime = duration / 100;
+            this.NotifySettings.gradientOffset = 0;
+            this.NotifySettings.intervalId = setInterval(() => {
+            this.NotifySettings.gradientOffset += 1;
+                if (this.NotifySettings.gradientOffset >= 100) {
+                clearInterval(this.NotifySettings.intervalId);
+                }
+            }, stepTime);
+        }
     },  
     
     computed: {
@@ -349,6 +451,19 @@ const app = Vue.createApp({
             }
 
             return x
+        },
+
+        NotifyColor() {
+            switch (this.NotifySettings.Type) {
+                case 'success':
+                  return '#00F0FF';
+                case 'information':
+                  return '#00FFB7';
+                case 'error':
+                  return '#FF0004';
+                default:
+                  return '';
+            }
         }
     },
 
