@@ -224,14 +224,8 @@ const app = Vue.createApp({
         NotifySettings: {
             Show: false,
             Type: 'success', // success, information, error
-            Header: '',
             Message: '',
-            NotifyColor: '#ffffff',
-            NotifyStrokeColor: '#0000ff',
-            gradientOffset: 0,
-            intervalId: null,
             Time: 0,
-
         },
 
         // Language
@@ -261,6 +255,11 @@ const app = Vue.createApp({
             ['inspect_exterior']: "Inspect Exterior",
             ['inspect_interior']: "Inspect Interior",
             ['preview_mode_information_text']: "Rotate the car for better view!",
+
+            // UI Notify
+            ['successful']: "Successful",
+            ['information']: "Information",
+            ['error']: "Error",
         },
     }),
 
@@ -272,6 +271,10 @@ const app = Vue.createApp({
         FormatMoney(s) {
             s = parseInt(s)
             return s.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+        },
+
+        BuyVehicle() {
+            // Buy Vehicle Codes
         },
 
         TestDrive() {
@@ -412,30 +415,24 @@ const app = Vue.createApp({
             // Code
         },
 
-        ShowNotify(type, header, text, ms) {
-            if (type && header && text && ms) {
-                this.NotifySettings.Show = true
-                this.NotifySettings.Type = type
-                this.NotifySettings.Header = header
-                this.NotifySettings.Message = text
-                this.NotifySettings.Time = ms
-                this.StartNotifyTimer()
+        ShowNotify(type, text, ms) {
+            if (this.NotifySettings.Show) return;
+
+            if (type && text && ms) {
+                let seconds = ms / 1000;
+                this.NotifySettings.Show = true;
+                this.NotifySettings.Type = type;
+                this.NotifySettings.Message = text;
+                this.NotifySettings.Time = seconds;
+                SoundPlayer('notification.wav')
+                setTimeout(() => {
+                    this.NotifySettings.Show = false;
+                    this.NotifySettings.Type = '';
+                    this.NotifySettings.Message = '';
+                    this.NotifySettings.Time = 0;
+                }, ms);
             }
         },
-
-        // @click="ShowNotify('success', 'asd', 'asd', 10000)"
-
-        StartNotifyTimer() {
-            const duration = this.NotifySettings.Time;
-            const stepTime = duration / 100;
-            this.NotifySettings.gradientOffset = 0;
-            this.NotifySettings.intervalId = setInterval(() => {
-            this.NotifySettings.gradientOffset += 1;
-                if (this.NotifySettings.gradientOffset >= 100) {
-                clearInterval(this.NotifySettings.intervalId);
-                }
-            }, stepTime);
-        }
     },  
     
     computed: {
@@ -522,3 +519,13 @@ window.postNUI = async (name, data) => {
         // console.log(error)
     }
 };
+
+let audioPlayer = null;
+function SoundPlayer(val) {
+    let audioPath = `./sounds/${val}`;
+    audioPlayer = new Howl({
+        src: [audioPath]
+    });
+    audioPlayer.volume(0.6);
+    audioPlayer.play();
+}

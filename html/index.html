@@ -39,29 +39,21 @@
                     <div class="w-[3%]"></div>
                     <div class="w-[74%] flex flex-col">
                         <div class="w-full flex items-end justify-start pt-[.5vw]">
-                            <span class="w-full text-white text-[.8333vw] text-start font-semibold font-['Poppins']">Succesful</span>
+                            <span class="w-full text-white text-[.8333vw] text-start font-semibold font-['Poppins']">{{ NotifySettings.Type === 'error' ? Language['error'] : (NotifySettings.Type === 'information' ? Language['information'] : (NotifySettings.Type === 'success' ? Language['successful'] : '')) }}</span>
                         </div>
                         <div class="w-full flex items-start justify-start pb-[.5vw]">
-                            <span class="text-white text-[.6771vw] font-normal font-['Poppins']">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum dolores ducimus explicabo culpa!</span>
+                            <span class="w-full text-white text-[.6771vw] font-normal font-['Poppins']">{{ NotifySettings.Message }}</span>
                         </div>
                     </div>
                     <div class="w-[4%] h-full"></div>
-                    <div class="w-[6%] flex items-start justify-star">
-                        <svg class="w-[1.5vw] h-[1.43vw] pt-[.3vw]" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
-                            <defs>
-                              <linearGradient :id="'grad-' + 1" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" :stop-color="NotifySettings.NotifyStrokeColor" />
-                                <stop :offset="NotifySettings.gradientOffset + '%'" stop-color="#535353" />
-                              </linearGradient>
-                            </defs>
-                            <mask id="path-1-inside-1_3_1194" fill="white">
-                              <path d="M18.1323 16.3683C16.9632 17.9608 15.2602 19.0794 13.3345 19.5198C11.4087 19.9601 9.3888 19.6928 7.64385 18.7667C5.89891 17.8406 4.54548 16.3176 3.83089 14.4759C3.1163 12.6342 3.08828 10.5968 3.75194 8.73619C4.41561 6.87554 5.72664 5.31582 7.44546 4.34208C9.16427 3.36834 11.1761 3.0456 13.1132 3.43284C15.0504 3.82008 16.7835 4.89145 17.9959 6.45114C19.2082 8.01083 19.8189 9.9547 19.7162 11.9275L18.2128 11.8493C18.2966 10.2375 17.7977 8.64935 16.8072 7.37508C15.8167 6.10081 14.4007 5.22551 12.8181 4.90913C11.2355 4.59275 9.59181 4.85643 8.18754 5.65198C6.78327 6.44752 5.71216 7.72181 5.16994 9.24197C4.62773 10.7621 4.65062 12.4266 5.23444 13.9313C5.81826 15.436 6.92401 16.6803 8.34963 17.4369C9.77525 18.1936 11.4255 18.4119 12.9989 18.0521C14.5722 17.6924 15.9636 16.7784 16.9187 15.4774L18.1323 16.3683Z" />
-                            </mask>
-                            <path d="M18.1323 16.3683C16.9632 17.9608 15.2602 19.0794 13.3345 19.5198C11.4087 19.9601 9.3888 19.6928 7.64385 18.7667C5.89891 17.8406 4.54548 16.3176 3.83089 14.4759C3.1163 12.6342 3.08828 10.5968 3.75194 8.73619C4.41561 6.87554 5.72664 5.31582 7.44546 4.34208C9.16427 3.36834 11.1761 3.0456 13.1132 3.43284C15.0504 3.82008 16.7835 4.89145 17.9959 6.45114C19.2082 8.01083 19.8189 9.9547 19.7162 11.9275L18.2128 11.8493C18.2966 10.2375 17.7977 8.64935 16.8072 7.37508C15.8167 6.10081 14.4007 5.22551 12.8181 4.90913C11.2355 4.59275 9.59181 4.85643 8.18754 5.65198C6.78327 6.44752 5.71216 7.72181 5.16994 9.24197C4.62773 10.7621 4.65062 12.4266 5.23444 13.9313C5.81826 15.436 6.92401 16.6803 8.34963 17.4369C9.77525 18.1936 11.4255 18.4119 12.9989 18.0521C14.5722 17.6924 15.9636 16.7784 16.9187 15.4774L18.1323 16.3683Z" stroke="url(#grad-1)" stroke-width="2" mask="url(#path-1-inside-1_3_1194)" />
-                        </svg>
-                    </div>
+                    <div class="w-[6%] flex items-start justify-start relative">
+                        <div class="mt-[.5vw] timer" :style="{ '--duration': NotifySettings.Time, '--background-color': NotifyColor, '--size': '0.9' }">
+                            <div class="mask"></div>
+                        </div>
+                    </div> 
                 </div>
-            </div> 
+            </div>
+        </div> 
             <div class="w-full h-full flex flex-col left-0 top-0 absolute" v-if="MainPage == 'Normal'">
                 <div class="w-full h-[8.5%] flex items-center justify-center left-0 top-0 absolute"> <!-- Header -->
                     <div class="w-[97%] h-full flex justify-between">
@@ -124,7 +116,7 @@
                                 <div class="w-[58.8%] h-full flex flex-col">
                                     <div class="w-full h-[9%]"></div>
                                     <div class="w-full h-[42%] flex flex-col">
-                                        <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer">
+                                        <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer" @click="BuyVehicle()">
                                             <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['medium']">{{ Language['buy_this_car'] }}</span>
                                         </div>
                                         <div class="w-full h-[4.5%]"></div>
@@ -342,5 +334,6 @@
     <script type="module" src="./app.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js" type="text/javascript"></script>
 </body>
 </html>

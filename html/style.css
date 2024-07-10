@@ -98,3 +98,43 @@ body {
     line-height: normal;
     opacity:  0.74;
 }
+
+.timer {
+    background: -webkit-linear-gradient(left, var(--background-color) 50%, #535353 50%);
+    border-radius: 100%;
+    width: calc(var(--size) * 1vw);
+    height: calc(var(--size) * 1vw);
+    position: relative;
+    -webkit-mask: radial-gradient(circle, transparent 53%, #000 59%);
+    mask: radial-gradient(circle, transparent 53%, #000 59%);
+}
+
+.mask {
+    border-radius: 100% 0 0 100% / 50% 0 0 50%;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    -webkit-animation: mask calc(var(--duration) * 1s) steps(500, start) infinite;
+    -webkit-transform-origin: 100% 50%;
+}
+
+@-webkit-keyframes mask {
+    0% {
+        background: #535353;
+        -webkit-transform: rotate(0deg);
+    }
+    50% {
+        background: #535353;
+        -webkit-transform: rotate(-180deg);
+    }
+    50.01% {
+        background: var(--background-color);
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        background: var(--background-color);
+        -webkit-transform: rotate(-180deg);
+    }
+}
