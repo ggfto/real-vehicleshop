@@ -23,37 +23,6 @@
 <body>
     <div id="app">
         <div class="w-full h-[100vh] flex item-center justify-center left-0 top-0 absolute" v-if="Show" style="background: url('./img/background.png'); background-size: cover; background-repeat: no-repeat;">
-            <div class="w-[26.4583vw] min-h-[4.2708vw] rounded-[.3563vw] top-[5%] absolute" style="background: url('./img/notify-background.png'); background-size: cover; background-repeat: no-repeat;" v-if="NotifySettings.Show">
-                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-success.png" v-if="NotifySettings.Type == 'success'">
-                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-information.png" v-else-if="NotifySettings.Type == 'information'">
-                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-error.png" v-else>
-                <div class="w-full flex flex-wrap relative">
-                    <div class="w-[3%]"></div>
-                    <div class="w-[10%] flex items-center justify-center">
-                        <svg class="w-[2vw] h-[2vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="36" viewBox="0 0 40 36" fill="none">
-                            <path d="M2.36307 29.8451L16.6958 3.80911C18.0239 1.39696 21.9763 1.39696 23.3044 3.80911L37.6372 29.8451C38.7998 31.957 37.0277 34.4 34.3329 34.4H5.66726C2.97252 34.4 1.2004 31.957 2.36307 29.8451Z" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20.0001 12.7981V19.9981" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20.0001 27.229V27.2019" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="w-[3%]"></div>
-                    <div class="w-[74%] flex flex-col">
-                        <div class="w-full flex items-end justify-start pt-[.5vw]">
-                            <span class="w-full text-white text-[.8333vw] text-start font-semibold font-['Poppins']">{{ NotifySettings.Type === 'error' ? Language['error'] : (NotifySettings.Type === 'information' ? Language['information'] : (NotifySettings.Type === 'success' ? Language['successful'] : '')) }}</span>
-                        </div>
-                        <div class="w-full flex items-start justify-start pb-[.5vw]">
-                            <span class="w-full text-white text-[.6771vw] font-normal font-['Poppins']">{{ NotifySettings.Message }}</span>
-                        </div>
-                    </div>
-                    <div class="w-[4%] h-full"></div>
-                    <div class="w-[6%] flex items-start justify-start relative">
-                        <div class="mt-[.5vw] timer" :style="{ '--duration': NotifySettings.Time, '--background-color': NotifyColor, '--size': '0.9' }">
-                            <div class="mask"></div>
-                        </div>
-                    </div> 
-                </div>
-            </div>
-        </div> 
             <div class="w-full h-full flex flex-col left-0 top-0 absolute" v-if="MainPage == 'Normal'">
                 <div class="w-full h-[8.5%] flex items-center justify-center left-0 top-0 absolute"> <!-- Header -->
                     <div class="w-[97%] h-full flex justify-between">
@@ -207,7 +176,7 @@
                             <div class="w-full h-[14%] flex flex-col relative">
                                 <div class="w-full"><span class="text-white text-[.8333vw] font-semibold font-['regular']">{{ Language['search'] }}</span></div>
                                 <div class="w-full h-[62%] flex items-center bg-[#5555554D] bottom-0 absolute">
-                                    <input type="text" class="w-[80%] h-full left-[.5vw] outline-none absolute search-input" placeholder="Name Search..." v-model="SearchInput" @input="Searching()">
+                                    <input type="text" class="w-[80%] h-full left-[.5vw] outline-none absolute search-input" :placeholder="Language['search_input_placeholder']" v-model="SearchInput" @input="Searching()">
                                     <svg class="right-[.9vw] absolute" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
                                         <path opacity="0.83" d="M20.7144 18.1589L16.6248 14.0694C16.4403 13.8848 16.1901 13.7823 15.9275 13.7823H15.2589C16.391 12.3343 17.0637 10.5131 17.0637 8.53187C17.0637 3.81883 13.2449 0 8.53187 0C3.81883 0 0 3.81883 0 8.53187C0 13.2449 3.81883 17.0637 8.53187 17.0637C10.5131 17.0637 12.3343 16.391 13.7823 15.2589V15.9275C13.7823 16.1901 13.8848 16.4403 14.0694 16.6248L18.1589 20.7144C18.5445 21.1 19.168 21.1 19.5495 20.7144L20.7103 19.5536C21.0959 19.168 21.0959 18.5445 20.7144 18.1589ZM8.53187 13.7823C5.63186 13.7823 3.28149 11.436 3.28149 8.53187C3.28149 5.63186 5.62776 3.28149 8.53187 3.28149C11.4319 3.28149 13.7823 5.62776 13.7823 8.53187C13.7823 11.4319 11.436 13.7823 8.53187 13.7823Z" fill="#B1B1B1"/>
                                     </svg>
@@ -328,6 +297,129 @@
             </div>
             <div class="w-full h-full left-0 top-0 absolute" v-if="MainPage == 'Component'">
                 <component :is="activePage"></component>
+            </div>
+            <div class="w-full h-full flex items-center justify-center left-0 top-0 absolute" style="background: url('./img/popup-background.png'); background-size: cover; background-repeat: no-repeat; backdrop-filter: blur(.151vw);" v-if="ShowPopupScrren">
+                <div class="w-[50vw] h-[21vw] flex flex-col border-[.1042vw] border-[#575757] bg-[#000000] rounded-[1.1979vw]" style="background-image: url('./img/popup-background-effect.png'); background-size: cover; background-repeat: no-repeat;" v-if="NormalPopupSettings.Show">
+                    <div class="w-full h-[8.8%]"></div>
+                    <div class="w-full h-[7%] flex items-center justify-center">
+                        <span class="w-full text-zinc-400 text-[1.4667vw] text-center font-semibold font-['Poppins']">{{ Language['are_you_sure'] }}</span>
+                    </div>
+                    <div class="w-full h-[12%]"></div>
+                    <div class="w-full h-[9%]">
+                        <div class="w-full h-full flex items-center justify-center">
+                            <span class="text-zinc-400 text-[1.3542vw] font-medium font-['Poppins']">{{ NormalPopupSettings.HeaderOne }}</span>
+                            <span class="text-cyan-400 text-[1.3542vw] font-medium font-['Poppins'] ml-[.4vw]">{{ NormalPopupSettings.HeaderTwo }}</span>
+                        </div>
+                    </div>
+                    <div class="w-full h-[9.2%]"></div>
+                    <div class="w-full h-[25%] flex items-start justify-center">
+                        <span class="w-[90%] text-center text-zinc-400 text-[1.1979vw] font-normal font-['Poppins']">{{ NormalPopupSettings.Description }}</span>
+                    </div>
+                    <div class="w-full h-[5.5%]"></div>
+                    <div class="w-full h-[23.5%] flex items-center justify-center">
+                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#4D4D4D] rounded-[.3125vw] mr-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" @click="ClosePopup('normal')">
+                            <span class="w-full text-center text-[#B1B1B1] text-[1.3542vw] font-medium font-['Poppins']">{{ Language['cancel'].toUpperCase() }}</span>
+                        </div>
+                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#00F0FF] rounded-[.3125vw] ml-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" style="box-shadow: 0vw 0vw .9vw 0vw #00F0FF;" @click="NormalPopupSettings.Function">
+                            <div class="w-full text-center text-black text-[1.3542vw] font-medium font-['Poppins']">{{ Language['confirm'].toUpperCase() }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-[53.75vw] h-[25.1042vw] flex flex-col border-[.1042vw] border-[#575757] bg-[#000000] rounded-[1.1979vw]" style="background-image: url('./img/feedback-popup-background-effect.png'); background-size: cover; background-repeat: no-repeat;" v-if="FeedbackPopupSettings.Show">
+                    <div class="w-full h-[8.8%]"></div>
+                    <div class="w-full h-[7%] flex items-center justify-center">
+                        <span class="w-full text-zinc-400 text-[1.6667vw] text-center font-semibold font-['Poppins']">{{ Language['leave_us_a_feedback'] }}</span>
+                    </div>
+                    <div class="w-full h-[9%]"></div>
+                    <div class="w-full h-[6.5%] flex items-center justify-center">
+                        <span class="w-full text-zinc-400 text-[1.3542vw] text-center font-medium font-['Poppins']">{{ Language['feedback_description'] }}</span>
+                    </div>
+                    <div class="w-full h-[5%]"></div>
+                    <div class="w-full h-[10.5%] flex items-center justify-center">
+                        <svg v-for="v in 5" :key="v" class="ml-[1.7vw] cursor-pointer" :class="{ 'active-star': v <= FeedbackPopupSettings.Rating }" xmlns="http://www.w3.org/2000/svg" width="52" height="49" viewBox="0 0 52 49" fill="none" @click="FeedbackPopupSettings.Rating = v">
+                            <path d="M26 0L32.0619 18.6565H51.6785L35.8083 30.1869L41.8702 48.8435L26 37.3131L10.1298 48.8435L16.1917 30.1869L0.321474 18.6565H19.9381L26 0Z" fill="#ffffff54"/>
+                        </svg>
+                    </div>
+                    <div class="w-full h-[4.8%]"></div>
+                    <div class="w-full h-[23%] flex items-start justify-center relative">
+                        <textarea class="w-[93%] h-full bg-[#212121] resize-none outline-none px-[.6vw] py-[.5vw] overflow-auto feedback-input absolute" :placeholder="Language['feedback_input_placeholder']" v-model="FeedbackPopupSettings.Message"></textarea>
+                        <div class="w-[93%] h-[20%] flex items-end bottom-0 absolute">
+                            <span class="w-full text-[#B1B1B1] text-[.7292vw] font-medium font-['Poppins'] left-0 top-0 ml-[.6vw] absolute" :class="{ 'text-red': FeedbackPopupSettings.Message.length > FeedbackCharacters.MaximumCharacter }">{{ Language['words'] + ': ' + FeedbackPopupSettings.Message.length }}</span>
+                        </div>
+                    </div>
+                    <div class="w-full h-[4.8%]"></div>
+                    <div class="w-full h-[15.5%] flex items-center justify-center">
+                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#4D4D4D] rounded-[.3125vw] mr-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" @click="ClosePopup('feedback')">
+                            <span class="w-full text-center text-[#B1B1B1] text-[1.3542vw] font-medium font-['Poppins']">{{ Language['close'].toUpperCase() }}</span>
+                        </div>
+                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#00F0FF] rounded-[.3125vw] ml-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" style="box-shadow: 0vw 0vw .5vw 0vw #00F0FF;" @click="SendFeedback()">
+                            <div class="w-full text-center text-black text-[1.3542vw] font-medium font-['Poppins']">{{ Language['confirm'].toUpperCase() }}</div>
+                        </div>
+                    </div>
+                    <div class="w-full h-[5.1%]"></div>
+                </div>
+                <div class="w-[50.2vw] h-[36.5vw] flex absolute" v-if="ComplaintPopupSettings.Show">
+                    <div class="w-[39.8438vw] h-[32.9167vw] flex flex-col border-[.1042vw] border-[#575757] bg-[#000000] rounded-[.5208vw] left-[5.15vw] top-[1.7vw] absolute" style="background-image: url('./img/complaint-background-effect.png'); background-size: cover; background-repeat: no-repeat;">
+                        <div class="w-full h-[6%]"></div>
+                        <div class="w-full h-[6%] flex items-center justify-center">
+                            <span class="w-full text-zinc-400 text-[1.6667vw] text-center font-semibold font-['Poppins']">{{ Language['complaint_header'] }}</span>
+                        </div>
+                        <div class="w-full h-[5.6%]"></div>
+                        <div class="w-full h-[5.4%] flex items-center justify-center">
+                            <span class="w-full text-zinc-400 text-[1.3542vw] text-center font-medium font-['Poppins']">{{ Language['complaint_description'] }}</span>
+                        </div>
+                        <div class="w-full h-[7%]"></div>
+                        <div class="w-full h-[44%] flex items-center justify-center">
+                            <div class="w-[88%] h-full relative">
+                                <textarea class="w-full h-full bg-[#212121] resize-none outline-none px-[.6vw] py-[.5vw] overflow-auto feedback-input absolute" :placeholder="Language['complaint_input_placeholder']" v-model="ComplaintPopupSettings.Message"></textarea>
+                                <div class="w-[93%] h-[10%] flex items-end bottom-0 absolute">
+                                    <span class="w-full text-[#B1B1B1] text-[.7292vw] font-medium font-['Poppins'] left-0 top-0 ml-[.6vw] absolute" :class="{ 'text-red': ComplaintPopupSettings.Message.length > ComplaintCharacters.MaximumCharacter }">{{ Language['words'] + ': ' + ComplaintPopupSettings.Message.length }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full h-[5%]"></div>
+                        <div class="w-full h-[13%] flex items-center justify-center">
+                            <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.8] bg-[#4D4D4D] rounded-[.3125vw] mr-[1.5vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" @click="ClosePopup('complaint')">
+                                <span class="w-full text-center text-[#B1B1B1] text-[1.3542vw] font-medium font-['Poppins']">{{ Language['close'].toUpperCase() }}</span>
+                            </div>
+                            <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.8] bg-[#FF0004] rounded-[.3125vw] ml-[1.5vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" style="box-shadow: 0vw 0vw .6vw 0vw #FF0004;" @click="SendComplaint()">
+                                <div class="w-full text-center text-black text-[1.3542vw] font-medium font-['Poppins']">{{ Language['confirm'].toUpperCase() }}</div>
+                            </div>
+                        </div>
+                        <div class="w-full h-[8%]"></div>
+                    </div>
+                    <img src="./img/complaint-img.png" class="w-[12.7083vw] h-[9.9159vw] right-0 bottom-0 absolute">
+                </div>
+            </div>
+            <div class="w-[26.4583vw] min-h-[4.2708vw] rounded-[.3563vw] top-[5%] absolute" style="background: url('./img/notify-background.png'); background-size: cover; background-repeat: no-repeat;" v-if="NotifySettings.Show">
+                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-success.png" v-if="NotifySettings.Type == 'success'">
+                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-information.png" v-else-if="NotifySettings.Type == 'information'">
+                <img class="w-full h-full absolute top-0 left-0" src="./img/notify-background-effect-error.png" v-else>
+                <div class="w-full flex flex-wrap relative">
+                    <div class="w-[3%]"></div>
+                    <div class="w-[10%] flex items-center justify-end">
+                        <svg class="w-[2vw] h-[2vw] mt-[.8vw]" xmlns="http://www.w3.org/2000/svg" width="40" height="36" viewBox="0 0 40 36" fill="none">
+                            <path d="M2.36307 29.8451L16.6958 3.80911C18.0239 1.39696 21.9763 1.39696 23.3044 3.80911L37.6372 29.8451C38.7998 31.957 37.0277 34.4 34.3329 34.4H5.66726C2.97252 34.4 1.2004 31.957 2.36307 29.8451Z" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20.0001 12.7981V19.9981" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20.0001 27.229V27.2019" :stroke="NotifyColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="w-[3.5%]"></div>
+                    <div class="w-[74%] flex flex-col">
+                        <div class="w-full flex items-end justify-start pt-[.5vw]">
+                            <span class="w-full text-white text-[.8333vw] text-start font-semibold font-['Poppins']">{{ NotifySettings.Type === 'error' ? Language['error'] : (NotifySettings.Type === 'information' ? Language['information'] : (NotifySettings.Type === 'success' ? Language['successful'] : '')) }}</span>
+                        </div>
+                        <div class="w-full flex items-start justify-start">
+                            <span class="w-full text-white text-[.6771vw] font-normal font-['Poppins']">{{ NotifySettings.Message }}</span>
+                        </div>
+                    </div>
+                    <div class="w-[3.5%] h-full"></div>
+                    <div class="w-[6%] flex items-start justify-start relative">
+                        <div class="mt-[.5vw] timer" :style="{ '--duration': NotifySettings.Time, '--background-color': NotifyColor, '--size': '0.9' }">
+                            <div class="mask"></div>
+                        </div>
+                    </div> 
+                </div>
             </div>
         </div>
     </div>

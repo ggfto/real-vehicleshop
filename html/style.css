@@ -138,3 +138,27 @@ body {
         -webkit-transform: rotate(-180deg);
     }
 }
+
+.active-star path {
+    fill: #00F0FF;
+}
+
+.feedback-input {
+    color: #B1B1B1;
+    font-family: Poppins;
+    font-size: .7292vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border: .0521vw solid #8C8C8C;
+}
+
+.feedback-input::placeholder {
+    color: #B1B1B1;
+    font-family: Poppins;
+    font-size: .7292vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    opacity: .8;
+}

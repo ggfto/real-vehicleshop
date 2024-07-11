@@ -205,12 +205,6 @@ const app = Vue.createApp({
                 stars: 4,
                 message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
             },
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 2,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
         ],
         VehicleStatisticMaxValues: {
             MaxSpeed: 500,
@@ -227,6 +221,51 @@ const app = Vue.createApp({
             Message: '',
             Time: 0,
         },
+
+        // Popup Settings
+        ShowPopupScrren: false,
+        NormalPopupSettings: {
+            Show: false,
+            HeaderOne: '',
+            HeaderTwo: '',
+            Description: '',
+            Function: null
+        },
+        FeedbackPopupSettings: {
+            Show: false,
+            Rating: null,
+            Message: '',
+        },
+        ComplaintPopupSettings: {
+            Show: false,
+            Message: '',
+        },
+
+        // Detailed Variables
+        CheckProfanities: true,
+        Profanities: [
+            "oç",
+            "oc",
+            "amk",
+            "aq",
+        ],
+        FeedbackCharacters: {
+            MinimumCharacter: 50,
+            MaximumCharacter: 150,
+        },
+        ComplaintCharacters: {
+            MinimumCharacter: 50,
+            MaximumCharacter: 150,
+        },
+
+        // Tables
+        ComplainTable: [
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+        ],
 
         // Language
         Language: {
@@ -255,11 +294,32 @@ const app = Vue.createApp({
             ['inspect_exterior']: "Inspect Exterior",
             ['inspect_interior']: "Inspect Interior",
             ['preview_mode_information_text']: "Rotate the car for better view!",
+            ['are_you_sure']: "Are You Sure?",
+            ['leave_us_a_feedback']: "Leave Us a Feedback!",
+            ['feedback_description']: "Thanks for choosing us. If you want to leave a feedback we would love to!",
+            ['confirm']: "Confirm",
+            ['cancel']: "Cancel",
+            ['close']: "Close",
+            ['words']: "Words",
+            ['complaint_header']: "Let us know your complaint!",
+            ['complaint_description']: "Let us know your complaint so we can fix ourselves.",
+
+            // UI Inputs (Placeholders)
+            ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
+            ['complaint_input_placeholder']: "Min 50 characters & Max 150 characters.",
+            ['search_input_placeholder']: "Name, Label, Model Search...",
 
             // UI Notify
             ['successful']: "Successful",
             ['information']: "Information",
             ['error']: "Error",
+            ['choose_point']: "First choose how many points you want to give to this company!",
+            ['feedback_stop_using_bad_words']: "If you want to give feedback, do it properly, without bad words. Be human!",
+            ['feedback_minimum_character']: "You have to write at least 50 words!",
+            ['feedback_maximum_character']: "You can't write more than 150 words!",
+            ['complaint_stop_using_bad_words']: "If you want to complain, do it properly, without bad words. Be human!",
+            ['complaint_minimum_character']: "You have to write at least 50 words!",
+            ['complaint_maximum_character']: "You can't write more than 150 words!"
         },
     }),
 
@@ -431,6 +491,83 @@ const app = Vue.createApp({
                     this.NotifySettings.Message = '';
                     this.NotifySettings.Time = 0;
                 }, ms);
+            }
+        },
+
+        ShowPopup(type, headerone, headertwo, description, fnc) {
+            this.ShowPopupScrren = true
+            if (type == 'normal') {
+                this.NormalPopupSettings.Show = true
+                this.NormalPopupSettings.HeaderOne = headerone
+                this.NormalPopupSettings.HeaderTwo = headertwo
+                this.NormalPopupSettings.Description = description
+                this.NormalPopupSettings.Function = fnc
+            }
+        },
+
+        ClosePopup(type) {
+            this.ShowPopupScrren = false
+            if (type == 'normal') {
+                this.NormalPopupSettings.Show = false
+                this.NormalPopupSettings.HeaderOne = ''
+                this.NormalPopupSettings.HeaderTwo = ''
+                this.NormalPopupSettings.Description = ''
+                this.NormalPopupSettings.Function = null
+            } else if (type == 'feedback') {
+                this.FeedbackPopupSettings.Show = false
+                this.FeedbackPopupSettings.Rating = null
+                this.FeedbackPopupSettings.Message = ''
+                // postNUI('CloseUI')
+            } else if (type == 'complaint') {
+                this.ComplaintPopupSettings.Show = false
+                this.ComplaintPopupSettings.Message = ''
+                // postNUI('CloseUI')
+            }
+        },
+
+        SendFeedback() {
+            if (this.FeedbackPopupSettings.Rating) {
+                if (this.FeedbackPopupSettings.Message.length >= this.FeedbackCharacters.MinimumCharacter) {
+                    if (this.FeedbackPopupSettings.Message.length <= this.FeedbackCharacters.MaximumCharacter) {
+                        if (this.CheckProfanities) {
+                            const SearchProfanities = this.Profanities.filter(v => this.FeedbackPopupSettings.Message.includes(v))
+                            if (SearchProfanities.length == 0) {
+                                // Table Insert (this.Feedbacks)
+                            } else {
+                                this.ShowNotify('error', this.Language['feedback_stop_using_bad_words'], 8000)
+                            }
+                        } else {
+                            // Table Insert (this.Feedbacks)
+                        }
+                    } else {
+                        this.ShowNotify('error', this.Language['feedback_maximum_character'], 4000)
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['feedback_minimum_character'], 4000)
+                }
+            } else {
+                this.ShowNotify('error', this.Language['choose_point'], 4000)
+            }
+        },
+
+        SendComplaint() {
+            if (this.ComplaintPopupSettings.Message.length >= this.ComplaintCharacters.MinimumCharacter) {
+                if (this.ComplaintPopupSettings.Message.length <= this.ComplaintCharacters.MaximumCharacter) {
+                    if (this.CheckProfanities) {
+                        const SearchProfanities = this.Profanities.filter(v => this.ComplaintPopupSettings.Message.includes(v))
+                        if (SearchProfanities.length == 0) {
+                            // Table Insert (this.ComplainTable)
+                        } else {
+                            this.ShowNotify('error', this.Language['complaint_stop_using_bad_words'], 8000)
+                        }
+                    } else {
+                        // Table Insert (this.ComplainTable)
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['complaint_maximum_character'], 4000)
+                }
+            } else {
+                this.ShowNotify('error', this.Language['complaint_minimum_character'], 4000)
             }
         },
     },  
