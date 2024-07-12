@@ -1,8 +1,12 @@
 import importTemplate from './utils/importTemplate.js';
 import inlinesvg from './utils/inlineSvg.js';
+import { FormatMoney, CalculateVehicleStatistic, ShowNotify } from './utils/functions.js';
 
 const preview = {
     template: await importTemplate('./pages/preview.html')
+}
+const dashboard = {
+    template: await importTemplate('./pages/bossmenu/dashboard.html')
 }
 
 const store = Vuex.createStore({
@@ -14,17 +18,19 @@ const store = Vuex.createStore({
 const app = Vue.createApp({
     components: {
         preview,
-        inlinesvg
+        inlinesvg,
+        dashboard
     },
     
     data: () => ({
         Show: true,
-        MainPage: 'Normal', // 'Normal', 'Component'
-        activePage: '', // 'preview'
+        MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
+        activePage: 'dashboard', // 'preview', 'dashboard'
         HasOwner: false,
 
         // Player Information
         PlayerName: "Oph3Z Second",
+        PlayerRank: 'Owner',
         PlayerMoney: 1000000,
         PlayerPfp: "https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&",
 
@@ -205,6 +211,30 @@ const app = Vue.createApp({
                 stars: 4,
                 message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
             },
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 2,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 3,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 4,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
+            {
+                name: "Oph3Z Test",
+                pfp: "./img/background.png",
+                stars: 1,
+                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
+            },
         ],
         VehicleStatisticMaxValues: {
             MaxSpeed: 500,
@@ -213,7 +243,52 @@ const app = Vue.createApp({
             MaxSuspension: 400,
             MaxHandling: 100
         },
-        
+
+        // Boss menu Variables
+        CompanyMoney: 10000,
+        BossmenuCategory: [
+            {name: 'dashboard', label: 'Dashboard'}, 
+            {name: 'company', label: 'Company'}, 
+            {name: 'categories', label: 'Categories'}, 
+            {name: 'vehicles', label: 'Vehicles'}, 
+            {name: 'employees', label: 'Employees'}, 
+            {name: 'chat', label: 'Chat'}, 
+            {name: 'feedbackcomplains', label: 'Feedback & Complains'}, 
+            {name: 'secondhand', label: 'Second Hand Company'}
+        ],
+        SelectedBossmenuCategory: 0,
+        Preorders: [
+            {
+                identifier: "",
+                requestor: "Oph3Z Test",
+                vehiclehash: "t20",
+                vehiclemodel: "T20",
+                price: 10000000
+            },
+        ],
+        EmployeesTable: [
+            {
+                identifier: "",
+                name: "Oph3Z Test",
+                pp: "",
+                perm: "Worker",
+                salary: 1000,
+                salarypenalty: 0
+            }
+        ],
+        SoldVehiclesLog: [
+            {
+                buyer: 'Oph3Z Sane',
+                vehicle: "T20",
+                price: 1000000,
+                date: '05.07.2024 | 16:25'
+            },
+        ],
+        BossmenuPageSettings: {
+            PreorderPage: 1,
+            SoldVehiclesPage: 1,
+        },
+
         // Notify
         NotifySettings: {
             Show: false,
@@ -267,9 +342,13 @@ const app = Vue.createApp({
             },
         ],
 
+        Inputs: {
+            SoldVehiclesInput: ''
+        },
+
         // Language
         Language: {
-            // UI
+            // UI (Vehicleshop)
             ['vehicle_setup_and_information']: "Vehicle Information & Setup",
             ['price']: "Price",
             ['buy_this_car']: "Buy this car",
@@ -304,10 +383,39 @@ const app = Vue.createApp({
             ['complaint_header']: "Let us know your complaint!",
             ['complaint_description']: "Let us know your complaint so we can fix ourselves.",
 
+            // UI (Boss menu)
+            ['vehicle_stock_list']: "Stock of vehicles in your company",
+            ['company_money']: "Company Money",
+            ['available']: "Available",
+            ['menu']: "Menu",
+            ['dashboard']: "Dashboard",
+            ['number_of_employeer']: "Number Of Employees",
+            ['employee']: "Employee",
+            ['vehicles_in_stock']: "Vehicles In Stock",
+            ['vehicle']: "Vehicle",
+            ['vehicles_sold']: "Number of Vehicles Sold",
+            ['company_rating']: "Company rating",
+            ['average']: "Average",
+            ['bad']: "Bad",
+            ['good']: "Good",
+            ['preorder']: "Pre-order",
+            ['preorder_description']: "If you accept, the vehicle will be automatically sent to the customer.",
+            ['ordered_by']: "Ordered By",
+            ['ordered_model']: "Ordered Model",
+            ['decline']: "Decline",
+            ['accept']: "Accept",
+            ['preorder_second_description']: "You can change the page by right/left clicking.",
+            ['sold_vehicles']: "Sold Vehicles",
+            ['sold_vehicles_description']: "List of sold vehicles in your company.",
+            ['buyer']: "Buyer",
+            ['purchased_model']: "Purchased Model",
+            ['date']: "Date",
+
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
             ['complaint_input_placeholder']: "Min 50 characters & Max 150 characters.",
             ['search_input_placeholder']: "Name, Label, Model Search...",
+            ['bossmenu_search_input']: "Search...",
 
             // UI Notify
             ['successful']: "Successful",
@@ -320,7 +428,7 @@ const app = Vue.createApp({
             ['complaint_stop_using_bad_words']: "If you want to complain, do it properly, without bad words. Be human!",
             ['complaint_minimum_character']: "You have to write at least 50 words!",
             ['complaint_maximum_character']: "You can't write more than 150 words!"
-        },
+        }
     }),
 
     methods: {
@@ -329,8 +437,7 @@ const app = Vue.createApp({
         },
 
         FormatMoney(s) {
-            s = parseInt(s)
-            return s.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+            return FormatMoney(s)
         },
 
         BuyVehicle() {
@@ -448,23 +555,7 @@ const app = Vue.createApp({
         },
 
         CalculateVehicleStatistic(type) {
-            let value
-            if (type == 'speed') {
-              value = Math.round((this.SelectedVehicleTable.VehicleTopSpeed / this.VehicleStatisticMaxValues.MaxSpeed) * 100);
-              return value < 60 ? 67 : value;
-            } else if (type == 'brake') {
-              value = Math.round((this.SelectedVehicleTable.VehicleBraking / this.VehicleStatisticMaxValues.MaxBrake) * 100);
-              return value < 50 ? 58 : value;
-            } else if (type == 'acceleration') {
-              value = Math.round((this.SelectedVehicleTable.VehicleAcceleration / this.VehicleStatisticMaxValues.MaxAcceleration) * 100);
-              return value < 50 ? 62 : value;
-            } else if (type == 'suspension') {
-              value = Math.round((this.SelectedVehicleTable.VehicleSuspension / this.VehicleStatisticMaxValues.MaxSuspension) * 100);
-              return value < 50 ? 62 : value;
-            } else if (type == 'handling') {
-              value = Math.round((this.SelectedVehicleTable.VehicleHandling / this.VehicleStatisticMaxValues.MaxHandling) * 100);
-              return value < 50 ? 55 : value;
-            }
+            return CalculateVehicleStatistic(type, this.SelectedVehicleTable, this.VehicleStatisticMaxValues)
         },
 
         InspectExterior() {
@@ -476,22 +567,7 @@ const app = Vue.createApp({
         },
 
         ShowNotify(type, text, ms) {
-            if (this.NotifySettings.Show) return;
-
-            if (type && text && ms) {
-                let seconds = ms / 1000;
-                this.NotifySettings.Show = true;
-                this.NotifySettings.Type = type;
-                this.NotifySettings.Message = text;
-                this.NotifySettings.Time = seconds;
-                SoundPlayer('notification.wav')
-                setTimeout(() => {
-                    this.NotifySettings.Show = false;
-                    this.NotifySettings.Type = '';
-                    this.NotifySettings.Message = '';
-                    this.NotifySettings.Time = 0;
-                }, ms);
-            }
+            ShowNotify(type, text, ms, this.NotifySettings, SoundPlayer)
         },
 
         ShowPopup(type, headerone, headertwo, description, fnc) {
@@ -570,6 +646,38 @@ const app = Vue.createApp({
                 this.ShowNotify('error', this.Language['complaint_minimum_character'], 4000)
             }
         },
+
+        TotalBossmenuPages(type) {
+            if (type == 'preorder') {
+                return Math.ceil(this.Preorders.length / 7)
+            } else if (type == 'soldvehicles') {
+                return Math.ceil(this.FilterSoldVehiclesPage.length / 7)  
+            }
+        },
+
+        NextPage(type) {
+            if (type == 'preorder') {
+                if (this.BossmenuPageSettings.PreorderPage < this.TotalBossmenuPages('preorder')) {
+                    this.BossmenuPageSettings.PreorderPage++
+                }
+            } else if (type == 'soldvehicles') {
+                if (this.BossmenuPageSettings.SoldVehiclesPage < this.TotalBossmenuPages('soldvehicles')) {
+                    this.BossmenuPageSettings.SoldVehiclesPage++
+                }
+            }
+        },
+
+        PrevPage(type) {
+            if (type == 'preorder') {
+                if (this.BossmenuPageSettings.PreorderPage > 1) {
+                    this.BossmenuPageSettings.PreorderPage--
+                }
+            } else if (type == 'soldvehicles') {
+                if (this.BossmenuPageSettings.SoldVehiclesPage > 1) {
+                    this.BossmenuPageSettings.SoldVehiclesPage--
+                }
+            }
+        },
     },  
     
     computed: {
@@ -598,10 +706,47 @@ const app = Vue.createApp({
                 default:
                   return '';
             }
-        }
+        },
+
+        AvailableVehiclesCount() {
+            return this.VehiclesTable.filter(v => v.stock > 0).length;
+        },
+
+        AverageRating() {
+            const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
+            return (rating / this.Feedbacks.length).toFixed(1);
+        },
+
+        PreordersPage() {
+            const s = (this.BossmenuPageSettings.PreorderPage - 1) * 7
+            const e = s + 7
+            return this.Preorders.slice(s, e)
+        },
+
+        FilterSoldVehiclesPage() {
+            if (!this.Inputs.SoldVehiclesInput) {
+                return this.SoldVehiclesLog
+            } 
+            return this.SoldVehiclesLog.filter(v => {
+                return (
+                    v.buyer.toLowerCase().includes(this.Inputs.SoldVehiclesInput.toLowerCase()) ||
+                    v.vehicle.toLowerCase().includes(this.Inputs.SoldVehiclesInput.toLowerCase()) ||
+                    v.price.toString().includes(this.Inputs.SoldVehiclesInput)
+                )
+            })
+        },
+
+        SoldVehiclesPage() {
+            const s = (this.BossmenuPageSettings.SoldVehiclesPage - 1) * 7
+            const e = s + 7
+            return this.FilterSoldVehiclesPage.slice(s, e)
+        },
     },
 
     watch: {
+        'Inputs.SoldVehiclesInput'() {
+            this.BossmenuPageSettings.SoldVehiclesPage = 1;
+        }
     },
 
     beforeDestroy() {

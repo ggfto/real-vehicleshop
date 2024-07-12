@@ -162,3 +162,12 @@ body {
     line-height: normal;
     opacity: .8;
 }
+
+.bossmenu-classic-search-input, .bossmenu-classic-search-input::placeholder {
+    color: #868686;
+    font-family: Poppins;
+    font-size: .7292vw;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
