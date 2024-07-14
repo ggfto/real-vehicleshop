@@ -911,7 +911,7 @@ const app = Vue.createApp({
 
         // Perms
         CreatePerm() {
-            // NOTE: Perm check
+            // NOTE: Perm check, Existing name check, Existing label check
 
             this.ShowBossPopup = 'createperm'
             // Name input: this.Inputs.PermNameInput
