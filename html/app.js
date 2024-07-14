@@ -8,6 +8,16 @@ const preview = {
 const dashboard = {
     template: await importTemplate('./pages/bossmenu/dashboard.html')
 }
+const company = {
+    template: await importTemplate('./pages/bossmenu/company.html')
+}
+const companysettings = {
+    template: await importTemplate('./pages/bossmenu/company/settings.html')
+}
+const staffsettings = {
+    template: await importTemplate('./pages/bossmenu/company/staffsettings.html')
+}
+
 
 const store = Vuex.createStore({
     state: {},
@@ -19,13 +29,16 @@ const app = Vue.createApp({
     components: {
         preview,
         inlinesvg,
-        dashboard
+        dashboard,
+        company,
+        companysettings,
+        staffsettings
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'dashboard', // 'preview', 'dashboard'
+        activePage: 'staffsettings', // 'preview', 'dashboard', 'company', 'companysettings', 'staffsettings'
         HasOwner: false,
 
         // Player Information
@@ -270,11 +283,11 @@ const app = Vue.createApp({
             {
                 identifier: "",
                 name: "Oph3Z Test",
-                pp: "",
-                perm: "Worker",
+                pp: "https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&",
+                rank: "Worker",
                 salary: 1000,
                 salarypenalty: 0
-            }
+            },
         ],
         SoldVehiclesLog: [
             {
@@ -284,9 +297,22 @@ const app = Vue.createApp({
                 date: '05.07.2024 | 16:25'
             },
         ],
+        Transactions: [
+            {
+                name: 'Oph3Z Second',
+                pfp: 'https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&',
+                rank: 'Owner',
+                amount: 10000,
+                date: '05.07 2024 | 16:25',
+                type: 'withdraw'
+            },
+        ],
         BossmenuPageSettings: {
             PreorderPage: 1,
             SoldVehiclesPage: 1,
+            TransactionsPage: 1,
+            EmployeeWithPenaltyPage: 1,
+            EmployeesPage: 1,
         },
 
         // Notify
@@ -343,7 +369,20 @@ const app = Vue.createApp({
         ],
 
         Inputs: {
-            SoldVehiclesInput: ''
+            SoldVehiclesInput: '', // Satılmış araçlar arama input
+            CompanyNameInput: '', // Şirket ismi değiştirme
+            TransferIdInput: '',  // Transfer
+            TransferPriceInput: '', // Transfer
+            DiscountInput: '', // İndirim
+            BonusesInput: '', // Prim
+            RaiseInput: '', // Zam
+            TransactionsInput: '', // Para Çekme/Yatırma arama input
+            EmployeeIdInput: '', // İşe alma
+            EmployeeSalaryInput: '', // İşe alma
+            SalaryPenaltyIdInput: '', // Maaş cezası
+            SalaryPenaltyInput: '', // İkinci input
+            PenaltySearchInput: '', // Maaş cezası
+            EmployeesInput: '', // Çalışanlar listesi
         },
 
         // Language
@@ -410,12 +449,74 @@ const app = Vue.createApp({
             ['buyer']: "Buyer",
             ['purchased_model']: "Purchased Model",
             ['date']: "Date",
+            ['company_name']: "Company Name",
+            ['current_company_name']: "Current Company Name",
+            ['save']: "Save",
+            ['trasnfer_company']: "Transfer Company",
+            ['trasnfer_company_description']: "You can transfer your company to someone else by writing ID.",
+            ['transfer']: "Transfer",
+            ['make_bulk_discount']: "Make Bulk Discount",
+            ['make_bulk_discount_description']: "Give a discount on all products by entering percent.",
+            ['discount_description']: "Please enter % flood value for All Vehicles.",
+            ['cancel_discount']: "Cancel Discount",
+            ['delete_all_logs']: "Delete All Logs",
+            ['delete_all_logs_description']: "Sometimes clear logs to avoid database bloat.",
+            ['delete_all_logs_information_text']: "This action deletes all messages and log records.",
+            ['delete']: "Delete",
+            ['bonuses_header']: "Distribute bonuses to employees",
+            ['bonuses_description']: "This action sends bonuses to all staff.",
+            ['bonuses_information']: "Enter the amount of bonus to be sent to All Employees.",
+            ['send']: "Send",
+            ['raise_the_price']: "Raise the price",
+            ['raise_description']: "You can raise prices on all products.",
+            ['raise_information']: "Enter the percentage increase below.",
+            ['cancel_raise']: "Cancel The Raise",
+            ['company_balance']: "Company Balance",
+            ['company_money_description']: "Here you can see your company's balance.",
+            ['deposit']: "Deposit",
+            ['withdraw']: "Withdraw",
+            ['profit']: "Profit",
+            ['profit_description']: "Here you can see the company's earnings so far.",
+            ['profit_information']: "If the logs are deleted, the profit here cannot be calculated!",
+            ['earned']: "Earned",
+            ['payout']: "Payout",
+            ['payout_description']: "Here are the company's expenditures to date.",
+            ['payout_information']: "If the logs are deleted, the expenses here cannot be calculated!",
+            ['was_spent']: "Was Spent",
+            ['deposit_withdraw_transaction']: "Deposit and Withdrawal Transactions",
+            ['dwt_description']: "The company's withdrawal and deposit history.",
+            ['staff']: "Staff",
+            ['rank']: "Rank",
+            ['amount']: "Amount",
+            ['withdrawn']: "withdrawn",
+            ['deposited']: "Deposited",
+            ['recruit_staff']: "Recruit Staff",
+            ['recruit_staff_description']: "Here you can hire workers for your company and determine their salary.",
+            ['send_request']: "Send Request",
+            ['salary_penalty']: "Salary Penalty",
+            ['salary_penalty_description']: "You can impose a salary penalty on those who work here.",
+            ['punish']: "Punish",
+            ['list_of_personnel_with_salary_penalty']: "List of Personnel with Salary Penalty",
+            ['lopwsp_description']: "List of Personnel Who Received Salary Penalty.",
+            ['salary']: "Salary",
+            ['end_the_punishment']: "End The Punishment",
+            ['staff_list']: "Staff List",
+            ['staff_list_description']: "Information about the staff team.",
+            ['rank_up']: "Rank Up",
+            ['reduce_rank']: "Reduce Rank",
+            ['fire']: "Fire",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
             ['complaint_input_placeholder']: "Min 50 characters & Max 150 characters.",
             ['search_input_placeholder']: "Name, Label, Model Search...",
             ['bossmenu_search_input']: "Search...",
+            ['enter_player_id']: "Enter Player ID...",
+            ['enter_sale_price']: "Enter Sale Price...",
+            ['write_percent_value']: "Write %",
+            ['enter_a_price']: "Enter a Price...",
+            ['enter_the_salary']: "Enter The Salary...",
+            ['penalty_time']: "How Many Salary Penalties?",
 
             // UI Notify
             ['successful']: "Successful",
@@ -652,6 +753,12 @@ const app = Vue.createApp({
                 return Math.ceil(this.Preorders.length / 7)
             } else if (type == 'soldvehicles') {
                 return Math.ceil(this.FilterSoldVehiclesPage.length / 7)  
+            } else if (type == 'transaction') {
+                return Math.ceil(this.FilterTransactionsPage.length / 8) 
+            } else if (type == 'employeewithpenalty') {
+                return Math.ceil(this.FilterEmployeesWithPenaltyTable.length / 1)
+            } else if (type == 'employee') {
+                return Math.ceil(this.FilterEmployeesTable.length / 8)
             }
         },
 
@@ -664,6 +771,18 @@ const app = Vue.createApp({
                 if (this.BossmenuPageSettings.SoldVehiclesPage < this.TotalBossmenuPages('soldvehicles')) {
                     this.BossmenuPageSettings.SoldVehiclesPage++
                 }
+            } else if (type == 'transaction') {
+                if (this.BossmenuPageSettings.TransactionsPage < this.TotalBossmenuPages('transaction')) {
+                    this.BossmenuPageSettings.TransactionsPage++
+                }
+            } else if (type == 'employeewithpenalty') {
+                if (this.BossmenuPageSettings.EmployeeWithPenaltyPage < this.TotalBossmenuPages('employeewithpenalty')) {
+                    this.BossmenuPageSettings.EmployeeWithPenaltyPage++
+                }
+            } else if (type == 'employee') {
+                if (this.BossmenuPageSettings.EmployeesPage < this.TotalBossmenuPages('employee')) {
+                    this.BossmenuPageSettings.EmployeesPage++
+                }
             }
         },
 
@@ -675,6 +794,18 @@ const app = Vue.createApp({
             } else if (type == 'soldvehicles') {
                 if (this.BossmenuPageSettings.SoldVehiclesPage > 1) {
                     this.BossmenuPageSettings.SoldVehiclesPage--
+                }
+            } else if (type == 'transaction') {
+                if (this.BossmenuPageSettings.TransactionsPage > 1) {
+                    this.BossmenuPageSettings.TransactionsPage--
+                }
+            } else if (type == 'employeewithpenalty') {
+                if (this.BossmenuPageSettings.EmployeeWithPenaltyPage > 1) {
+                    this.BossmenuPageSettings.EmployeeWithPenaltyPage--
+                }
+            } else if (type == 'employee') {
+                if (this.BossmenuPageSettings.EmployeesPage > 1) {
+                    this.BossmenuPageSettings.EmployeesPage--
                 }
             }
         },
@@ -741,11 +872,94 @@ const app = Vue.createApp({
             const e = s + 7
             return this.FilterSoldVehiclesPage.slice(s, e)
         },
+
+        FilterTransactionsPage() {
+            if (!this.Inputs.TransactionsInput) {
+                return this.Transactions
+            }
+
+            const input = this.Inputs.TransactionsInput.toLowerCase();
+
+            return this.Transactions.filter(v => {
+                if (input === 'withdraw' || input === 'deposit') {
+                    return v.type.toLowerCase() === input;
+                }
+                return (
+                    v.name.toLowerCase().includes(input) ||
+                    v.amount.toString().includes(this.Inputs.TransactionsInput)
+                );
+            });
+        },
+
+        TransactionsPage() {
+            const s = (this.BossmenuPageSettings.TransactionsPage - 1) * 8
+            const e = s + 8
+            return this.FilterTransactionsPage.slice(s, e)
+        },
+
+        FilterEmployeesWithPenaltyTable() {
+            if (!this.Inputs.PenaltySearchInput) {
+                return this.EmployeesTable.filter(v => v.salarypenalty > 0);
+            }
+
+            const input = this.Inputs.PenaltySearchInput.toLowerCase();
+
+            return this.EmployeesTable.filter(v => {
+                return (
+                    v.name.toLowerCase().includes(input) &&
+                    v.salarypenalty > 0 ||
+                    v.identifier.toLowerCase().includes(input) &&
+                    v.salarypenalty > 0 ||
+                    v.salary.toString().includes(this.Inputs.PenaltySearchInput) &&
+                    v.salarypenalty > 0
+                );
+            });
+        },
+
+        EmployeeWithPenaltyPage() {
+            const s = (this.BossmenuPageSettings.EmployeeWithPenaltyPage - 1) * 1
+            const e = s + 1
+            return this.FilterEmployeesWithPenaltyTable.slice(s, e)
+        },
+
+        FilterEmployeesTable() {
+            if (!this.Inputs.EmployeesInput) {
+                return this.EmployeesTable
+            }
+
+            const input = this.Inputs.EmployeesInput.toLowerCase();
+
+            return this.EmployeesTable.filter(v => {
+                return (
+                    v.name.toLowerCase().includes(input) ||
+                    v.identifier.toLowerCase().includes(input) ||
+                    v.salary.toString().includes(this.Inputs.EmployeesInput)
+                );
+            });
+        },
+
+        EmployeesPage() {
+            const s = (this.BossmenuPageSettings.EmployeesPage - 1) * 8
+            const e = s + 8
+            return this.FilterEmployeesTable.slice(s, e)
+        },
     },
 
     watch: {
         'Inputs.SoldVehiclesInput'() {
             this.BossmenuPageSettings.SoldVehiclesPage = 1;
+        },
+
+        'Inputs.TransactionsInput'() {
+            this.BossmenuPageSettings.TransactionsPage = 1;
+        },
+
+        'Inputs.PenaltySearchInput'() {
+            this.BossmenuPageSettings.EmployeeWithPenaltyPage = 1;
+        },
+
+        'Inputs.EmployeesPage'() {
+            this.BossmenuPageSettings.EmployeesPage = 1;
         }
     },
 

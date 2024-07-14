@@ -50,6 +50,11 @@ body {
   border-radius: 1vw;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
 .color-text {
     color: #FFF;
     font-family: regular;
@@ -170,4 +175,29 @@ body {
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.company-input, .company-input::placeholder {
+    color: #000;
+    text-align: center;
+    font-family: Poppins;
+    font-size: .7813vw;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.company-second-input, .company-second-input::placeholder {
+    color: #A8A8A8;
+    text-align: center;
+    font-family: Poppins;
+    font-size: .7813vw;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.borderred {
+    border-width: 1px;
+    border-color: #ff0000;
 }
