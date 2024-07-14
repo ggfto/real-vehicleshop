@@ -197,6 +197,16 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: normal;
 }
 
+.depositwithdrawinput, .depositwithdrawinput::placeholder {
+    color: #7EF7FF;
+    text-align: center;
+    font-family: Poppins;
+    font-size: .7813vw;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
 .borderred {
     border-width: 1px;
     border-color: #ff0000;

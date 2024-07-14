@@ -14,8 +14,11 @@ const company = {
 const companysettings = {
     template: await importTemplate('./pages/bossmenu/company/settings.html')
 }
-const staffsettings = {
+const companystaffsettings = {
     template: await importTemplate('./pages/bossmenu/company/staffsettings.html')
+}
+const bosspopup = {
+    template: await importTemplate('./pages/bossmenu/bosspopup.html')
 }
 
 
@@ -32,13 +35,14 @@ const app = Vue.createApp({
         dashboard,
         company,
         companysettings,
-        staffsettings
+        companystaffsettings,
+        bosspopup
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'staffsettings', // 'preview', 'dashboard', 'company', 'companysettings', 'staffsettings'
+        activePage: 'company', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings'
         HasOwner: false,
 
         // Player Information
@@ -342,6 +346,20 @@ const app = Vue.createApp({
             Message: '',
         },
 
+        // Boss Menu Popup Settings
+        ShowBossPopup: '', // deposit, withdraw
+
+        // Popup Without UI
+        ShowPopupToTarget: '', // 'TransferRequest', 'JobReq'
+
+        // TransferReq Settings
+        TransferReqCompanyName: 'Oph3Z Vehicleshop',
+        TransferReqCompanyPrice: 1000000,
+
+        // JobReq Settings
+        JobReqCompanyName: 'Test Vehicleshop',
+        JobReqSalary: 15000,
+
         // Detailed Variables
         CheckProfanities: true,
         Profanities: [
@@ -383,6 +401,8 @@ const app = Vue.createApp({
             SalaryPenaltyInput: '', // İkinci input
             PenaltySearchInput: '', // Maaş cezası
             EmployeesInput: '', // Çalışanlar listesi
+            DepositInput: '', // Para yatırma input
+            WithdrawInput: '', // Para çekme input
         },
 
         // Language
@@ -505,6 +525,17 @@ const app = Vue.createApp({
             ['rank_up']: "Rank Up",
             ['reduce_rank']: "Reduce Rank",
             ['fire']: "Fire",
+            ['deposit_description']: "Put money into your company.",
+            ['withdraw_description']: "Withdraw money from your company.",
+            ['enter_an_amount']: "Enter an Amount",
+            ['want_to_buy_the_company']: "Do you want to buy this company?",
+            ['wtbtc_description']: "This action cannot be reversed, check that the store name is correct.",
+            ['job_req']: "You've been offered a job. Do you accept?",
+            ['job_req_description']: "Before accepting, check the name of the company and your salary.",
+            ['reject']: "Reject",
+            ['day']: "Day",
+            ['staff_settings']: "Staff Settings",
+            ['company_settings']: "Company Settings",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
