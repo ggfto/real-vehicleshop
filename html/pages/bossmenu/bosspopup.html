@@ -59,4 +59,34 @@
             </div>
         </div>
     </div>
+    <div class="w-[35.5729vw] flex flex-col h-[9.5833vw] bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'createperm'">
+        <div class="w-full h-[3.5417vw] bg-[#000000DE] rounded-t-[.2604vw] relative">
+            <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
+                <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.775vw] absolute">{{ $root.Language['create_perm'] }}</span>
+                <div class="w-full bottom-[.6vw] absolute">
+                    <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['create_perm_description'] }}</span>
+                </div>
+            </div>
+            <img src="./img/bossmenu/employee-bg.png" class="w-[13.3333vw] h-[3.63vw] right-0 top-0 absolute">
+        </div>
+        <div class="w-full h-[61.5%] flex items-center justify-center relative">
+            <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
+                <div class="w-[70.5%] h-full flex flex-col">
+                    <div class="w-full h-[58%] mb-[1%]">
+                        <input type="text" class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input" :placeholder="$root.Language['enter_perm_name']" v-model="$root.Inputs.PermNameInput">
+                    </div>
+                    <input type="text" class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]" :placeholder="$root.Language['enter_perm_label']" v-model="$root.Inputs.PermLabelInput">
+                </div>
+                <div class="w-[29.5%] h-full flex flex-col items-start">
+                    <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                        <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['create'] }}</span>
+                    </div>
+                    <div class="w-full h-[2.5%]"></div>
+                    <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer" @click="$root.ShowBossPopup = ''; $root.Inputs.PermNameInput = ''; $root.Inputs.PermLabelInput = '';">
+                        <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['cancel'] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

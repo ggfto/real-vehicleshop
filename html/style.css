@@ -207,6 +207,27 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: normal;
 }
 
+.permission-container:nth-child(even) {
+    margin-left: 1.6%;
+}
+
+.toggle-perm {
+    transition: background-color 0.3s;
+}
+
+.toggle-perm.active {
+    background-color: #4B4B4B;
+}
+
+.toggle-circle {
+    background-color: blue;
+    transition: left 0.3s;
+}
+
+.toggle-perm.active .toggle-circle {
+    left: calc(100% - 1.3021vw);
+}
+
 .borderred {
     border-width: 1px;
     border-color: #ff0000;

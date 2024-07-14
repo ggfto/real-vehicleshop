@@ -20,7 +20,9 @@ const companystaffsettings = {
 const bosspopup = {
     template: await importTemplate('./pages/bossmenu/bosspopup.html')
 }
-
+const perms = {
+    template: await importTemplate('./pages/bossmenu/perms.html')
+}
 
 const store = Vuex.createStore({
     state: {},
@@ -36,13 +38,14 @@ const app = Vue.createApp({
         company,
         companysettings,
         companystaffsettings,
+        perms,
         bosspopup
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'company', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings'
+        activePage: 'perms', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms'
         HasOwner: false,
 
         // Player Information
@@ -50,6 +53,9 @@ const app = Vue.createApp({
         PlayerRank: 'Owner',
         PlayerMoney: 1000000,
         PlayerPfp: "https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&",
+
+        // Main Informations
+        CurrentVehicleshop: -1,
 
         // Vehicleshop Variables
         VehicleShopName: "Oph3Z's Dealership",
@@ -311,6 +317,57 @@ const app = Vue.createApp({
                 type: 'withdraw'
             },
         ],
+        PermsTable: [
+            {
+                name: 'owner',
+                label: "Owner",
+                permissions: [
+                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: true },
+                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: true },
+                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: true },
+                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: true },
+                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: true },
+                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: true },
+                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: true },
+                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: true },
+                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: true },
+                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: true },
+                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: true },
+                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: true },
+                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: true },
+                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: true },
+                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: true },
+
+                ],
+                removable: false,
+                editable: false,
+            },
+            {
+                name: 'manager',
+                label: 'Manager',
+                permissions: [
+                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: false },
+                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: true },
+                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: true },
+                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: true },
+                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: true },
+                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: true },
+                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: true },
+                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: false },
+                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: true },
+                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: false },
+                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: true },
+                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: false },
+                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: true },
+                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: false },
+                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: false },
+
+                ],
+                removable: true,
+                editable: true,
+            },
+        ],
+        SelectedPerm: -1,
         BossmenuPageSettings: {
             PreorderPage: 1,
             SoldVehiclesPage: 1,
@@ -347,7 +404,7 @@ const app = Vue.createApp({
         },
 
         // Boss Menu Popup Settings
-        ShowBossPopup: '', // deposit, withdraw
+        ShowBossPopup: '', // deposit, withdraw, createperm
 
         // Popup Without UI
         ShowPopupToTarget: '', // 'TransferRequest', 'JobReq'
@@ -403,6 +460,8 @@ const app = Vue.createApp({
             EmployeesInput: '', // Çalışanlar listesi
             DepositInput: '', // Para yatırma input
             WithdrawInput: '', // Para çekme input
+            PermNameInput: '', // Perm oluşturma name
+            PermLabelInput: '', // Perm oluşturma label
         },
 
         // Language
@@ -536,6 +595,13 @@ const app = Vue.createApp({
             ['day']: "Day",
             ['staff_settings']: "Staff Settings",
             ['company_settings']: "Company Settings",
+            ['perms']: "Perms",
+            ['perms_description']: "You can create/change perms.",
+            ['create']: "Create",
+            ['remove']: "Remove",
+            ['edit']: "Edit",
+            ['create_perm']: "Create Perms",
+            ['create_perm_description']: "You can create authorization in this section.",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
@@ -548,6 +614,8 @@ const app = Vue.createApp({
             ['enter_a_price']: "Enter a Price...",
             ['enter_the_salary']: "Enter The Salary...",
             ['penalty_time']: "How Many Salary Penalties?",
+            ['enter_perm_name']: "Enter Perm Name...",
+            ['enter_perm_label']: "Enter Perm Label...",
 
             // UI Notify
             ['successful']: "Successful",
@@ -839,6 +907,43 @@ const app = Vue.createApp({
                     this.BossmenuPageSettings.EmployeesPage--
                 }
             }
+        },
+
+        // Perms
+        CreatePerm() {
+            // NOTE: Perm check
+
+            this.ShowBossPopup = 'createperm'
+            // Name input: this.Inputs.PermNameInput
+            // Label input: this.Inputs.PermLabelInput
+            // Vehicleshop: this.CurrentVehicleshop
+        },
+
+        RemovePerm(k) {
+            // NOTE: Perm check
+
+            // postNUI('RemovePerm', {
+            //     vehicleshop: this.CurrentVehicleshop,
+            //     name: this.PermsTable[k].name,
+            // })
+        },
+
+        TogglePerms(k) {
+            let table = this.PermsTable[this.SelectedPerm].permissions;
+            let permission = table[k];
+            permission.value = !permission.value;
+        },
+
+        SaveNewPermissions() {
+            // NOTE: Perm check
+
+            // postNUI('SaveNewPermissions', {
+            //     vehicleshop: this.CurrentVehicleshop,
+            //     name: this.PermsTable[this.SelectedPerm].name,
+            //     table: this.PermsTable[this.SelectedPerm].permissions,
+            // })
+
+            // LUA: Check old table and compare with new table
         },
     },  
     
