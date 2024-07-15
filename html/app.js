@@ -23,6 +23,9 @@ const bosspopup = {
 const perms = {
     template: await importTemplate('./pages/bossmenu/perms.html')
 }
+const feedbacks = {
+    template: await importTemplate('./pages/bossmenu/feedbacks.html')
+}
 
 const store = Vuex.createStore({
     state: {},
@@ -39,13 +42,14 @@ const app = Vue.createApp({
         companysettings,
         companystaffsettings,
         perms,
+        feedbacks,
         bosspopup
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'perms', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms'
+        activePage: 'feedbacks', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbacks'
         HasOwner: false,
 
         // Player Information
@@ -366,8 +370,33 @@ const app = Vue.createApp({
                 removable: true,
                 editable: true,
             },
+            {
+                name: 'worker',
+                label: 'Worker',
+                permissions: [
+                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: false },
+                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: false },
+                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: false },
+                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: false },
+                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: false },
+                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: false },
+                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: false },
+                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: false },
+                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: false },
+                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: false },
+                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: false },
+                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: false },
+                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: false },
+                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: false },
+                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: false },
+
+                ],
+                removable: true,
+                editable: true,
+            },
         ],
         SelectedPerm: -1,
+        OriginalPermsTable: null,
         BossmenuPageSettings: {
             PreorderPage: 1,
             SoldVehiclesPage: 1,
@@ -375,6 +404,7 @@ const app = Vue.createApp({
             EmployeeWithPenaltyPage: 1,
             EmployeesPage: 1,
         },
+        FeedbackComplaintScreen: -1,
 
         // Notify
         NotifySettings: {
@@ -602,6 +632,11 @@ const app = Vue.createApp({
             ['edit']: "Edit",
             ['create_perm']: "Create Perms",
             ['create_perm_description']: "You can create authorization in this section.",
+            ['feedbacksandcomplaints']: "Feedback & Complaints",
+            ['feedbacksandcomplaints_description']: "Read feedbacks and complaints from customers.",
+            ['read']: "Read",
+            ['feedback']: "Feedback",
+            ['complaint']: "Complaint",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
@@ -929,21 +964,46 @@ const app = Vue.createApp({
         },
 
         TogglePerms(k) {
+            if (this.SelectedPerm < 0) return;
+
+            if (!this.OriginalPermsTable) {
+                this.OriginalPermsTable = JSON.parse(JSON.stringify(this.PermsTable[this.SelectedPerm].permissions));
+            }
             let table = this.PermsTable[this.SelectedPerm].permissions;
             let permission = table[k];
             permission.value = !permission.value;
+            this.$forceUpdate();
+        },
+
+        ResetPermsToggle() {
+            if (this.OriginalPermsTable) {
+                this.PermsTable[this.SelectedPerm].permissions = JSON.parse(JSON.stringify(this.OriginalPermsTable));
+                this.OriginalPermsTable = null;
+                this.$forceUpdate();
+            }
         },
 
         SaveNewPermissions() {
             // NOTE: Perm check
 
-            // postNUI('SaveNewPermissions', {
-            //     vehicleshop: this.CurrentVehicleshop,
-            //     name: this.PermsTable[this.SelectedPerm].name,
-            //     table: this.PermsTable[this.SelectedPerm].permissions,
-            // })
+            if (this.OriginalPermsTable) {
+                this.PermsTable[this.SelectedPerm].permissions = JSON.parse(JSON.stringify(this.OriginalPermsTable));
+                this.OriginalPermsTable = null;
+                // postNUI('SaveNewPermissions', { // Bu kısım açılacak
+                //     vehicleshop: this.CurrentVehicleshop,
+                //     name: this.PermsTable[this.SelectedPerm].name,
+                //     table: this.PermsTable[this.SelectedPerm].permissions,
+                // })
+            } else {
+                // Değişiklik yapılmamış hatası/notify
+            }
+        },
 
-            // LUA: Check old table and compare with new table
+        // Feedback & Complaint
+        RemoveFeedbackComplaint(k, name, message) {
+            // NOTE: Perm check
+            // k = table number | name = player name (For check) | message = player message (For check) | Vehicleshop: this.CurrentVehicleshop
+            // this.FeedbackComplaintScreen = -1
         },
     },  
     
@@ -1079,6 +1139,20 @@ const app = Vue.createApp({
             const e = s + 8
             return this.FilterEmployeesTable.slice(s, e)
         },
+
+        FeedbackAndComplaintsTable() {
+            const complaints = this.ComplainTable.map(item => ({
+              ...item,
+              type: 'complaint'
+            }));
+      
+            const feedbacks = this.Feedbacks.map(item => ({
+              ...item,
+              type: 'feedback'
+            }));
+      
+            return [...complaints, ...feedbacks];
+        }
     },
 
     watch: {
