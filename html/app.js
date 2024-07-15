@@ -26,6 +26,9 @@ const perms = {
 const feedbacks = {
     template: await importTemplate('./pages/bossmenu/feedbacks.html')
 }
+const vehicles = {
+    template: await importTemplate('./pages/bossmenu/vehicles.html')
+}
 
 const store = Vuex.createStore({
     state: {},
@@ -43,13 +46,14 @@ const app = Vue.createApp({
         companystaffsettings,
         perms,
         feedbacks,
+        vehicles,
         bosspopup
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'feedbacks', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbacks'
+        activePage: 'vehicles', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbacks', 'vehicles'
         HasOwner: false,
 
         // Player Information
@@ -118,6 +122,7 @@ const app = Vue.createApp({
                 label: 'Trucks'
             },
         ],
+        SelectedVehicleEditCategory: -1,
         SelectedVehicleCategory: 'all',
         VehiclesTable: [
             {
@@ -128,6 +133,7 @@ const app = Vue.createApp({
                 price: 13000000,
                 stock: 20,
                 img: 'https://docs.fivem.net/vehicles/t20.webp',
+                discount: '',
                 information: {
                     TopSpeed: 273,
                     Braking: 100,
@@ -144,6 +150,7 @@ const app = Vue.createApp({
                 price: 2500000,
                 stock: 0,
                 img: 'https://docs.fivem.net/vehicles/elegy.webp',
+                discount: '',
                 information: {
                     TopSpeed: 273,
                     Braking: 100,
@@ -160,6 +167,7 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                discount: '',
                 information: {
                     TopSpeed: 123,
                     Braking: 75,
@@ -176,6 +184,7 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                discount: '',
                 information: {
                     TopSpeed: 273,
                     Braking: 100,
@@ -192,6 +201,7 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                discount: '',
                 information: {
                     TopSpeed: 273,
                     Braking: 100,
@@ -208,6 +218,7 @@ const app = Vue.createApp({
                 price: 1000000,
                 stock: 2,
                 img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
+                discount: '',
                 information: {
                     TopSpeed: 273,
                     Braking: 100,
@@ -279,7 +290,6 @@ const app = Vue.createApp({
             {name: 'categories', label: 'Categories'}, 
             {name: 'vehicles', label: 'Vehicles'}, 
             {name: 'employees', label: 'Employees'}, 
-            {name: 'chat', label: 'Chat'}, 
             {name: 'feedbackcomplains', label: 'Feedback & Complains'}, 
             {name: 'secondhand', label: 'Second Hand Company'}
         ],
@@ -405,6 +415,7 @@ const app = Vue.createApp({
             EmployeesPage: 1,
         },
         FeedbackComplaintScreen: -1,
+        VehicleEditScreen: -1, // Selected vehicle table number
 
         // Notify
         NotifySettings: {
@@ -434,7 +445,7 @@ const app = Vue.createApp({
         },
 
         // Boss Menu Popup Settings
-        ShowBossPopup: '', // deposit, withdraw, createperm
+        ShowBossPopup: '', // deposit, withdraw, createperm, vehicleedit
 
         // Popup Without UI
         ShowPopupToTarget: '', // 'TransferRequest', 'JobReq'
@@ -492,6 +503,14 @@ const app = Vue.createApp({
             WithdrawInput: '', // Para çekme input
             PermNameInput: '', // Perm oluşturma name
             PermLabelInput: '', // Perm oluşturma label
+        },
+
+        EditVehicleInputs: {
+            Name: '',
+            Model: '',
+            Img: '',
+            Discount: '',
+            Price: '',
         },
 
         // Language
@@ -637,6 +656,8 @@ const app = Vue.createApp({
             ['read']: "Read",
             ['feedback']: "Feedback",
             ['complaint']: "Complaint",
+            ['buy_vehicle']: "Buy Vehicle",
+            ['select_category']: "Select Category",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
@@ -651,6 +672,11 @@ const app = Vue.createApp({
             ['penalty_time']: "How Many Salary Penalties?",
             ['enter_perm_name']: "Enter Perm Name...",
             ['enter_perm_label']: "Enter Perm Label...",
+            ['enter_vehicle_name']: "Enter Vehicle Name...",
+            ['enter_vehicle_model']: "Enter Vehicle Model...",
+            ['enter_vehicle_img']: "Enter Vehicle IMG (URL)...",
+            ['enter_vehicle_discount']: "Enter Vehicle Discount (%)...",
+            ['enter_vehicle_price']: "Enter Vehicle Price...",
 
             // UI Notify
             ['successful']: "Successful",
@@ -1005,6 +1031,42 @@ const app = Vue.createApp({
             // k = table number | name = player name (For check) | message = player message (For check) | Vehicleshop: this.CurrentVehicleshop
             // this.FeedbackComplaintScreen = -1
         },
+
+        // Edit Vehicle
+        OpenEditVehicleScreen(k, label, model, img, discount, price, category) {
+            // NOTE: Perm check
+
+            const CategoryIndex = this.CategoryList.findIndex(v => v.name == category)
+            this.SelectedVehicleEditCategory = CategoryIndex
+            this.ShowBossPopup = 'vehicleedit'
+            this.VehicleEditScreen = k
+            this.EditVehicleInputs.Name = label
+            this.EditVehicleInputs.Model = model
+            this.EditVehicleInputs.Img = img
+            this.EditVehicleInputs.Discount = discount
+            this.EditVehicleInputs.Price = price
+        },
+
+        CloseEditVehicleScreen() {
+            this.SelectedVehicleEditCategory = -1
+            this.ShowBossPopup = ''
+            this.VehicleEditScreen = -1
+            this.EditVehicleInputs.Name = ''
+            this.EditVehicleInputs.Model = ''
+            this.EditVehicleInputs.Img = ''
+            this.EditVehicleInputs.Discount = ''
+            this.EditVehicleInputs.Price = ''
+        },
+
+        SaveEditVehicleSection() {
+            // this.CurrentVehicleshop
+            
+            if (this.BossMenuFilterVehicles[ this.VehicleEditScreen].label == this.EditVehicleInputs.Name && this.BossMenuFilterVehicles[ this.VehicleEditScreen].model == this.EditVehicleInputs.Model && this.BossMenuFilterVehicles[ this.VehicleEditScreen].img == this.EditVehicleInputs.Img && this.BossMenuFilterVehicles[ this.VehicleEditScreen].discount == this.EditVehicleInputs.Discount && this.BossMenuFilterVehicles[ this.VehicleEditScreen].price == this.EditVehicleInputs.Price) {
+                // No change notify
+            } else {
+                // Change action
+            }
+        },
     },  
     
     computed: {
@@ -1020,6 +1082,16 @@ const app = Vue.createApp({
             }
 
             return x
+        },
+
+        BossMenuFilterVehicles() {
+            let x = this.VehiclesTable
+
+            if (this.IsSearching && this.SearchInput != '') {
+                return x.filter(v => v.name.toLowerCase().includes(this.SearchInput.toLowerCase()) && v.stock > 0 || v.label.toLowerCase().includes(this.SearchInput.toLowerCase()) && v.stock > 0 || v.model.toLowerCase().includes(this.SearchInput.toLowerCase()) && v.stock > 0)
+            } else {
+                return x.filter(v => v.stock > 0)
+            }
         },
 
         NotifyColor() {

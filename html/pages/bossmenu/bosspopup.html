@@ -1,5 +1,5 @@
 <div class="w-full h-full flex items-center justify-center" style="background: url('./img/popup-background.png'); background-size: cover; background-repeat: no-repeat; backdrop-filter: blur(.151vw);">
-    <div class="w-[35.5729vw] flex flex-col h-[9.5833vw] bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'deposit'">
+    <div class="w-[35.5729vw] h-[9.5833vw] flex flex-col bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'deposit'">
         <div class="w-full h-[3.5417vw] bg-[#000000DE] rounded-t-[.2604vw] relative">
             <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.775vw] absolute">{{ $root.Language['deposit'] }}</span>
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="w-[35.5729vw] flex flex-col h-[9.5833vw] bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'withdraw'">
+    <div class="w-[35.5729vw] h-[9.5833vw] flex flex-col bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'withdraw'">
         <div class="w-full h-[3.5417vw] bg-[#000000DE] rounded-t-[.2604vw] relative">
             <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.775vw] absolute">{{ $root.Language['withdraw'] }}</span>
@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div class="w-[35.5729vw] flex flex-col h-[9.5833vw] bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'createperm'">
+    <div class="w-[35.5729vw] h-[9.5833vw] flex flex-col bg-[#000000BF] rounded-[.2604vw]" v-if="$root.ShowBossPopup == 'createperm'">
         <div class="w-full h-[3.5417vw] bg-[#000000DE] rounded-t-[.2604vw] relative">
             <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.775vw] absolute">{{ $root.Language['create_perm'] }}</span>
@@ -88,5 +88,51 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="w-[35.5729vw] h-[23.75vw] flex flex-col bg-[#000000BF] rounded-[.2604vw] " v-if="$root.ShowBossPopup == 'vehicleedit' && $root.VehicleEditScreen >= 0">
+        <div class="w-full h-[3.5417vw] bg-[#000000DE] rounded-[.2604vw] relative">
+            <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
+                <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.775vw] absolute">{{ $root.Language['create_perm'] }}</span>
+                <div class="w-full bottom-[.6vw] absolute">
+                    <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['create_perm_description'] }}</span>
+                </div>
+            </div>
+            <img src="./img/bossmenu/dashboard/dollar.png" class="w-[11.8755vw] h-full right-0 top-0 absolute">
+        </div>
+        <div class="w-full h-[.4vw]"></div>
+        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input" :placeholder="$root.Language['enter_vehicle_name']" v-model="$root.EditVehicleInputs.Name">
+        <div class="w-full h-[.4vw]"></div>
+        <input type="text" class="w-full h-[1.8229vw] bg-[#000000DE] outline-none vehicles-screen-second-input" :placeholder="$root.Language['enter_vehicle_model']" v-model="$root.EditVehicleInputs.Model">
+        <div class="w-full h-[.4vw]"></div>
+        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input" :placeholder="$root.Language['enter_vehicle_img']" v-model="$root.EditVehicleInputs.Img">
+        <div class="w-full h-[.4vw]"></div>
+        <input type="text" class="w-full h-[1.8229vw] bg-[#000000DE] outline-none vehicles-screen-second-input" :placeholder="$root.Language['enter_vehicle_discount']" v-model="$root.EditVehicleInputs.Discount">
+        <div class="w-full h-[.4vw]"></div>
+        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input" :placeholder="$root.Language['enter_vehicle_price']" v-model="$root.EditVehicleInputs.Price">
+        <div class="w-full h-[.4vw]"></div>
+        <div class="w-full h-[1.8229vw] flex items-center justify-center bg-[#000000DE] select-wrapper relative">
+            <div class="w-full h-full flex items-center justify-center">
+                <select v-model="$root.SelectedVehicleEditCategory" class="top-0 absolute cursor-pointer">
+                    <option v-for="(v, k) in $root.CategoryList" :value="k">{{ v.label }}</option>
+                </select>
+            </div>
+            <span v-if="$root.SelectedVehicleEditCategory >= 0" class="text-neutral-400 text-[.7813vw] text-center font-semibold font-['Poppins'] absolute">{{ $root.CategoryList[$root.SelectedVehicleEditCategory].label }}</span>
+            <div v-else class="w-full flex items-center justify-center">
+                <div class="w-full flex items-center justify-center">
+                    <img src="./img/bossmenu/select-icon.png" class="w-[.7813vw] h-[.7813vw]">
+                    <span class="text-neutral-400 text-[.7813vw] text-center font-semibold font-['Poppins'] ml-[.5vw]">{{ $root.Language['select_category'] }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="w-full h-[.8vw]"></div>
+        <div class="w-full h-[2.7083vw] flex items-center justify-center">
+            <div class="w-[10.3125vw] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="$root.CloseEditVehicleScreen()">
+                <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['cancel'] }}</div>
+            </div>
+            <div class="w-[10.3125vw] h-full flex items-center justify-center bg-[#00F0FF] cursor-pointer" @click="$root.SaveEditVehicleSection()">
+                <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['save'] }}</span>
+            </div>
+        </div>
+        <div class="w-full h-[.8vw]"></div>
     </div>
 </div>

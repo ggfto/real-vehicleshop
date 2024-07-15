@@ -432,6 +432,24 @@
                     </div>
                     <div class="w-full h-[5.5%]"></div>
                 </div>
+                <div class="w-[48.3%] h-[6%] flex justify-end right-[5.3vw] top-[7vw] absolute" v-if="activePage == 'vehicles'">
+                    <div class="w-[33.2%] h-full relative">
+                        <div class="w-full h-[63%] flex flex-wrap bg-[#55555599] rounded-[.28vw] left-0 bottom-0 absolute">
+                            <input type="text" class="w-[88%] h-full outline-none pl-[.3vw] left-0 top-0 absolute search-input-second placeholder:opacity-[.85]" :placeholder="Language['search_input_placeholder']" v-model="SearchInput" @input="Searching()">
+                            <div class="w-[12%] h-full flex items-center justify-center right-0 top-0 absolute">
+                                <svg class="w-[1vw] h-[1vw]" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path opacity="0.83" d="M17.7552 14.9629L14.2499 11.5931C14.0917 11.441 13.8772 11.3565 13.6522 11.3565C13.4226 11.3565 13.2923 11.087 13.4223 10.8977C14.1839 9.78835 14.6261 8.45983 14.6261 7.03023C14.6261 3.1467 11.3528 0 7.31303 0C3.27329 0 0 3.1467 0 7.03023C0 10.9137 3.27329 14.0605 7.31303 14.0605C8.81082 14.0605 10.2019 13.6292 11.3609 12.8874C11.552 12.7651 11.8134 12.8974 11.8134 13.1242C11.8134 13.3405 11.9013 13.5467 12.0595 13.6988L15.5648 17.0686C15.8953 17.3863 16.4297 17.3863 16.7567 17.0686L17.7517 16.1121C18.0822 15.7943 18.0822 15.2806 17.7552 14.9629ZM7.31303 11.3565C4.82731 11.3565 2.81271 9.42321 2.81271 7.03023C2.81271 4.64062 4.82379 2.70393 7.31303 2.70393C9.79876 2.70393 11.8134 4.63724 11.8134 7.03023C11.8134 9.41983 9.80228 11.3565 7.31303 11.3565Z" fill="#B1B1B1"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-[36.5%] h-full flex items-center justify-center bg-[#000000BF] rounded-[.2604vw] ml-[.5vw] relative cursor-pointer">
+                        <img src="./img/bossmenu/car-bg.png" class="w-[14.5vw] h-full right-0 absolute">
+                        <div class="w-[70%] h-full flex items-center justify-start left-[.8vw] absolute">
+                            <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins']">{{ Language['buy_vehicle'] }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="w-full h-full left-0 top-0 absolute" v-if="ShowBossPopup">
                 <bosspopup></bosspopup>
