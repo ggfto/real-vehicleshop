@@ -342,7 +342,7 @@
                         </div>
                         <div class="w-full h-[1.75%]"></div>
                         <div class="w-full h-[78.8%] block">
-                            <div v-for="(v, k) in BossmenuCategory" class="w-full h-[11.5%] flex items-center justify-start bg-[#000000BD] mb-[.3vw] cursor-pointer relative" :class="{ 'bg-[#00F0FF]': SelectedBossmenuCategory == k, 'hover:scale-[.985]': SelectedBossmenuCategory != k }" @click="SelectedBossmenuCategory = k;">
+                            <div v-for="(v, k) in BossmenuCategory" class="w-full h-[11.5%] flex items-center justify-start bg-[#000000BD] mb-[.3vw] cursor-pointer relative" :class="{ 'bg-[#00F0FF]': SelectedBossmenuCategory == k, 'hover:scale-[.985]': SelectedBossmenuCategory != k }" @click="SelectedBossmenuCategory = k; setActivePage(v.name);">
                                 <inlinesvg class="left-[.7vw] absolute" :src="'./img/svg/Categories/'+v.name+'.svg'" :fill="SelectedBossmenuCategory == k ? 'black' : 'white'"></inlinesvg>
                                 <span class="text-[.8333vw] font-semibold font-['Poppins'] left-[3.3vw] absolute" :class="{ 'text-black': SelectedBossmenuCategory == k, 'text-white': SelectedBossmenuCategory != k }">{{ v.label }}</span>
                             </div>
@@ -358,13 +358,13 @@
                             </div>
                             <div class="w-[65.8%] h-full">
                                 <div class="w-full h-full flex items-center justify-end" v-if="activePage == 'company'">
-                                    <div class="w-[37.23%] h-[90%] bg-[#000000BF] rounded-[.2604vw] relative cursor-pointer">
+                                    <div class="w-[37.23%] h-[90%] bg-[#000000BF] rounded-[.2604vw] relative cursor-pointer" @click="setActivePage('companystaffsettings')">
                                         <div class="w-[60%] h-full flex items-center justify-start left-0 top-0 absolute">
                                             <span class="w-[95%] text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] ml-[5%]">{{ Language['staff_settings'] }}</span>
                                         </div>
                                         <img src="./img/bossmenu/employee-bg.png" class="w-[10vw] h-full right-0 top-0 absolute">
                                     </div>
-                                    <div class="w-[37.2%] h-[90%] bg-[#000000BF] rounded-[.2604vw] relative cursor-pointer ml-[.4vw]">
+                                    <div class="w-[37.2%] h-[90%] bg-[#000000BF] rounded-[.2604vw] relative cursor-pointer ml-[.4vw]" @click="setActivePage('companysettings')">
                                         <div class="w-[60%] h-full flex items-center justify-start left-0 top-0 absolute">
                                             <span class="w-[95%] text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] ml-[5%]">{{ Language['company_settings'] }}</span>
                                         </div>

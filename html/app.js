@@ -23,7 +23,7 @@ const bosspopup = {
 const perms = {
     template: await importTemplate('./pages/bossmenu/perms.html')
 }
-const feedbacks = {
+const feedbackcomplains = {
     template: await importTemplate('./pages/bossmenu/feedbacks.html')
 }
 const vehicles = {
@@ -45,7 +45,7 @@ const app = Vue.createApp({
         companysettings,
         companystaffsettings,
         perms,
-        feedbacks,
+        feedbackcomplains,
         vehicles,
         bosspopup
     },
@@ -53,7 +53,7 @@ const app = Vue.createApp({
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'vehicles', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbacks', 'vehicles'
+        activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles'
         HasOwner: false,
 
         // Player Information
@@ -289,7 +289,7 @@ const app = Vue.createApp({
             {name: 'company', label: 'Company'}, 
             {name: 'categories', label: 'Categories'}, 
             {name: 'vehicles', label: 'Vehicles'}, 
-            {name: 'employees', label: 'Employees'}, 
+            {name: 'perms', label: 'Perms'}, 
             {name: 'feedbackcomplains', label: 'Feedback & Complains'}, 
             {name: 'secondhand', label: 'Second Hand Company'}
         ],
@@ -380,30 +380,6 @@ const app = Vue.createApp({
                 removable: true,
                 editable: true,
             },
-            {
-                name: 'worker',
-                label: 'Worker',
-                permissions: [
-                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: false },
-                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: false },
-                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: false },
-                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: false },
-                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: false },
-                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: false },
-                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: false },
-                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: false },
-                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: false },
-                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: false },
-                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: false },
-                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: false },
-                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: false },
-                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: false },
-                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: false },
-
-                ],
-                removable: true,
-                editable: true,
-            },
         ],
         SelectedPerm: -1,
         OriginalPermsTable: null,
@@ -420,7 +396,7 @@ const app = Vue.createApp({
         // Notify
         NotifySettings: {
             Show: false,
-            Type: 'success', // success, information, error
+            Type: '', // success, information, error
             Message: '',
             Time: 0,
         },
@@ -447,7 +423,7 @@ const app = Vue.createApp({
         // Boss Menu Popup Settings
         ShowBossPopup: '', // deposit, withdraw, createperm, vehicleedit
 
-        // Popup Without UI
+        // Popup Without UI (Req to other players)
         ShowPopupToTarget: '', // 'TransferRequest', 'JobReq'
 
         // TransferReq Settings
@@ -658,6 +634,8 @@ const app = Vue.createApp({
             ['complaint']: "Complaint",
             ['buy_vehicle']: "Buy Vehicle",
             ['select_category']: "Select Category",
+            ['edit_vehicle']: "Edit Selected Vehicle",
+            ['edit_vehicle_description']: "In this section you can edit the vehicle information.",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
@@ -1067,6 +1045,103 @@ const app = Vue.createApp({
                 // Change action
             }
         },
+
+        // CloseUI
+        CloseUI() {
+            this.Show = false
+            this.MainPage = ''
+            this.activePage = 'dashboard'
+            this.HasOwner = false
+            this.SelectedColor = null
+            this.Inputs = {
+                SoldVehiclesInput: '',
+                CompanyNameInput: '',
+                TransferIdInput: '',
+                TransferPriceInput: '',
+                DiscountInput: '',
+                BonusesInput: '',
+                RaiseInput: '',
+                TransactionsInput: '',
+                EmployeeIdInput: '',
+                EmployeeSalaryInput: '',
+                SalaryPenaltyIdInput: '',
+                SalaryPenaltyInput: '',
+                PenaltySearchInput: '',
+                EmployeesInput: '',
+                DepositInput: '',
+                WithdrawInput: '',
+                PermNameInput: '',
+                PermLabelInput: '',
+            }
+            this.selectedVehicleTable = {
+                VehicleIndex: -1,
+                VehicleLabel: "",
+                VehicleModel: "",
+                VehiclePrice: 0,
+                VehicleTopSpeed: 0,
+                VehicleBraking: 0,
+                VehicleAcceleration: 0,
+                VehicleSuspension: 0,
+                VehicleHandling: 0,
+            }
+            this.VehiclesTable = []
+            this.Feedbacks = []
+            this.CategoryList = []
+            this.SearchInput = ""
+            this.PlateInput = ""
+            this.ShowPlateChange = false
+            this.IsSearching = false
+            this.ShowFeedback = false
+            this.CompanyMoney = 0
+            this.Preorders = []
+            this.EmployeesTable = []
+            this.SoldVehiclesLog = []
+            this.Transactions = []
+            this.PermsTable = []
+            this.SelectedPerm = -1
+            this.OriginalPermsTable = null
+            this.BossmenuPageSettings = {
+                PreorderPage: 1,
+                SoldVehiclesPage: 1,
+                TransactionsPage: 1,
+                EmployeeWithPenaltyPage: 1,
+                EmployeesPage: 1,
+            }
+            this.FeedbackComplaintScreen = -1
+            this.VehicleEditScreen = -1
+            this.CurrentVehicleshop = -1
+            this.NotifySettings = {
+                Show: false,
+                Type: '',
+                Message: '',
+                Time: 0,
+            }
+            this.ShowPopupScrren = false
+            this.NormalPopupSettings = {
+                Show: false,
+                HeaderOne: '',
+                HeaderTwo: '',
+                Description: '',
+                Function: null
+            }
+            this.FeedbackPopupSettings = {
+                Show: false,
+                Rating: null,
+                Message: '',
+            }
+            this.ComplaintPopupSettings = {
+                Show: false,
+                Message: '',
+            }
+            this.ComplainTable = []
+            this.EditVehicleInputs = {
+                Name: '',
+                Model: '',
+                Img: '',
+                Discount: '',
+                Price: '',
+            }
+        },
     },  
     
     computed: {
@@ -1260,12 +1335,35 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
-                if (this.Show) {
-                    postNUI('CloseUI')
+                if (this.activePage == 'companystaffsettings' || this.activePage == 'companysettings') {
+                    this.setActivePage('company')
+                    this.Inputs.CompanyNameInput = ''
+                    this.Inputs.TransferIdInput = ''
+                    this.Inputs.CompanyNameInput = ''
+                    this.Inputs.TransferIdInput = ''
+                    this.Inputs.TransferPriceInput = ''
+                    this.Inputs.DiscountInput = ''
+                    this.Inputs.BonusesInput = ''
+                    this.Inputs.RaiseInput = ''
+                    this.Inputs.EmployeeIdInput = ''
+                    this.Inputs.EmployeeSalaryInput = ''
+                    this.Inputs.SalaryPenaltyIdInput = ''
+                    this.Inputs.SalaryPenaltyInput = ''
+                    this.Inputs.PenaltySearchInput = ''
+                    this.Inputs.EmployeesInput = ''
                 }
                 if (this.ShowPlateChange) {
                     this.ShowPlateChange = false
                     this.PlateInput = ""
+                }
+                if (this.ShowColorPicker) {
+                    this.ShowColorPicker = false
+                    this.SelectedColor = null
+                    this.ColorPickerColor = "#FFF"
+                }
+                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && !this.ShowPopupScrren && !this.ShowBossPopup) {
+                    this.CloseUI()
+                    postNUI('CloseUI')
                 }
             } 
         });
