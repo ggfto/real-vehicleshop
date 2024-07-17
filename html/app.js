@@ -29,6 +29,12 @@ const feedbackcomplains = {
 const vehicles = {
     template: await importTemplate('./pages/bossmenu/vehicles.html')
 }
+const category = {
+    template: await importTemplate('./pages/bossmenu/category.html')
+}
+const buyvehicle = {
+    template: await importTemplate('./pages/bossmenu/buyvehicle.html')
+}
 
 const store = Vuex.createStore({
     state: {},
@@ -47,13 +53,15 @@ const app = Vue.createApp({
         perms,
         feedbackcomplains,
         vehicles,
+        category,
+        buyvehicle,
         bosspopup
     },
     
     data: () => ({
         Show: true,
         MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
-        activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles'
+        activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles', 'category', 'buyvehicle'
         HasOwner: false,
 
         // Player Information
@@ -228,6 +236,37 @@ const app = Vue.createApp({
                 }
             },
         ],
+        AllVehicleData: [
+            {
+                name: 't20',
+                label: 'T20',
+                model: 'Super',
+                price: 1000000,
+                img: 'https://docs.fivem.net/vehicles/t20.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
+            },
+            {
+                name: 'elegy',
+                label: 'Elegy',
+                model: 'Custom',
+                price: 150000,
+                img: 'https://docs.fivem.net/vehicles/elegy.webp',
+                information: {
+                    TopSpeed: 273,
+                    Braking: 100,
+                    Acceleration: 89,
+                    Suspension: 100,
+                    Handling: 89
+                }
+            },
+        ],
+        SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında)
         SelectedVehicleTable: {
             VehicleIndex: -1,
             VehicleLabel: "",
@@ -287,11 +326,10 @@ const app = Vue.createApp({
         BossmenuCategory: [
             {name: 'dashboard', label: 'Dashboard'}, 
             {name: 'company', label: 'Company'}, 
-            {name: 'categories', label: 'Categories'}, 
+            {name: 'category', label: 'Categories'}, 
             {name: 'vehicles', label: 'Vehicles'}, 
             {name: 'perms', label: 'Perms'}, 
             {name: 'feedbackcomplains', label: 'Feedback & Complains'}, 
-            {name: 'secondhand', label: 'Second Hand Company'}
         ],
         SelectedBossmenuCategory: 0,
         Preorders: [
@@ -392,6 +430,7 @@ const app = Vue.createApp({
         },
         FeedbackComplaintScreen: -1,
         VehicleEditScreen: -1, // Selected vehicle table number
+        SelectedShowCategory: 0, // 'category' - page (When clicking 'Show')
 
         // Notify
         NotifySettings: {
@@ -421,7 +460,7 @@ const app = Vue.createApp({
         },
 
         // Boss Menu Popup Settings
-        ShowBossPopup: '', // deposit, withdraw, createperm, vehicleedit
+        ShowBossPopup: '', // deposit, withdraw, createperm, vehicleedit, createcategory, editcategory, buyvehicle
 
         // Popup Without UI (Req to other players)
         ShowPopupToTarget: '', // 'TransferRequest', 'JobReq'
@@ -479,6 +518,8 @@ const app = Vue.createApp({
             WithdrawInput: '', // Para çekme input
             PermNameInput: '', // Perm oluşturma name
             PermLabelInput: '', // Perm oluşturma label
+            CategoryNameInput: '', // Kategori oluşturma name
+            CategoryLabelInput: '', // Kategori oluşturma label
         },
 
         EditVehicleInputs: {
@@ -487,6 +528,12 @@ const app = Vue.createApp({
             Img: '',
             Discount: '',
             Price: '',
+        },
+
+        BuyVehicleInputs: {
+            Stock: 1,
+            Price: '',
+            SelectedCategoryIndex: -1
         },
 
         // Language
@@ -636,6 +683,17 @@ const app = Vue.createApp({
             ['select_category']: "Select Category",
             ['edit_vehicle']: "Edit Selected Vehicle",
             ['edit_vehicle_description']: "In this section you can edit the vehicle information.",
+            ['category']: "Category",
+            ['category_description']: "You can create and edit categories in this section.",
+            ['show']: "Show",
+            ['show_category_vehicles']: "You can see the vehicles in the category of your choice.",
+            ['create_category']: "Create Category",
+            ['create_category_description']: "You can create category in this section.",
+            ['edit_category']: "Edit Category",
+            ['edit_category_description']: "Edit selected category in this section.",
+            ['buy']: "Buy",
+            ['buy_vehicle_description']: "Buy vehicle to your company in this section.",
+            ['total_price']: "Total Price",
 
             // UI Inputs (Placeholders)
             ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
@@ -655,6 +713,9 @@ const app = Vue.createApp({
             ['enter_vehicle_img']: "Enter Vehicle IMG (URL)...",
             ['enter_vehicle_discount']: "Enter Vehicle Discount (%)...",
             ['enter_vehicle_price']: "Enter Vehicle Price...",
+            ['category_name']: "Enter Category Name...",
+            ['category_label']: "Enter Category Label...",
+            ['enter_stock']: "Enter stock...",
 
             // UI Notify
             ['successful']: "Successful",
@@ -1046,6 +1107,55 @@ const app = Vue.createApp({
             }
         },
 
+        // Category Page
+        CategoryPageFilterVehicle(type) {
+            if (type == 'all') {
+                return this.VehiclesTable.filter(v => v.stock > 0)
+            } else {
+                return this.VehiclesTable.filter(v => v.category == type && v.stock > 0)
+            }
+        },
+
+        CreateCategory() {
+            // NOTE: Perm check, Existing name check, Existing label check
+
+            // Name input: this.Inputs.PermNameInput
+            // Label input: this.Inputs.PermLabelInput
+            // Vehicleshop: this.CurrentVehicleshop
+        },
+
+        RemoveCategory(name) {
+            // NOTE: Perm check and If category has vehicle check
+
+            // Close popup (this.ShowBossPopup)
+            // this.SelectedShowCategory
+            // this.CategoryList
+            // this.CurrentVehicleshop
+        },
+
+        EditCategory(label) {
+            // this.SelectedShowCategory
+            // this.Inputs.CategoryLabelInput
+        },
+
+        // Buy Vehicle Page
+        BuyVehicleSection() {
+            // NOTE: Perm check
+
+            // this.CurrentVehicleshop
+            // Alt kısımda bilgiler var
+        },
+
+        CloseBuyVehicleSection() {
+            this.ShowBossPopup = ''
+            this.SelectedBuyVehicle = -1
+            this.BuyVehicleInputs = {
+                Stock: 1,
+                Price: '',
+                SelectedCategoryIndex: -1
+            }
+        },
+
         // CloseUI
         CloseUI() {
             this.Show = false
@@ -1140,6 +1250,12 @@ const app = Vue.createApp({
                 Img: '',
                 Discount: '',
                 Price: '',
+            }
+            this.SelectedShowCategory = 0
+            this.BuyVehicleInputs = {
+                Stock: 1,
+                Price: '',
+                SelectedCategoryIndex: -1
             }
         },
     },  
@@ -1299,7 +1415,11 @@ const app = Vue.createApp({
             }));
       
             return [...complaints, ...feedbacks];
-        }
+        },
+
+        FilterCategories() {
+            return this.CategoryList.filter(v => v.name != 'all')
+        },
     },
 
     watch: {
@@ -1335,6 +1455,10 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
+                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup) {
+                    this.CloseUI()
+                    postNUI('CloseUI')
+                }
                 if (this.activePage == 'companystaffsettings' || this.activePage == 'companysettings') {
                     this.setActivePage('company')
                     this.Inputs.CompanyNameInput = ''
@@ -1361,9 +1485,8 @@ const app = Vue.createApp({
                     this.SelectedColor = null
                     this.ColorPickerColor = "#FFF"
                 }
-                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && !this.ShowPopupScrren && !this.ShowBossPopup) {
-                    this.CloseUI()
-                    postNUI('CloseUI')
+                if (this.activePage == 'buyvehicle') {
+                    this.setActivePage('vehicles')
                 }
             } 
         });
