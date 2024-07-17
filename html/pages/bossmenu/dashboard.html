@@ -37,7 +37,7 @@
                 <div class="w-full bottom-[.8vw] absolute">
                     <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]" :class="{ 'text-[#FF0004]': $root.AverageRating < 3 }">{{ $root.AverageRating }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{ $root.Language['average'] }}</span>
-                    <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">({{ $root.AverageRating < 3 ? $root.Language['bad'] : $root.Language['good'] }})</span>
+                    <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']" v-if=" $root.AverageRating > 0">({{ $root.AverageRating < 3 ? $root.Language['bad'] : $root.Language['good'] }})</span>
                 </div>
             </div>
         </div>
