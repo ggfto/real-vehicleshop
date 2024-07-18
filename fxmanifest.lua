@@ -9,14 +9,26 @@ ui_page {
 
 files {
 	'html/*.css',
+	'html/utils/*.js',
 	'html/*.js',
 	'html/*.html',
+	'html/pages/*.html',
+	'html/pages/bossmenu/*.html',
+	'html/pages/bossmenu/company/*.html',
+	'html/sounds/*.wav',
+	'html/sounds/*.mp3',
 	'html/img/*.png',
-    'html/img/*.jpg',
+    'html/img/svg/*.svg',
+	'html/img/svg/Categories/*.svg',
+	'html/img/bossmenu/*.png',
+	'html/img/bossmenu/*.svg',
+	'html/img/bossmenu/dashboard/*.png',
+	'html/fonts/*.tff',
 }
 
 shared_script{
 	'config/config.lua',
+	'config/language.lua',
 	'GetFrameworkObject.lua',
 }
 

@@ -59,8 +59,8 @@ const app = Vue.createApp({
     },
     
     data: () => ({
-        Show: true,
-        MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
+        Show: false,
+        MainPage: 'Normal', // 'Normal', 'Component', "Bossmenu"
         activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles', 'category', 'buyvehicle'
         HasOwner: false,
 
