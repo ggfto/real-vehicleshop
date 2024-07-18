@@ -59,8 +59,8 @@ const app = Vue.createApp({
     },
     
     data: () => ({
-        Show: true,
-        MainPage: 'Bossmenu', // 'Normal', 'Component', "Bossmenu"
+        Show: false,
+        MainPage: 'Normal', // 'Normal', 'Component', "Bossmenu"
         activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles', 'category', 'buyvehicle'
         HasOwner: false,
 
@@ -77,59 +77,18 @@ const app = Vue.createApp({
         VehicleShopName: "Oph3Z's Dealership",
         VehicleshopDescription: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat illum aperiam neque nisi nemo itaque error voluptatem, ut minus, eaque ex similique maxime!",
         VehicleShopStar: 4,
+        Discount: 0,
+        Raise: 0,
         TestDrivePrice: 7500,
         ShowColorPicker: false,
         ColorPickerColor: "#FFF",
         SelectedColor: null,
-        ColorsTable: [
-            { color: "#FF5733" },
-            { color: "#33FF57" },
-            { color: "#3357FF" },
-            { color: "#FF33A1" },
-            { color: "#A133FF" },
-            { color: "#33FFA1" },
-            { color: "#FF5733" },
-            { color: "#FFBD33" },
-            { color: "#33FFBD" },
-            { color: "#BD33FF" },
-            { color: "#5733FF" },
-            { color: "#FFA133" },
-            { color: "#A1FF33" },
-            { color: "#33A1FF" },
-            { color: "#FF33BD" },
-            { color: "#33BDFF" },
-            { color: "#BDFF33" },
-            { color: "#33FF57" },
-            { color: "#57FF33" },
-            { color: "#FF33FF" },
-            { color: "#33FF33" },
-            { color: "#FF3333" }
-        ],
+        ColorsTable: [],
         AllowPlateChange: true,
+        PlateChangePrice: 0,
         ShowPlateChange: false,
         PlateInput: "",
-        CategoryList: [
-            {
-                name: 'all',
-                label: 'All'
-            },
-            {
-                name: 'sports',
-                label: 'Sports'
-            },
-            {
-                name: 'sedans',
-                label: 'Sedans'
-            },
-            {
-                name: 'suv',
-                label: 'SUVs'
-            },
-            {
-                name: 'trucks',
-                label: 'Trucks'
-            },
-        ],
+        CategoryList: [],
         SelectedVehicleEditCategory: -1,
         SelectedVehicleCategory: 'all',
         VehiclesTable: [
@@ -236,39 +195,11 @@ const app = Vue.createApp({
                 }
             },
         ],
-        AllVehicleData: [
-            {
-                name: 't20',
-                label: 'T20',
-                model: 'Super',
-                price: 1000000,
-                img: 'https://docs.fivem.net/vehicles/t20.webp',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-            {
-                name: 'elegy',
-                label: 'Elegy',
-                model: 'Custom',
-                price: 150000,
-                img: 'https://docs.fivem.net/vehicles/elegy.webp',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-        ],
+        AllVehicleData: [],
         SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında)
         SelectedVehicleTable: {
             VehicleIndex: -1,
+            VehicleHash: "",
             VehicleLabel: "",
             VehicleModel: "",
             VehiclePrice: 0,
@@ -315,7 +246,7 @@ const app = Vue.createApp({
         ],
         VehicleStatisticMaxValues: {
             MaxSpeed: 500,
-            MaxBrake: 300,
+            MaxBrake: 200,
             MaxAcceleration: 250,
             MaxSuspension: 400,
             MaxHandling: 100
@@ -323,14 +254,7 @@ const app = Vue.createApp({
 
         // Boss menu Variables
         CompanyMoney: 10000,
-        BossmenuCategory: [
-            {name: 'dashboard', label: 'Dashboard'}, 
-            {name: 'company', label: 'Company'}, 
-            {name: 'category', label: 'Categories'}, 
-            {name: 'vehicles', label: 'Vehicles'}, 
-            {name: 'perms', label: 'Perms'}, 
-            {name: 'feedbackcomplains', label: 'Feedback & Complains'}, 
-        ],
+        BossmenuCategory: [],
         SelectedBossmenuCategory: 0,
         Preorders: [
             {
@@ -475,20 +399,9 @@ const app = Vue.createApp({
 
         // Detailed Variables
         CheckProfanities: true,
-        Profanities: [
-            "oç",
-            "oc",
-            "amk",
-            "aq",
-        ],
-        FeedbackCharacters: {
-            MinimumCharacter: 50,
-            MaximumCharacter: 150,
-        },
-        ComplaintCharacters: {
-            MinimumCharacter: 50,
-            MaximumCharacter: 150,
-        },
+        Profanities: [],
+        FeedbackCharacters: {},
+        ComplaintCharacters: {},
 
         // Tables
         ComplainTable: [
@@ -537,198 +450,7 @@ const app = Vue.createApp({
         },
 
         // Language
-        Language: {
-            // UI (Vehicleshop)
-            ['vehicle_setup_and_information']: "Vehicle Information & Setup",
-            ['price']: "Price",
-            ['buy_this_car']: "Buy this car",
-            ['test_drive']: "Test Drive",
-            ['preview']: "Preview",
-            ['change_plate']: "Change Plate",
-            ['colors']: "Colors",
-            ['color_settings']: "Color Settings",
-            ['color_hex']: "Color Hex",
-            ['change_color']: "Change Color",
-            ['search']: "Search",
-            ['type']: "Type",
-            ['car_list']: "Car List",
-            ['stock']: "Stock",
-            ['kits']: "Kits",
-            ['top_speed']: "Top Speed",
-            ['braking']: "Braking",
-            ['acceleration']: "Acceleration",
-            ['suspension']: "Suspension",
-            ['handling']: "Handling",
-            ['exit_preview']: "Exit Preview",
-            ['inspect_exterior']: "Inspect Exterior",
-            ['inspect_interior']: "Inspect Interior",
-            ['preview_mode_information_text']: "Rotate the car for better view!",
-            ['are_you_sure']: "Are You Sure?",
-            ['leave_us_a_feedback']: "Leave Us a Feedback!",
-            ['feedback_description']: "Thanks for choosing us. If you want to leave a feedback we would love to!",
-            ['confirm']: "Confirm",
-            ['cancel']: "Cancel",
-            ['close']: "Close",
-            ['words']: "Words",
-            ['complaint_header']: "Let us know your complaint!",
-            ['complaint_description']: "Let us know your complaint so we can fix ourselves.",
-
-            // UI (Boss menu)
-            ['vehicle_stock_list']: "Stock of vehicles in your company",
-            ['company_money']: "Company Money",
-            ['available']: "Available",
-            ['menu']: "Menu",
-            ['dashboard']: "Dashboard",
-            ['number_of_employeer']: "Number Of Employees",
-            ['employee']: "Employee",
-            ['vehicles_in_stock']: "Vehicles In Stock",
-            ['vehicle']: "Vehicle",
-            ['vehicles_sold']: "Number of Vehicles Sold",
-            ['company_rating']: "Company rating",
-            ['average']: "Average",
-            ['bad']: "Bad",
-            ['good']: "Good",
-            ['preorder']: "Pre-order",
-            ['preorder_description']: "If you accept, the vehicle will be automatically sent to the customer.",
-            ['ordered_by']: "Ordered By",
-            ['ordered_model']: "Ordered Model",
-            ['decline']: "Decline",
-            ['accept']: "Accept",
-            ['preorder_second_description']: "You can change the page by right/left clicking.",
-            ['sold_vehicles']: "Sold Vehicles",
-            ['sold_vehicles_description']: "List of sold vehicles in your company.",
-            ['buyer']: "Buyer",
-            ['purchased_model']: "Purchased Model",
-            ['date']: "Date",
-            ['company_name']: "Company Name",
-            ['current_company_name']: "Current Company Name",
-            ['save']: "Save",
-            ['trasnfer_company']: "Transfer Company",
-            ['trasnfer_company_description']: "You can transfer your company to someone else by writing ID.",
-            ['transfer']: "Transfer",
-            ['make_bulk_discount']: "Make Bulk Discount",
-            ['make_bulk_discount_description']: "Give a discount on all products by entering percent.",
-            ['discount_description']: "Please enter % flood value for All Vehicles.",
-            ['cancel_discount']: "Cancel Discount",
-            ['delete_all_logs']: "Delete All Logs",
-            ['delete_all_logs_description']: "Sometimes clear logs to avoid database bloat.",
-            ['delete_all_logs_information_text']: "This action deletes all messages and log records.",
-            ['delete']: "Delete",
-            ['bonuses_header']: "Distribute bonuses to employees",
-            ['bonuses_description']: "This action sends bonuses to all staff.",
-            ['bonuses_information']: "Enter the amount of bonus to be sent to All Employees.",
-            ['send']: "Send",
-            ['raise_the_price']: "Raise the price",
-            ['raise_description']: "You can raise prices on all products.",
-            ['raise_information']: "Enter the percentage increase below.",
-            ['cancel_raise']: "Cancel The Raise",
-            ['company_balance']: "Company Balance",
-            ['company_money_description']: "Here you can see your company's balance.",
-            ['deposit']: "Deposit",
-            ['withdraw']: "Withdraw",
-            ['profit']: "Profit",
-            ['profit_description']: "Here you can see the company's earnings so far.",
-            ['profit_information']: "If the logs are deleted, the profit here cannot be calculated!",
-            ['earned']: "Earned",
-            ['payout']: "Payout",
-            ['payout_description']: "Here are the company's expenditures to date.",
-            ['payout_information']: "If the logs are deleted, the expenses here cannot be calculated!",
-            ['was_spent']: "Was Spent",
-            ['deposit_withdraw_transaction']: "Deposit and Withdrawal Transactions",
-            ['dwt_description']: "The company's withdrawal and deposit history.",
-            ['staff']: "Staff",
-            ['rank']: "Rank",
-            ['amount']: "Amount",
-            ['withdrawn']: "withdrawn",
-            ['deposited']: "Deposited",
-            ['recruit_staff']: "Recruit Staff",
-            ['recruit_staff_description']: "Here you can hire workers for your company and determine their salary.",
-            ['send_request']: "Send Request",
-            ['salary_penalty']: "Salary Penalty",
-            ['salary_penalty_description']: "You can impose a salary penalty on those who work here.",
-            ['punish']: "Punish",
-            ['list_of_personnel_with_salary_penalty']: "List of Personnel with Salary Penalty",
-            ['lopwsp_description']: "List of Personnel Who Received Salary Penalty.",
-            ['salary']: "Salary",
-            ['end_the_punishment']: "End The Punishment",
-            ['staff_list']: "Staff List",
-            ['staff_list_description']: "Information about the staff team.",
-            ['rank_up']: "Rank Up",
-            ['reduce_rank']: "Reduce Rank",
-            ['fire']: "Fire",
-            ['deposit_description']: "Put money into your company.",
-            ['withdraw_description']: "Withdraw money from your company.",
-            ['enter_an_amount']: "Enter an Amount",
-            ['want_to_buy_the_company']: "Do you want to buy this company?",
-            ['wtbtc_description']: "This action cannot be reversed, check that the store name is correct.",
-            ['job_req']: "You've been offered a job. Do you accept?",
-            ['job_req_description']: "Before accepting, check the name of the company and your salary.",
-            ['reject']: "Reject",
-            ['day']: "Day",
-            ['staff_settings']: "Staff Settings",
-            ['company_settings']: "Company Settings",
-            ['perms']: "Perms",
-            ['perms_description']: "You can create/change perms.",
-            ['create']: "Create",
-            ['remove']: "Remove",
-            ['edit']: "Edit",
-            ['create_perm']: "Create Perms",
-            ['create_perm_description']: "You can create authorization in this section.",
-            ['feedbacksandcomplaints']: "Feedback & Complaints",
-            ['feedbacksandcomplaints_description']: "Read feedbacks and complaints from customers.",
-            ['read']: "Read",
-            ['feedback']: "Feedback",
-            ['complaint']: "Complaint",
-            ['buy_vehicle']: "Buy Vehicle",
-            ['select_category']: "Select Category",
-            ['edit_vehicle']: "Edit Selected Vehicle",
-            ['edit_vehicle_description']: "In this section you can edit the vehicle information.",
-            ['category']: "Category",
-            ['category_description']: "You can create and edit categories in this section.",
-            ['show']: "Show",
-            ['show_category_vehicles']: "You can see the vehicles in the category of your choice.",
-            ['create_category']: "Create Category",
-            ['create_category_description']: "You can create category in this section.",
-            ['edit_category']: "Edit Category",
-            ['edit_category_description']: "Edit selected category in this section.",
-            ['buy']: "Buy",
-            ['buy_vehicle_description']: "Buy vehicle to your company in this section.",
-            ['total_price']: "Total Price",
-
-            // UI Inputs (Placeholders)
-            ['feedback_input_placeholder']: "Min 50 characters & Max 150 characters.",
-            ['complaint_input_placeholder']: "Min 50 characters & Max 150 characters.",
-            ['search_input_placeholder']: "Name, Label, Model Search...",
-            ['bossmenu_search_input']: "Search...",
-            ['enter_player_id']: "Enter Player ID...",
-            ['enter_sale_price']: "Enter Sale Price...",
-            ['write_percent_value']: "Write %",
-            ['enter_a_price']: "Enter a Price...",
-            ['enter_the_salary']: "Enter The Salary...",
-            ['penalty_time']: "How Many Salary Penalties?",
-            ['enter_perm_name']: "Enter Perm Name...",
-            ['enter_perm_label']: "Enter Perm Label...",
-            ['enter_vehicle_name']: "Enter Vehicle Name...",
-            ['enter_vehicle_model']: "Enter Vehicle Model...",
-            ['enter_vehicle_img']: "Enter Vehicle IMG (URL)...",
-            ['enter_vehicle_discount']: "Enter Vehicle Discount (%)...",
-            ['enter_vehicle_price']: "Enter Vehicle Price...",
-            ['category_name']: "Enter Category Name...",
-            ['category_label']: "Enter Category Label...",
-            ['enter_stock']: "Enter stock...",
-
-            // UI Notify
-            ['successful']: "Successful",
-            ['information']: "Information",
-            ['error']: "Error",
-            ['choose_point']: "First choose how many points you want to give to this company!",
-            ['feedback_stop_using_bad_words']: "If you want to give feedback, do it properly, without bad words. Be human!",
-            ['feedback_minimum_character']: "You have to write at least 50 words!",
-            ['feedback_maximum_character']: "You can't write more than 150 words!",
-            ['complaint_stop_using_bad_words']: "If you want to complain, do it properly, without bad words. Be human!",
-            ['complaint_minimum_character']: "You have to write at least 50 words!",
-            ['complaint_maximum_character']: "You can't write more than 150 words!"
-        }
+        Language: {}
     }),
 
     methods: {
@@ -796,6 +518,7 @@ const app = Vue.createApp({
         SelectVehicle(index, v) {
             if (this.SelectedVehicleTable.VehicleIndex != index && v.stock > 0) {
                 this.SelectedVehicleTable.VehicleIndex = index
+                this.SelectedVehicleTable.VehicleHash = v.name
                 this.SelectedVehicleTable.VehicleLabel = v.label
                 this.SelectedVehicleTable.VehicleModel = v.model
                 this.SelectedVehicleTable.VehiclePrice = v.price
@@ -804,6 +527,7 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleAcceleration = v.information.Acceleration
                 this.SelectedVehicleTable.VehicleSuspension = v.information.Suspension
                 this.SelectedVehicleTable.VehicleHandling = v.information.Handling
+                postNUI('CreateSelectedVehicle', this.SelectedVehicleTable.VehicleHash)
             } 
         },
 
@@ -1185,6 +909,7 @@ const app = Vue.createApp({
             }
             this.selectedVehicleTable = {
                 VehicleIndex: -1,
+                VehicleHash: "",
                 VehicleLabel: "",
                 VehicleModel: "",
                 VehiclePrice: 0,
@@ -1448,8 +1173,47 @@ const app = Vue.createApp({
         window.addEventListener("message", event => {
             const data = event.data;
             
-            if (data.action == 'OpenUI') {
-                // Content
+            switch (data.action) {
+                case 'Setup':
+                    this.Language = data.language
+                    this.ColorsTable = data.colorstable
+                    this.AllVehicleData = data.allvehiclestable
+                    this.BossmenuCategory = data.bossmenucategories
+                    this.CheckProfanities = data.checkprofanities
+                    this.Profanities = data.profanities
+                    this.FeedbackCharacters = data.feedbackcharacters
+                    this.ComplaintCharacters = data.complaintcharacters
+                    this.TestDrivePrice = data.testdriveprice
+                    this.AllowPlateChange = data.platechange
+                    this.PlateChangePrice = data.platechangeprice
+                    break;
+                case 'OpenVehicleshop':
+                    this.Show = true
+                    this.MainPage = 'Normal'
+                    this.HasOwner = data.hasowner
+                    this.PlayerName = data.playername
+                    this.PlayerMoney = data.playermoney
+                    this.PlayerPfp = data.playerpfp
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.VehicleShopName = data.vehicleshopname
+                    this.VehicleshopDescription = data.vehicleshopdescription
+                    this.VehicleShopStar = data.vehicleshoprating
+                    this.VehiclesTable = data.vehicles
+                    this.CategoryList = data.categories
+                    this.Feedbacks = data.feedbacks
+                    this.Discount = data.discount
+                    this.Raise = data.raise
+                    break;
+                case 'UpdateCreateSelectedVehicle':
+                    this.SelectedVehicleTable.VehicleTopSpeed = data.speed
+                    this.SelectedVehicleTable.VehicleBraking = data.brake
+                    this.SelectedVehicleTable.VehicleAcceleration = data.acceleration
+                    this.SelectedVehicleTable.VehicleSuspension = data.suspension
+                    this.SelectedVehicleTable.VehicleHandling = data.handling
+                    this.PlateInput = data.plate
+                    break;
+                default:
+                    break;
             }
         });
         

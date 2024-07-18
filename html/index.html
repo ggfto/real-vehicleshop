@@ -40,7 +40,7 @@
                                 <div class="w-[3.5%] h-full"></div>
                                 <div class="w-[16.5%] h-full flex items-center justify-center">
                                     <div class="w-[97%] h-[95%] flex items-center justify-center border-[.1vw] border-[#00F0FF] justify-center rounded-[50%]">
-                                        <img :src="PlayerPfp" class="w-full h-full">
+                                        <img :src="PlayerPfp" class="w-full h-full rounded-[50%]">
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,9 @@
                                 </div>
                             </div>
                             <div class="w-full h-[8%] flex items-start justify-start">
-                                <span class="text-white text-[2.0833vw] font-normal font-['regular'] italic">{{ SelectedVehicleTable.VehicleLabel }} <span class="text-cyan-300 text-[1.4063vw] font-semibold font-['medium'] not-italic">{{ SelectedVehicleTable.VehicleModel }}</span></span>
+                                <div class="w-full flex items-start justify-start">
+                                    <span class="text-white text-[2.0833vw] font-normal font-['regular'] italic">{{ SelectedVehicleTable.VehicleLabel }} <span class="text-cyan-300 text-[1.4063vw] font-semibold font-['medium'] not-italic">{{ SelectedVehicleTable.VehicleModel }}</span></span>
+                                </div>
                             </div>
                             <div class="w-full h-[6%]"></div>
                             <div class="w-full h-[50.9%] flex flex-wrap justify-between" v-if="SelectedVehicleTable.VehicleIndex >= 0">
@@ -261,8 +263,8 @@
                             <div class="w-[92.7%] h-full flex flex-row whitespace-nowrap overflow-x-hidden overflow-y-hidden" ref="vc">
                                 <div class="w-[19%] h-full flex flex-col shrink-0 mr-[1.15vw] relative cursor-pointer" v-for="(v, k) in FilterVehicles" :class="{ 'opacity-[.7]': v.stock == 0, 'cursor-not-allowed': v.stock == 0, 'hover:scale-[.97]': v.stock > 0 }" @click="SelectVehicle(k, v)">
                                     <div class="w-full h-[78.5%] bg-[#000000DE] rounded-[.2604vw] left-0 top-0 absolute">
-                                        <img src="./img/vehicle-container-effect-gray.png" class="w-[14.5833vw] h-[9.1146vw] right-0 absolute" v-if="SelectedVehicleTable.VehicleIndex != k">
-                                        <img src="./img/vehicle-container-effect-blue.png" class="w-[14.5833vw] h-[9.1146vw] right-0 absolute" v-else>
+                                        <img src="./img/vehicle-container-effect-gray.png" class="w-[14.5833vw] h-full right-0 absolute" v-if="SelectedVehicleTable.VehicleIndex != k">
+                                        <img src="./img/vehicle-container-effect-blue.png" class="w-[14.5833vw] h-full right-0 absolute" v-else>
                                         <div class="w-full h-full flex flex-wrap items-center left-0 top-0 absolute">
                                             <div class="w-[4%] h-full"></div>
                                             <div class="w-[80%] h-[86%] flex flex-col items-start justify-start">
@@ -277,7 +279,8 @@
                                     </div>
                                     <div class="w-full h-[3%] left-0 top-[78.5%] absolute"></div>
                                     <div class="w-full h-[18.5%] flex items-center justify-between left-0 bottom-0 bg-[#000000DE] rounded-[.2604vw] absolute">
-                                        <span class="w-[50%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }">{{ Language['stock'] + ': ' + v.stock }}</span>
+                                        <span class="w-[50%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }" v-if="HasOwner">{{ Language['stock'] + ': ' + v.stock }}</span>
+                                        <span class="w-[50%] text-white text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" v-else>{{ Language['stock'] + ': ' + Language['available'] }}</span>
                                         <span class="w-[50%] text-[.8333vw] text-right font-semibold font-['regular'] right-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(v.price) }}</span>
                                     </div>
                                 </div>

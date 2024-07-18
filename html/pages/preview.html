@@ -64,7 +64,7 @@
                     <div class="w-full h-full left-0 top-0 absolute">
                         <div class="h-full left-0 top-0 absolute" :style="{ width: $root.CalculateVehicleStatistic('brake') + '%' }">
                             <inlinesvg class="w-full h-full" :value="$root.CalculateVehicleStatistic('brake')"></inlinesvg>
-                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleBraking }}</span>
+                            <span class="text-black text-[.8333vw] font-medium font-['Oswald'] translate-y-[-50%] right-0 top-[50%] p-[2vw] absolute">{{ $root.SelectedVehicleTable.VehicleBraking + 's' }}</span>
                         </div>
                         <div class="w-full h-full flex flex-wrap left-0 top-0 absolute">
                             <div class="w-[4.5%] h-full"></div>

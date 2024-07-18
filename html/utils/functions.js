@@ -10,7 +10,7 @@ export function CalculateVehicleStatistic(type, SelectedVehicleTable, VehicleSta
         value = Math.round((SelectedVehicleTable.VehicleTopSpeed / VehicleStatisticMaxValues.MaxSpeed) * 100);
         return value < 60 ? 67 : value;
     } else if (type == 'brake') {
-        value = Math.round((SelectedVehicleTable.VehicleBraking / VehicleStatisticMaxValues.MaxBrake) * 100);
+        value = (SelectedVehicleTable.VehicleBraking / VehicleStatisticMaxValues.MaxBrake) * 100;
         return value < 50 ? 58 : value;
     } else if (type == 'acceleration') {
         value = Math.round((SelectedVehicleTable.VehicleAcceleration / VehicleStatisticMaxValues.MaxAcceleration) * 100);
