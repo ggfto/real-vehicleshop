@@ -33,6 +33,9 @@ Locales['en'] = {
     ['words'] = "Words",
     ['complaint_header'] = "Let us know your complaint!",
     ['complaint_description'] = "Let us know your complaint so we can fix ourselves.",
+    ['testdrive_header'] = "You have to pay for a test drive",
+    ['testdrive_description'] = "A test drive is there for you to get to know the vehicle better, but you have to pay a certain amount for it. But we are sure you will not regret it. All customers usually do a test drive, before they buy.",
+    ['not_enough_money'] = "You don't have enough money.",
 
     -- UI (Boss menu)
     ['vehicle_stock_list'] = "Stock of vehicles in your company",
@@ -155,6 +158,7 @@ Locales['en'] = {
     ['buy'] = "Buy",
     ['buy_vehicle_description'] = "Buy vehicle to your company in this section.",
     ['total_price'] = "Total Price",
+    ['time_left'] = "Time Left",
 
     -- UI Inputs (Placeholders)
     ['feedback_input_placeholder'] = "Min 50 characters & Max 150 characters.",
@@ -189,9 +193,14 @@ Locales['en'] = {
     ['complaint_stop_using_bad_words'] = "If you want to complain, do it properly, without bad words. Be human!",
     ['complaint_minimum_character'] = "You have to write at least 50 words!",
     ['complaint_maximum_character'] = "You can't write more than 150 words!",
+    ['too_long_plate'] = "The license plate must not exceed 6 characters!",
+    ['successfully_changed_plate'] = "Successfylly changed plate!",
+    ['new_generated_plate'] = "The special license plate was deleted, a new one was created and the price was reduced.",
+    ['dont_leave_empty'] = "Do not leave the field empty!",
 
     -- Drawtext
     ['open_vehicleshop'] = "~INPUT_PICKUP~ - Open Vehicleshop",
+    ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
 
     -- Notify
     ['not_allowed_to_open_vs'] = "You don't have permission to access to this shop."

@@ -1,4 +1,4 @@
-<div class="w-full h-full flex flex-col left-0 top-0 absolute" style="background: url('./img/preview-screen-effect.png'); background-size: cover; background-repeat: no-repeat;">
+<div class="w-full h-full flex flex-col left-0 top-0 absolute" style="background: url('./img/preview-screen-effect.png'); background-size: cover; background-repeat: no-repeat;" :class="{ 'cursor-grabbing': $root.DraggingCheck }" @mousemove="$root.RotateCamera" @mousedown="$root.LeftClickCheck" @mouseup="$root.LeaveLeftClick" @wheel="$root.HandleZoomScroll">
     <div class="w-full h-[8.5%] flex items-center justify-center left-0 top-0 absolute"> <!-- Header -->
         <div class="w-[97%] h-full flex justify-between">
             <div class="w-[50%] h-full flex items-center justify-end">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="w-full h-[11.2%]"></div>
-    <div class="w-full h-[35%] flex flex flex-wrap">
+    <div class="w-full h-[35%] flex flex flex-wrap" :class="{ 'cursor-grabbing': $root.DraggingCheck }" @mousemove="$root.RotateCamera" @mousedown="$root.LeftClickCheck" @mouseup="$root.LeaveLeftClick" @wheel="$root.HandleZoomScroll">
         <div class="w-[79%] h-full"></div>
         <div class="w-[18.8%] h-full flex flex-col">
             <div class="w-full h-[5%] flex flex-wrap">
@@ -142,9 +142,9 @@
         <div class="w-[2.2%] h-full"></div>
     </div>
     <div class="w-full h-[40.5%]"></div>
-    <div class="w-full h-[5.4%] flex flex-wrap">
+    <div class="w-full h-[5.4%] flex flex-wrap" :class="{ 'cursor-grabbing': $root.DraggingCheck }" @mousemove="$root.RotateCamera" @mousedown="$root.LeftClickCheck" @mouseup="$root.LeaveLeftClick" @wheel="$root.HandleZoomScroll">
         <div class="w-[1.7%] h-full"></div>
-        <div class="w-[11.2%] h-full flex items-center justify-center border-[.1042vw] border-[#FFFFFF] cursor-pointer hover:scale-[.97]" @click="$root.MainPage = 'Normal'; $root.setActivePage(false)">
+        <div class="w-[11.2%] h-full flex items-center justify-center border-[.1042vw] border-[#FFFFFF] cursor-pointer hover:scale-[.97]" @click="$root.LeavePreviewMode()">
             <span class="w-full text-white text-[.9375vw] text-center font-normal font-['medium']" style="text-shadow: 0vw 0vw .4656vw rgba(255, 255, 255, 0.38);">{{ $root.Language['exit_preview'] }}</span>
         </div>
         <div class="w-[61.85%] h-full"></div>

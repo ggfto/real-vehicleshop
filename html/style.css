@@ -13,6 +13,11 @@
     font-family: "bold";
 }
 
+@font-face {
+    src: url("../html/fonts/Creattion.otf");
+    font-family: 'Creattion';
+}
+
 *{
     overflow: hidden !important;
 }
@@ -46,6 +51,26 @@ body {
 }
 
 .feedback-container::-webkit-scrollbar-thumb:hover {
+  background: white; 
+  border-radius: 1vw;
+}
+
+.colorstable-container::-webkit-scrollbar {
+    width: .15vw;
+    border-radius: 1vw;
+}
+
+.colorstable-container::-webkit-scrollbar-track {
+    background: #7B7B7BCC;
+    border-radius: 1vw;
+}
+
+.colorstable-container::-webkit-scrollbar-thumb {
+    background: white; 
+    border-radius: 1vw;
+}
+
+.colorstable-container::-webkit-scrollbar-thumb:hover {
   background: white; 
   border-radius: 1vw;
 }
@@ -290,9 +315,4 @@ select {
     outline: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-}
-
-.borderred {
-    border-width: 1px;
-    border-color: #ff0000;
 }

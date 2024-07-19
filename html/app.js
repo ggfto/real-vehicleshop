@@ -60,6 +60,7 @@ const app = Vue.createApp({
     
     data: () => ({
         Show: false,
+        ShowTestDriveTime: false,
         MainPage: 'Normal', // 'Normal', 'Component', "Bossmenu"
         activePage: 'dashboard', // 'preview', 'dashboard', 'company', 'companysettings', 'companystaffsettings', 'perms', 'feedbackcomplains', 'vehicles', 'category', 'buyvehicle'
         HasOwner: false,
@@ -72,6 +73,12 @@ const app = Vue.createApp({
 
         // Main Informations
         CurrentVehicleshop: -1,
+        ShiftPressed: false,
+        DraggingCheck: false,
+        MouseX: null,
+        MouseY: null,
+        CameraAngle: 'exterior',
+        TestDriveTime: 0,
 
         // Vehicleshop Variables
         VehicleShopName: "Oph3Z's Dealership",
@@ -81,13 +88,14 @@ const app = Vue.createApp({
         Raise: 0,
         TestDrivePrice: 7500,
         ShowColorPicker: false,
-        ColorPickerColor: "#FFF",
+        ColorPickerColor: "#FFFFFF",
         SelectedColor: null,
         ColorsTable: [],
         AllowPlateChange: true,
         PlateChangePrice: 0,
         ShowPlateChange: false,
         PlateInput: "",
+        ChangedPlate: false,
         CategoryList: [],
         SelectedVehicleEditCategory: -1,
         SelectedVehicleCategory: 'all',
@@ -450,7 +458,10 @@ const app = Vue.createApp({
         },
 
         // Language
-        Language: {}
+        Language: {},
+
+        // Extras
+        CurrentVehicleColor: null,
     }),
 
     methods: {
@@ -464,10 +475,35 @@ const app = Vue.createApp({
 
         BuyVehicle() {
             // Buy Vehicle Codes
+            // ChangedPlate
         },
 
         TestDrive() {
-            // Test Drive Codes
+            this.ShowPopupScrren = true
+            this.NormalPopupSettings.Show = true
+            this.NormalPopupSettings.HeaderOne = this.Language['testdrive_header']
+            this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(this.TestDrivePrice)
+            this.NormalPopupSettings.Description = this.Language['testdrive_description']
+            this.NormalPopupSettings.Function = 'testdrive'
+        },
+
+        StartTestDrive() {
+            if (this.PlayerMoney >= this.TestDrivePrice) {
+                postNUI('StartTestDrive', {
+                    vehicleshop: this.CurrentVehicleshop,
+                    vehicle: this.SelectedVehicleTable.VehicleHash,
+                    color: this.CurrentVehicleColor
+                })
+                this.CloseUI()
+            } else {
+                this.ShowNotify('error', this.Language['not_enough_money'], 2000)
+            }
+        },
+
+        VehicleshopPopupFunction(type) {
+            if (type == 'testdrive') {
+                this.StartTestDrive()
+            }
         },
 
         SetColorPicker() {
@@ -480,6 +516,10 @@ const app = Vue.createApp({
 
             if (this.ShowColorPicker) {
                 this.OpenColorPicker()
+                postNUI('ChangeVehicleColorFromPopup', this.ColorPickerColor)
+            } else {
+                this.ColorPickerColor = "#FFFFFF"
+                postNUI('ChangeVehicleColor', this.CurrentVehicleColor)
             }
         },
 
@@ -497,26 +537,58 @@ const app = Vue.createApp({
                 });
                 colorPicker.on('color:change', (color) => {
                     this.ColorPickerColor = color.hexString;
+                    postNUI('ChangeVehicleColorFromPopup', this.ColorPickerColor)
                 });
             });
         },
 
-        ChangePlateStatus() {
-            this.ShowPlateChange = !this.ShowPlateChange
+        ChangeVehicleColorFromSelector() {
+            this.ShowColorPicker = false
+            postNUI('ChangeVehicleColorPermanent', this.ColorPickerColor)
+            if (this.SelectedColor) {
+                this.SelectedColor = null
+            }
+        },
 
+        ChangePlateStatus(type) {
             if (this.ShowColorPicker) {
                 this.ShowColorPicker = false
+                this.ColorPickerColor = "#FFFFFF"
             }
 
-            if (!this.ShowPlateChange) {
-                if (this.PlateInput.length >= 6) {
-                    // Change Plate Functions
+            if (this.ShowPlateChange) {
+                if (this.PlateInput.length <= 6 && this.PlateInput.length > 0) {
+                    postNUI('ChangePlate', this.PlateInput)
+                    this.ShowPlateChange = false
+                    this.ShowNotify('success', this.Language['successfully_changed_plate'], 2000)
+                    this.ChangedPlate = true
+                    setTimeout(() => {
+                        postNUI('ResetCameraToNormal')
+                    }, 1500)
+                } else {
+                    if (this.PlateInput.length == 0) {
+                        if (this.ChangedPlate) {
+                            this.ShowPlateChange = false
+                            postNUI('GenerateNewPlate')
+                            this.ChangedPlate = false
+                            this.ShowNotify('information', this.Language['new_generated_plate'], 4000)
+                            setTimeout(() => {
+                                postNUI('ResetCameraToNormal')
+                            }, 1500)
+                        } else {
+                            this.ShowNotify('error', this.Language['dont_leave_empty'], 4000)
+                        }
+                    } else {
+                        this.ShowNotify('error', this.Language['too_long_plate'], 3000)
+                    }
                 }
+            } else {
+                this.ShowPlateChange = true
+                postNUI('ShowPlateCamera')
             }
         },
 
         SelectVehicle(index, v) {
-            const boolean = false
             if (this.SelectedVehicleTable.VehicleIndex != index && v.stock > 0) {
                 this.SelectedVehicleTable.VehicleIndex = index
                 this.SelectedVehicleTable.VehicleHash = v.name
@@ -529,14 +601,11 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleSuspension = v.information.Suspension
                 this.SelectedVehicleTable.VehicleHandling = v.information.Handling
                 postNUI('CreateSelectedVehicle', this.SelectedVehicleTable.VehicleHash)
-                boolean = true
             }
         },
 
         SelectVehicleColor(k) {
             if (this.SelectedColor != k) {
-                console.log(JSON.stringify(this.ColorsTable))
-                console.log(this.ColorsTable[k].r, this.ColorsTable[k].g, this.ColorsTable[k].b)
                 this.SelectedColor = k
                 postNUI('ChangeVehicleColor', k)
             }
@@ -594,11 +663,29 @@ const app = Vue.createApp({
         },
 
         InspectExterior() {
-            // Code
+            if (this.CameraAngle == 'interior') {
+                postNUI('MoveCamToExterior')
+                this.CameraAngle = 'exterior'
+            }
         },
 
         InspectInterior() {
-            // Code
+            if (this.CameraAngle == 'exterior') {
+                postNUI('MoveCamToInterior')
+                this.CameraAngle = 'interior'
+            }
+        },
+
+        LeavePreviewMode() {
+            this.MainPage = 'Normal'
+            this.CameraAngle = 'interior'
+            this.setActivePage(false)
+            this.ShiftPressed = false
+            this.DraggingCheck = false
+            this.MouseX = null
+            this.MouseY = null
+            postNUI('ResetCameraAngle')
+            this.InspectExterior()
         },
 
         ShowNotify(type, text, ms) {
@@ -891,6 +978,42 @@ const app = Vue.createApp({
             }
         },
 
+        // Camera angles
+        HandleZoomScroll(event) {
+            if (this.ShiftPressed) {
+                if (event.deltaY < 0) {
+                    postNUI('ZoomIn')
+                } else {
+                    postNUI('ZoomOut')
+                }
+            }
+        },
+
+        RotateCamera(event) {
+            if (this.DraggingCheck) {
+                if (!this.ShiftPressed) {
+                    if (this.MouseX != null) {
+                        if (event.clientX > this.MouseX) {
+                            postNUI('RotateCameraRight')
+                        } else if (event.clientX < this.MouseX) {
+                            postNUI('RotateCameraLeft')
+                        }
+                    }
+                }
+                if (this.CameraAngle == 'interior' && this.ShiftPressed) {
+                    if (this.MouseY != null) {
+                        if (event.clientY > this.MouseY) {
+                            postNUI('RotateCameraUp')
+                        } else if (event.clientY < this.MouseY) {
+                            postNUI('RotateCameraDown')
+                        }
+                    }
+                }
+                this.MouseX = event.clientX
+                this.MouseY = event.clientY
+            }
+        },
+
         // CloseUI
         CloseUI() {
             this.Show = false
@@ -993,7 +1116,42 @@ const app = Vue.createApp({
                 Price: '',
                 SelectedCategoryIndex: -1
             }
+            this.ShiftPressed = false
+            this.DraggingCheck = false
+            this.MouseX = null
+            this.MouseY = null
+            this.CameraAngle = 'exterior'
+            if (this.MainPage == 'Component' && this.activePage == 'preview') {
+                this.LeavePreviewMode()
+            }
             postNUI('CloseUI')
+        },
+
+        // Events
+        HandleKeyDown(event) {
+            if (event.key === 'Shift') {
+                this.ShiftPressed = true
+            }
+        },
+
+        HandleKeyUp(event) {
+            if (event.key === 'Shift') {
+                this.ShiftPressed = false
+            }
+        },
+
+        LeftClickCheck(event) {
+            if (event.button === 0) {
+                this.DraggingCheck = true
+                this.MouseX = event.clientX
+                this.MouseY = event.clientY
+            }
+        },
+
+        LeaveLeftClick(event) {
+            if (event.button === 0) {
+                this.DraggingCheck = false
+            }
         },
     },  
     
@@ -1178,7 +1336,8 @@ const app = Vue.createApp({
     },
 
     beforeDestroy() {
-        window.removeEventListener('keyup', this.onKeyUp);
+        window.removeEventListener('keydown', this.HandleKeyDown);
+        window.removeEventListener('keyup', this.HandleKeyUp);
     },
     
     mounted() {
@@ -1223,6 +1382,23 @@ const app = Vue.createApp({
                     this.SelectedVehicleTable.VehicleSuspension = data.suspension
                     this.SelectedVehicleTable.VehicleHandling = data.handling
                     this.PlateInput = data.plate
+                    this.CurrentVehicleColor = data.color
+                    break;
+                case 'ChangeCurrentVehicleColorStatus':
+                    this.CurrentVehicleColor = data.color
+                    break;
+                case 'UpdatePlateInput':
+                    this.PlateInput = data.value
+                    break;
+                case 'ShowTestDriveTime':
+                    if (!this.ShowTestDriveTime) {
+                        this.ShowTestDriveTime = true
+                    }
+                    this.TestDriveTime = data.time
+                    break;
+                case 'CloseTimer':
+                    this.ShowTestDriveTime = false
+                    this.TestDriveTime = 0
                     break;
                 default:
                     break;
@@ -1231,8 +1407,11 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
-                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
+                if (this.Show && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI()
+                }
+                if (this.activePage == 'preview') {
+                    this.LeavePreviewMode()
                 }
                 if (this.activePage == 'companystaffsettings' || this.activePage == 'companysettings') {
                     this.setActivePage('company')
@@ -1253,7 +1432,7 @@ const app = Vue.createApp({
                 }
                 if (this.ShowPlateChange) {
                     this.ShowPlateChange = false
-                    this.PlateInput = ""
+                    postNUI('ResetCameraToNormal')
                 }
                 if (this.ShowColorPicker) {
                     this.ShowColorPicker = false
@@ -1263,8 +1442,12 @@ const app = Vue.createApp({
                 if (this.activePage == 'buyvehicle') {
                     this.setActivePage('vehicles')
                 }
-            } 
+            } else if (event.key == 'Shift') {
+                this.ShiftPressed = true
+            }
         });
+
+        window.addEventListener('keyup', this.HandleKeyUp);
     },
 });
 
@@ -1300,6 +1483,6 @@ function SoundPlayer(val) {
     audioPlayer = new Howl({
         src: [audioPath]
     });
-    audioPlayer.volume(0.6);
+    audioPlayer.volume(0.5);
     audioPlayer.play();
 }

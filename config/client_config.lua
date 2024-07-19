@@ -6,6 +6,12 @@ function DrawText3D(msg, coords)
     EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
+function ShowHelpNotification(text)
+    BeginTextCommandDisplayHelp("STRING")
+    AddTextComponentSubstringPlayerName(text)
+    EndTextCommandDisplayHelp(0, false, true, -1)
+end
+
 for k, v in pairs(Config.Vehicleshops) do
     if v.BlipSettings.Enable then
         blip = AddBlipForCoord(v.ShopOpenCoords.x, v.ShopOpenCoords.y, v.ShopOpenCoords.z)
@@ -53,7 +59,7 @@ Citizen.CreateThread(function()
                         OpenVehicleshop(k)
                     end
                 else
-                    print(Language('not_allowed_to_open_vs'))
+                    Config.Notification(Language('not_allowed_to_open_vs'), 'error', false)
                 end
             end
         end

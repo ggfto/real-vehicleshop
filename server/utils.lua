@@ -78,6 +78,24 @@ function GetPlayerMoneyOnline(source, type)
     end
 end
 
+function RemoveAddBankMoneyOnline(type, amount, id)
+    if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(id)
+        if type == 'add' then
+            Player.Functions.AddMoney('bank', tonumber(amount))
+        elseif type == 'remove' then
+            Player.Functions.RemoveMoney('bank', tonumber(amount))
+        end
+    else
+        local Player = frameworkObject.GetPlayerFromId(id)
+        if type == 'add' then
+            Player.addAccountMoney('bank', tonumber(amount))
+        elseif type == 'remove' then
+            Player.removeAccountMoney('bank', tonumber(amount))
+        end
+    end
+end
+
 function GetName(source)
     if Config.Framework == "esx" or Config.Framework == "oldesx" then
         local Player = frameworkObject.GetPlayerFromId(tonumber(source))

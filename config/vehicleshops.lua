@@ -34,6 +34,7 @@ Config.Vehicleshops = {
             VehiclePos = vector4(797.25, -3000.18, -69.63, 242.65), -- Don't touch this coordinate. If you want to change it, come to my discord server and open a ticket and I'll help!
             PlayerPos = vector3(806.75, -3000.08, -69.0), -- Don't touch this coordinate. If you want to change it, come to my discord server and open a ticket and I'll help!
             Coords = vector3(806.75, -3000.08, -69.0), -- Cam Coords
-        }
+        },
+        TestDriveLocation = vector4(-1331.59, -2202.41, 13.32, 149.94),
     }
 }

@@ -22,6 +22,11 @@
 </head>
 <body>
     <div id="app">
+        <div class="w-full h-[100vh] flex items-end justify-center" v-if="ShowTestDriveTime">
+            <div class="w-full h-[10%] flex items-center justify-start">
+                <span class="w-[30%] text-[#00F0FF] text-[2vw] text-start font-normal font-['Poppins'] ml-[1vw] italic">{{ Language['time_left'] + ': ' + TestDriveTime }}</span>
+            </div>
+        </div>
         <div class="w-full h-[100vh] flex item-center justify-center left-0 top-0 absolute" v-if="Show" style="background: url('./img/background.png'); background-size: cover; background-repeat: no-repeat;">
             <div class="w-full h-full flex flex-col left-0 top-0 absolute" v-if="MainPage == 'Normal'">
                 <div class="w-full h-[8.5%] flex items-center justify-center left-0 top-0 absolute"> <!-- Header -->
@@ -112,8 +117,8 @@
                                         </div>
                                     </div>
                                     <div class="w-full h-[3%]"></div>
-                                    <div class="w-full h-[19%] block overflow-y-auto overflow-x-hidden" style="scroll-behavior: smooth !important;">
-                                        <div v-for="(v, k) in ColorsTable" :key="k" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.2vw] mb-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k }" :style="{ background: `rgb(${v[0]}, ${v[1]}, ${v[2]})` }" @click="SelectVehicleColor(k)">
+                                    <div class="w-full h-[19%] block overflow-y-auto overflow-x-hidden colorstable-container">
+                                        <div v-for="(v, k) in ColorsTable" :key="k" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.18vw] mb-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k }" :style="{ background: `rgb(${v[0]}, ${v[1]}, ${v[2]})` }" @click="SelectVehicleColor(k)">
                                             <svg v-if="SelectedColor == k" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 16 12" fill="none">
                                               <path d="M5.43431 11.6971L0.234305 6.49706C-0.0781016 6.18465 -0.0781016 5.67812 0.234305 5.36568L1.36565 4.23431C1.67806 3.92187 2.18462 3.92187 2.49703 4.23431L6 7.73725L13.503 0.234305C13.8154 -0.0781016 14.3219 -0.0781016 14.6344 0.234305L15.7657 1.36568C16.0781 1.67809 16.0781 2.18462 15.7657 2.49706L6.56569 11.6971C6.25325 12.0095 5.74672 12.0095 5.43431 11.6971Z" fill="white"/>
                                             </svg>
@@ -157,7 +162,7 @@
                                         </div>
                                         <div class="w-full h-[3%]"></div>
                                         <div class="w-full h-[9%] flex items-center justify-center">
-                                            <div class="w-[58%] h-full flex items-center justify-center bg-[#4E4E4E] rounded-[.3125vw] cursor-pointer">
+                                            <div class="w-[58%] h-full flex items-center justify-center bg-[#4E4E4E] rounded-[.3125vw] cursor-pointer" @click="ChangeVehicleColorFromSelector()">
                                                 <span class="w-full text-center text-white text-xs font-medium font-['medium']">{{ Language['change_color'] }}</span>
                                             </div>
                                         </div>
@@ -466,7 +471,7 @@
                     <div class="w-full h-[12%]"></div>
                     <div class="w-full h-[9%]">
                         <div class="w-full h-full flex items-center justify-center">
-                            <span class="text-zinc-400 text-[1.3542vw] font-medium font-['Poppins']">{{ NormalPopupSettings.HeaderOne }}</span>
+                            <span class="text-zinc-400 text-[1.3542vw] font-medium font-['Poppins']">{{ NormalPopupSettings.HeaderOne }} -</span>
                             <span class="text-cyan-400 text-[1.3542vw] font-medium font-['Poppins'] ml-[.4vw]">{{ NormalPopupSettings.HeaderTwo }}</span>
                         </div>
                     </div>
@@ -479,7 +484,7 @@
                         <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#4D4D4D] rounded-[.3125vw] mr-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" @click="ClosePopup('normal')">
                             <span class="w-full text-center text-[#B1B1B1] text-[1.3542vw] font-medium font-['Poppins']">{{ Language['cancel'].toUpperCase() }}</span>
                         </div>
-                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#00F0FF] rounded-[.3125vw] ml-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" style="box-shadow: 0vw 0vw .9vw 0vw #00F0FF;" @click="NormalPopupSettings.Function">
+                        <div class="w-[13.2292vw] h-[2.7208vw] flex items-center justify-center opacity-[.85] bg-[#00F0FF] rounded-[.3125vw] ml-[2vw] mb-[.4vw] cursor-pointer hover:opacity-[1]" style="box-shadow: 0vw 0vw .9vw 0vw #00F0FF;" @click="VehicleshopPopupFunction(NormalPopupSettings.Function)">
                             <div class="w-full text-center text-black text-[1.3542vw] font-medium font-['Poppins']">{{ Language['confirm'].toUpperCase() }}</div>
                         </div>
                     </div>

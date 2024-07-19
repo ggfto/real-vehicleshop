@@ -24,6 +24,7 @@ files {
 	'html/img/bossmenu/*.svg',
 	'html/img/bossmenu/dashboard/*.png',
 	'html/fonts/*.ttf',
+	'html/fonts/*.otf',
 }
 
 shared_script{

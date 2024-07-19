@@ -4,9 +4,45 @@ Config.Framework = 'qb' -- qb, oldqb, esx, oldesx or autodetect
 Config.MySQL = 'oxmysql' -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
 Config.Language = 'en'
 
+Config.TestDriveTime = 15 -- seconds
 Config.TestDrivePrice = 7500
+Config.TestDrivePlate = 'TESTDRIVE'
 Config.PlateChange = true
 Config.PlateChangePrice = 1000
+
+Config.GiveVehicleKey = true
+Config.VehicleKeySystem = 'qb-vehiclekeys' -- cd_garage | qs-vehiclekeys | wasabi-carlock | qb-vehiclekeys | custom
+Config.GiveVehicleKeys = function(plate, model, vehicle)
+    if Config.GiveVehicleKey then
+        if Config.VehicleKeySystem == 'cd_garage' then
+            TriggerEvent('cd_garage:AddKeys', exports['cd_garage']:GetPlate(vehicle))
+        elseif Config.VehicleKeySystem == 'qs-vehiclekeys' then
+            exports['qs-vehiclekeys']:GiveKeys(plate, model)
+        elseif Config.VehicleKeySystem == 'wasabi-carlock' then
+            exports.wasabi_carlock:GiveKey(plate)
+        elseif Config.VehicleKeySystem == 'qb-vehiclekeys' then
+            TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
+        elseif Config.VehicleKeySystem == 'custom' then
+            -- Your code here
+        end
+    end
+end
+
+Config.Notification = function(msg, type, server, src)
+    if server then
+        if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+            TriggerClientEvent('QBCore:Notify', src, msg, type, 3000)
+        else
+            TriggerClientEvent('esx:showNotification', src, msg)
+        end
+    else
+        if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+            TriggerEvent('QBCore:Notify', msg, type, 3000)
+        else
+            TriggerEvent('esx:showNotification', msg)
+        end
+    end
+end
 
 Config.CheckProfanities = true
 Config.Profanities = {
