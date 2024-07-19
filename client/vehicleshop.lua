@@ -97,14 +97,35 @@ function CreateSelectedVehicle(vehiclehash)
     SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
     SendNUIMessage({
         action = 'UpdateCreateSelectedVehicle',
-        speed = GetVehicleEstimatedMaxSpeed(CreatedSelectedVehicle) * 3.6,
-        brake = GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeForce") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeBiasFront") * 100,
-        acceleration = GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveForce"),
-        suspension = GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fSuspensionForce'),
-        handling = (GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fSteeringLock") + GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionBiasFront") - GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionLossMult")) * 2,
-        plate = GetVehicleNumberPlateText(CreatedSelectedVehicle)
+        speed = math.floor(GetVehicleEstimatedMaxSpeed(CreatedSelectedVehicle) * 3.6 + 0.5),
+        brake = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeForce") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeBiasFront") * 100 + 0.5),
+        acceleration = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveForce") + 0.5),
+        suspension = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fSuspensionForce') + 0.5),
+        handling = math.floor((GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fSteeringLock") + GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionBiasFront") - GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionLossMult")) * 2 + 0.5),
+        plate = GetVehicleNumberPlateText(CreatedSelectedVehicle)        
     })
+end
+
+function HexToRGB(hex)
+    hex = hex:gsub("#", "")
+    return tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6))
+end
+
+function GetColorIndexFromHex(hexColor)
+    for i, color in ipairs(Config.Colors) do
+        if color.color == hexColor then
+            return i - 1
+        end
+    end
+    return 0
+end
+
+function ChangeVehicleColor(color)
+    color = tonumber(color)
+    SetVehicleColours(CreatedSelectedVehicle, color, color)
+    SetVehicleExtraColours(CreatedSelectedVehicle, 0, 0)
 end
 
 RegisterNUICallback('CloseUI', CloseUI)
 RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
+RegisterNUICallback('ChangeVehicleColor', ChangeVehicleColor)

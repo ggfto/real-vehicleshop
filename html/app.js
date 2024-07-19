@@ -196,7 +196,7 @@ const app = Vue.createApp({
             },
         ],
         AllVehicleData: [],
-        SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında)
+        SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında | Boss menu)
         SelectedVehicleTable: {
             VehicleIndex: -1,
             VehicleHash: "",
@@ -516,6 +516,7 @@ const app = Vue.createApp({
         },
 
         SelectVehicle(index, v) {
+            const boolean = false
             if (this.SelectedVehicleTable.VehicleIndex != index && v.stock > 0) {
                 this.SelectedVehicleTable.VehicleIndex = index
                 this.SelectedVehicleTable.VehicleHash = v.name
@@ -528,7 +529,17 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleSuspension = v.information.Suspension
                 this.SelectedVehicleTable.VehicleHandling = v.information.Handling
                 postNUI('CreateSelectedVehicle', this.SelectedVehicleTable.VehicleHash)
-            } 
+                boolean = true
+            }
+        },
+
+        SelectVehicleColor(k) {
+            if (this.SelectedColor != k) {
+                console.log(JSON.stringify(this.ColorsTable))
+                console.log(this.ColorsTable[k].r, this.ColorsTable[k].g, this.ColorsTable[k].b)
+                this.SelectedColor = k
+                postNUI('ChangeVehicleColor', k)
+            }
         },
 
         ShowMoreCar(type) {
@@ -883,7 +894,7 @@ const app = Vue.createApp({
         // CloseUI
         CloseUI() {
             this.Show = false
-            this.MainPage = ''
+            this.MainPage = 'Normal'
             this.activePage = 'dashboard'
             this.HasOwner = false
             this.SelectedColor = null
@@ -907,7 +918,7 @@ const app = Vue.createApp({
                 PermNameInput: '',
                 PermLabelInput: '',
             }
-            this.selectedVehicleTable = {
+            this.SelectedVehicleTable = {
                 VehicleIndex: -1,
                 VehicleHash: "",
                 VehicleLabel: "",
@@ -982,6 +993,7 @@ const app = Vue.createApp({
                 Price: '',
                 SelectedCategoryIndex: -1
             }
+            postNUI('CloseUI')
         },
     },  
     
@@ -1219,9 +1231,8 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
-                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup) {
+                if (this.Show && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI()
-                    postNUI('CloseUI')
                 }
                 if (this.activePage == 'companystaffsettings' || this.activePage == 'companysettings') {
                     this.setActivePage('company')

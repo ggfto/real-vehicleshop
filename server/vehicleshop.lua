@@ -14,14 +14,14 @@ CreateThread(function()
 
     RegisterCallback('real-vehicleshop:CheckPlateStatus', function(source, cb, plate)
         if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-            local result = Execute("SELECT `plate` FROM `player_vehicles` WHERE `plate` = '"..plate.."'")
+            local result = ExecuteSql("SELECT `plate` FROM `player_vehicles` WHERE `plate` = '"..plate.."'")
             if #result > 0 then
                 cb(true)
             else
                 cb(false)
             end
         else
-            local result = Execute("SELECT `plate` FROM `owned_vehicles` WHERE `plate` = '"..plate.."'")
+            local result = ExecuteSql("SELECT `plate` FROM `owned_vehicles` WHERE `plate` = '"..plate.."'")
             if #result > 0 then
                 cb(true)
             else

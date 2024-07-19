@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>codeReal</title>
+    <title>real-vehicleshop</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -112,10 +112,10 @@
                                         </div>
                                     </div>
                                     <div class="w-full h-[3%]"></div>
-                                    <div class="w-full h-[19%] block overflow-y-hidden overflow-x-hidden">
-                                        <div v-for="(v, k) in ColorsTable" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k, 'mb-[.2vw]': k < 11 }" :style="{ backgroundColor: v.color }" @click="SelectedColor = k">
+                                    <div class="w-full h-[19%] block overflow-y-auto overflow-x-hidden" style="scroll-behavior: smooth !important;">
+                                        <div v-for="(v, k) in ColorsTable" :key="k" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.2vw] mb-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k }" :style="{ background: `rgb(${v[0]}, ${v[1]}, ${v[2]})` }" @click="SelectVehicleColor(k)">
                                             <svg v-if="SelectedColor == k" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 16 12" fill="none">
-                                                <path d="M5.43431 11.6971L0.234305 6.49706C-0.0781016 6.18465 -0.0781016 5.67812 0.234305 5.36568L1.36565 4.23431C1.67806 3.92187 2.18462 3.92187 2.49703 4.23431L6 7.73725L13.503 0.234305C13.8154 -0.0781016 14.3219 -0.0781016 14.6344 0.234305L15.7657 1.36568C16.0781 1.67809 16.0781 2.18462 15.7657 2.49706L6.56569 11.6971C6.25325 12.0095 5.74672 12.0095 5.43431 11.6971Z" fill="white"/>
+                                              <path d="M5.43431 11.6971L0.234305 6.49706C-0.0781016 6.18465 -0.0781016 5.67812 0.234305 5.36568L1.36565 4.23431C1.67806 3.92187 2.18462 3.92187 2.49703 4.23431L6 7.73725L13.503 0.234305C13.8154 -0.0781016 14.3219 -0.0781016 14.6344 0.234305L15.7657 1.36568C16.0781 1.67809 16.0781 2.18462 15.7657 2.49706L6.56569 11.6971C6.25325 12.0095 5.74672 12.0095 5.43431 11.6971Z" fill="white"/>
                                             </svg>
                                         </div>
                                     </div>
@@ -318,7 +318,7 @@
                                 <div class="w-[3.5%] h-full"></div>
                                 <div class="w-[16.5%] h-full flex items-center justify-center">
                                     <div class="w-[97%] h-[95%] flex items-center justify-center border-[.1vw] border-[#00F0FF] justify-center rounded-[50%]">
-                                        <img :src="PlayerPfp" class="w-full h-full">
+                                        <img :src="PlayerPfp" class="w-full h-full rounded-[50%]">
                                     </div>
                                 </div>
                             </div>

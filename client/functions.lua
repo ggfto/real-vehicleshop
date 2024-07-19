@@ -1,20 +1,20 @@
-local function Trim(value)
+function Trim(value)
     if not value then return nil end
     return (string.gsub(value, '^%s*(.-)%s*$', '%1'))
 end
 
-local function GetPlate(vehicle)
+function GetPlate(vehicle)
     if vehicle == 0 then return end
     return Trim(GetVehicleNumberPlateText(vehicle))
 end
 
-local function Round(value, numDecimalPlaces)
+function Round(value, numDecimalPlaces)
     if not numDecimalPlaces then return math.floor(value + 0.5) end
     local power = 10 ^ numDecimalPlaces
     return math.floor((value * power) + 0.5) / (power)
 end
 
-local function GetVehicleProperties(vehicle)
+function GetVehicleProperties(vehicle)
     if DoesEntityExist(vehicle) then
         local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 

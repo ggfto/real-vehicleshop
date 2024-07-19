@@ -125,7 +125,6 @@ function StartScript()
         end
         LoadData()
     end
-    print("^2[real-vehicleshop]^0 - Data executed successfully")
 end
 
 function RequestNewData()
