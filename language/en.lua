@@ -36,6 +36,9 @@ Locales['en'] = {
     ['testdrive_header'] = "You have to pay for a test drive",
     ['testdrive_description'] = "A test drive is there for you to get to know the vehicle better, but you have to pay a certain amount for it. But we are sure you will not regret it. All customers usually do a test drive, before they buy.",
     ['not_enough_money'] = "You don't have enough money.",
+    ['buyvehicle_header'] = "Check the vehicle's details before buying",
+    ['buyvehicle_description'] = "You can test drive the vehicle before you buy it, you can also change the color of the vehicle and if you are not happy with the license plate, you can change it by paying a certain fee.",
+    ['plate_already_exist'] = "License plates are already in use.",
 
     -- UI (Boss menu)
     ['vehicle_stock_list'] = "Stock of vehicles in your company",
@@ -199,7 +202,6 @@ Locales['en'] = {
     ['dont_leave_empty'] = "Do not leave the field empty!",
 
     -- Drawtext
-    ['open_vehicleshop'] = "~INPUT_PICKUP~ - Open Vehicleshop",
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
 
     -- Notify

@@ -10,6 +10,8 @@ Config.TestDrivePlate = 'TESTDRIVE'
 Config.PlateChange = true
 Config.PlateChangePrice = 1000
 
+Config.DefaultGarage = 'pillboxgarage' -- Garage when buying vehicles
+
 Config.GiveVehicleKey = true
 Config.VehicleKeySystem = 'qb-vehiclekeys' -- cd_garage | qs-vehiclekeys | wasabi-carlock | qb-vehiclekeys | custom
 Config.GiveVehicleKeys = function(plate, model, vehicle)
@@ -63,30 +65,60 @@ Config.ComplaintCharacterCheck = {
 }
 
 Config.VehiclesData = {
-    { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-    { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    ['car'] = {
+        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'nero', label = 'Nero', model = 'Super', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/nero.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
+
+    ['boat'] = {
+        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'toro2', label = 'Toro', model = 'Luxry', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/toro2.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
+
+    ['aircraft'] = {
+        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
 }
 
 Config.Categories = {
-    { -- DONT REMOVE THIS ONE
-        name = 'all',
-        label = 'All'
+    ['car'] = {
+        { -- DONT REMOVE THIS ONE
+            name = 'all',
+            label = 'All'
+        },
+        {
+            name = 'sports',
+            label = 'Sports'
+        },
+        {
+            name = 'sedans',
+            label = 'Sedans'
+        },
+        {
+            name = 'suv',
+            label = 'SUVs'
+        },
+        {
+            name = 'trucks',
+            label = 'Trucks'
+        },
     },
-    {
-        name = 'sports',
-        label = 'Sports'
+
+    ['boat'] = {
+        { -- DONT REMOVE THIS ONE
+            name = 'all',
+            label = 'All'
+        },
     },
-    {
-        name = 'sedans',
-        label = 'Sedans'
-    },
-    {
-        name = 'suv',
-        label = 'SUVs'
-    },
-    {
-        name = 'trucks',
-        label = 'Trucks'
+
+    ['aircraft'] = {
+        { -- DONT REMOVE THIS ONE
+            name = 'all',
+            label = 'All'
+        },
     },
 }
 
@@ -100,105 +132,95 @@ Config.BossmenuCategories = { -- Dont touch names. Just edit labels.
 }
 
 Config.BeginningVehicles = {
-    { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-    { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    ['car'] = {
+        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
+
+    ['boat'] = {
+        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
+
+    ['aircraft'] = {
+        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+    },
 }
 
 Config.Colors = {
-    ["0"] = {13, 17, 22}, -- Metallic Black
-    ["1"] = {17, 17, 19}, -- Graphite
-    ["2"] = {29, 30, 33}, -- Black Steel
-    ["3"] = {36, 37, 41}, -- Dark Steel
-    ["4"] = {156, 156, 152}, -- Silver
-    ["5"] = {163, 162, 159}, -- Bluish Silver
-    ["6"] = {183, 191, 206}, -- Rolled Steel
-    ["7"] = {118, 120, 122}, -- Shadow Silver
-    ["8"] = {132, 136, 141}, -- Stone Silver
-    ["9"] = {132, 146, 156}, -- Midnight Silver
-    ["10"] = {88, 89, 90}, -- Cast Iron Silver
-    ["11"] = {26, 26, 29}, -- Anthracite Black
-    ["21"] = {30, 35, 47}, -- Worn Black
-    ["27"] = {208, 25, 25}, -- Red
-    ["28"] = {218, 25, 24}, -- Metallic Torino Red
-    ["29"] = {227, 34, 24}, -- Formula Red
-    ["30"] = {255, 40, 0}, -- Blaze Red
-    ["31"] = {218, 24, 24}, -- Grace Red
-    ["32"] = {255, 0, 0}, -- Garnet Red
-    ["33"] = {255, 99, 71}, -- Sunset Red
-    ["34"] = {139, 0, 0}, -- Cabernet Red
-    ["35"] = {255, 8, 127}, -- Candy Red
-    ["38"] = {255, 140, 0}, -- Orange
-    ["39"] = {255, 0, 0}, -- Matte Red
-    ["40"] = {128, 0, 0}, -- Matte Dark Red
-    ["41"] = {255, 165, 0}, -- Matte Orange
-    ["42"] = {255, 255, 0}, -- Matte Yellow
-    ["49"] = {0, 100, 0}, -- Dark Green
-    ["50"] = {0, 128, 0}, -- Racing Green
-    ["51"] = {32, 178, 170}, -- Sea Green
-    ["52"] = {107, 142, 35}, -- Olive Green
-    ["53"] = {0, 255, 0}, -- Bright Green
-    ["54"] = {175, 238, 238}, -- Gasoline Green
-    ["55"] = {0, 255, 0}, -- Matte Lime Green
-    ["61"] = {0, 0, 128}, -- Galaxy Blue
-    ["62"] = {0, 0, 139}, -- Dark Blue
-    ["63"] = {15, 82, 186}, -- Saxon Blue
-    ["64"] = {0, 0, 255}, -- Blue
-    ["65"] = {100, 149, 237}, -- Mariner Blue
-    ["66"] = {72, 61, 139}, -- Harbor Blue
-    ["67"] = {173, 216, 230}, -- Diamond Blue
-    ["68"] = {0, 191, 255}, -- Surf Blue
-    ["69"] = {0, 0, 139}, -- Nautical Blue
-    ["70"] = {0, 85, 255}, -- Ultra Blue
-    ["71"] = {75, 0, 130}, -- Schafter Purple
-    ["72"] = {138, 43, 226}, -- Spinnaker Purple
-    ["73"] = {0, 116, 217}, -- Racing Blue
-    ["74"] = {173, 216, 230}, -- Light Blue
-    ["80"] = {66, 113, 225}, -- Util Maui Blue Poly
-    ["82"] = {0, 0, 128}, -- Matte Dark Blue
-    ["83"] = {0, 0, 139}, -- Matte Blue
-    ["84"] = {25, 25, 112}, -- Matte Midnight Blue
-    ["88"] = {255, 255, 0}, -- Yellow
-    ["89"] = {255, 255, 85}, -- Race Yellow
-    ["90"] = {205, 127, 50}, -- Bronze
-    ["91"] = {255, 239, 61}, -- Dew Yellow
-    ["92"] = {50, 205, 50}, -- Lime Green
-    ["95"] = {101, 67, 33}, -- Creeen Brown
-    ["96"] = {210, 105, 30}, -- Chocolate Brown
-    ["97"] = {139, 69, 19}, -- Maple Brown
-    ["98"] = {139, 69, 19}, -- Saddle Brown
-    ["99"] = {212, 175, 55}, -- Gold
-    ["100"] = {101, 67, 33}, -- Moss Brown
-    ["101"] = {165, 42, 42}, -- Bison Brown
-    ["102"] = {204, 136, 0}, -- Woodbeech Brown
-    ["103"] = {193, 154, 107}, -- Beechwood Brown
-    ["104"] = {160, 82, 45}, -- Sienna Brown
-    ["105"] = {244, 164, 96}, -- Sandy Brown
-    ["106"] = {245, 222, 179}, -- Bleached Brown
-    ["107"] = {255, 253, 208}, -- Cream
-    ["111"] = {255, 250, 250}, -- Ice White
-    ["112"] = {237, 237, 237}, -- Metallic Frost White
-    ["117"] = {122, 122, 122}, -- Metals Brushed Steel
-    ["118"] = {96, 96, 96}, -- Metals Brushed Black Steel
-    ["119"] = {145, 145, 145}, -- Metals Brushed Aluminum
-    ["128"] = {0, 128, 0}, -- Matte Green
-    ["131"] = {250, 250, 255}, -- Matte Ice White
-    ["135"] = {255, 105, 180}, -- Hot Pink
-    ["136"] = {255, 182, 193}, -- Salmon Pink
-    ["137"] = {223, 88, 145}, -- Metallic Vermillion Pink
-    ["138"] = {255, 69, 0}, -- Bright Orange
-    ["141"] = {25, 25, 112}, -- Midnight Blue
-    ["142"] = {48, 25, 52}, -- Midnight Purple
-    ["143"] = {130, 0, 0}, -- Wine Red
-    ["145"] = {147, 112, 219}, -- Bright Purple
-    ["147"] = {0, 0, 0}, -- Carbon Black
-    ["148"] = {147, 112, 219}, -- Matte Schafter Purple
-    ["149"] = {48, 25, 52}, -- Matte Midnight Purple
-    ["150"] = {148, 33, 23}, -- Lava Red
-    ["151"] = {34, 139, 34}, -- Matte Forest Green
-    ["152"] = {107, 107, 71}, -- Matte Olive Darb
-    ["153"] = {85, 85, 70}, -- Matte Dark Earth
-    ["154"] = {153, 153, 102}, -- Matte Desert Tan
-    ["155"] = {107, 142, 35}, -- Matte Foliage Green
-    ["158"] = {255, 215, 0}, -- Metals Pure Gold
-    ["159"] = {184, 134, 11}, -- Metals Brushed Gold
+    ["0"] = {name = "Black", hex = "#0d1116"},
+    ["147"] = {name = "Carbon Black", hex = "#11141a"},
+    ["1"] = {name = "Graphite", hex = "#1c1d21"},
+    ["11"] = {name = "Anthracite Black", hex = "#1d2129"},
+    ["2"] = {name = "Black Steel", hex = "#32383d"},
+    ["3"] = {name = "Dark Steel", hex = "#454b4f"},
+    ["4"] = {name = "Silver", hex = "#999da0"},
+    ["5"] = {name = "Bluish Silver", hex = "#c2c4c6"},
+    ["6"] = {name = "Rolled Steel", hex = "#979a97"},
+    ["7"] = {name = "Shadow Silver", hex = "#637380"},
+    ["8"] = {name = "Stone Silver", hex = "#63625c"},
+    ["9"] = {name = "Midnight Silver", hex = "#3c3f47"},
+    ["10"] = {name = "Cast Iron Silver", hex = "#444e54"},
+    ["27"] = {name = "Red", hex = "#c00e1a"},
+    ["28"] = {name = "Torino Red", hex = "#da1918"},
+    ["29"] = {name = "Formula Red", hex = "#b6111b"},
+    ["150"] = {name = "Lava Red", hex = "#bc1917"},
+    ["30"] = {name = "Blaze Red", hex = "#a51e23"},
+    ["31"] = {name = "Grace Red", hex = "#7b1a22"},
+    ["32"] = {name = "Garnet Red", hex = "#8e1b1f"},
+    ["33"] = {name = "Sunset Red", hex = "#6f1818"},
+    ["34"] = {name = "Cabernet Red", hex = "#49111d"},
+    ["143"] = {name = "Wine Red", hex = "#0e0d14"},
+    ["35"] = {name = "Candy Red", hex = "#b60f25"},
+    ["135"] = {name = "Hot Pink", hex = "#f21f99"},
+    ["137"] = {name = "Pfister Pink", hex = "#df5891"},
+    ["136"] = {name = "Salmon Pink", hex = "#fdd6cd"},
+    ["36"] = {name = "Sunrise Orange", hex = "#d44a17"},
+    ["38"] = {name = "Orange", hex = "#f78616"},
+    ["138"] = {name = "Bright Orange", hex = "#f6ae20"},
+    ["99"] = {name = "Gold", hex = "#ac9975"},
+    ["90"] = {name = "Bronze", hex = "#916532"},
+    ["88"] = {name = "Yellow", hex = "#ffcf20"},
+    ["89"] = {name = "Race Yellow", hex = "#fbe212"},
+    ["91"] = {name = "Dew Yellow", hex = "#e0e13d"},
+    ["49"] = {name = "Dark Green", hex = "#132428"},
+    ["50"] = {name = "Racing Green", hex = "#122e2b"},
+    ["51"] = {name = "Sea Green", hex = "#12383c"},
+    ["52"] = {name = "Olive Green", hex = "#31423f"},
+    ["53"] = {name = "Bright Green", hex = "#155c2d"},
+    ["54"] = {name = "Gasoline Green", hex = "#1b6770"},
+    ["92"] = {name = "Lime Green", hex = "#98d223"},
+    ["141"] = {name = "Midnight Blue", hex = "#0a0c17"},
+    ["61"] = {name = "Galaxy Blue", hex = "#222e46"},
+    ["62"] = {name = "Dark Blue", hex = "#233155"},
+    ["63"] = {name = "Saxon Blue", hex = "#304c7e"},
+    ["64"] = {name = "Blue", hex = "#47578f"},
+    ["65"] = {name = "Mariner Blue", hex = "#637ba7"},
+    ["66"] = {name = "Harbor Blue", hex = "#394762"},
+    ["67"] = {name = "Diamond Blue", hex = "#d6e7f1"},
+    ["68"] = {name = "Surf Blue", hex = "#76afbe"},
+    ["69"] = {name = "Nautical Blue", hex = "#345e72"},
+    ["73"] = {name = "Racing Blue", hex = "#2354a1"},
+    ["70"] = {name = "Ultra Blue", hex = "#0b9cf1"},
+    ["74"] = {name = "Light Blue", hex = "#6ea3c6"},
+    ["96"] = {name = "Chocolate Brown", hex = "#221b19"},
+    ["101"] = {name = "Bison Brown", hex = "#402e2b"},
+    ["95"] = {name = "Creen Brown", hex = "#473f2b"},
+    ["94"] = {name = "Feltzer Brown", hex = "#503218"},
+    ["97"] = {name = "Maple Brown", hex = "#653f23"},
+    ["103"] = {name = "Beechwood Brown", hex = "#46231a"},
+    ["104"] = {name = "Sienna Brown", hex = "#752b19"},
+    ["98"] = {name = "Saddle Brown", hex = "#775c3e"},
+    ["100"] = {name = "Moss Brown", hex = "#6c6b4b"},
+    ["102"] = {name = "Woodbeech Brown", hex = "#a4965f"},
+    ["105"] = {name = "Sandy Brown", hex = "#bfae7b"},
+    ["106"] = {name = "Bleached Brown", hex = "#dfd5b2"},
+    ["71"] = {name = "Schafter Purple", hex = "#2f2d52"},
+    ["72"] = {name = "Spinnaker Purple", hex = "#282c4d"},
+    ["142"] = {name = "Midnight Purple", hex = "#0c0d18"},
+    ["145"] = {name = "Bright Purple", hex = "#621276"},
+    ["107"] = {name = "Cream", hex = "#f7edd5"},
+    ["111"] = {name = "Ice White", hex = "#fffff6"},
+    ["112"] = {name = "Frost White", hex = "#eaeaea"}
 }

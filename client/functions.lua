@@ -162,7 +162,7 @@ function GetVehicleProperties(vehicle)
     end
 end
 
-local function SetVehicleProperties(vehicle, props, plate)
+function SetVehicleProperties(vehicle, props, plate)
     if DoesEntityExist(vehicle) then
         if props.extras then
             for id, enabled in pairs(props.extras) do

@@ -40,6 +40,44 @@ CreateThread(function()
             end
         end
     end)
+
+    RegisterCallback('real-vehicleshop:BuyPlayerVehicle', function(source, cb, data)
+        local src = source
+        local result = ExecuteSql("SELECT * FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+        local PlayerBank = GetPlayerMoneyOnline(src, 'bank')
+        local identifier = GetIdentifier(src)
+        if PlayerBank >= data.price then
+            if Config.Vehicleshops[data.id].Owner == "" then
+                RemoveAddBankMoneyOnline('remove', data.price, src)
+                if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                    local Player = frameworkObject.Functions.GetPlayer(src)
+                    ExecuteSql("INSERT INTO `player_vehicles` (license, citizenid, vehicle, hash, mods, plate, garage, state) VALUES (@license, @citizenid, @vehicle, @hash, @mods, @plate, @garage, @state)", {
+                        ['@license'] = Player.PlayerData.license,
+                        ['@citizenid'] = identifier,
+                        ['@vehicle'] = data.model,
+                        ['@hash'] = GetHashKey(data.props.model),
+                        ['@mods'] = json.encode(data.props),
+                        ['@plate'] = data.plate,
+                        ['@garage'] = Config.DefaultGarage,
+                        ['@state'] = 0
+                    })
+                    cb(true)
+                else
+                    local Player = frameworkObject.GetPlayerFromId(src)
+                    ExecuteSql("INSERT INTO `owned_vehicles` (owner, plate, vehicle) VALUES (@owner, @plate, @vehicle)", {
+                        ['@owner'] = identifier,
+                        ['@plate'] = data.plate,
+                        ['@vehicle'] = json.encode(data.props),
+                    })
+                    cb(true)
+                end
+            else
+                -- If Owner
+            end
+        else
+            cb(false)
+        end
+    end)
 end)
 
 RegisterNetEvent('real-vehicleshop:TestDrive', function(started, netid)

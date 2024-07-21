@@ -211,6 +211,7 @@ const app = Vue.createApp({
             VehicleLabel: "",
             VehicleModel: "",
             VehiclePrice: 0,
+            VehicleStock: null,
             VehicleTopSpeed: 0,
             VehicleBraking: 0,
             VehicleAcceleration: 0,
@@ -255,7 +256,7 @@ const app = Vue.createApp({
         VehicleStatisticMaxValues: {
             MaxSpeed: 500,
             MaxBrake: 200,
-            MaxAcceleration: 250,
+            MaxAcceleration: 2500,
             MaxSuspension: 400,
             MaxHandling: 100
         },
@@ -474,8 +475,35 @@ const app = Vue.createApp({
         },
 
         BuyVehicle() {
-            // Buy Vehicle Codes
-            // ChangedPlate
+            this.ShowPopupScrren = true
+            this.NormalPopupSettings.Show = true
+            this.NormalPopupSettings.HeaderOne = this.Language['buyvehicle_header']
+            if (this.ChangedPlate) {
+                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(this.SelectedVehicleTable.VehiclePrice) + ' + ' + this.FormatMoney(this.PlateChangePrice)
+            } else {
+                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(this.SelectedVehicleTable.VehiclePrice)
+            }
+            this.NormalPopupSettings.Description = this.Language['buyvehicle_description']
+            this.NormalPopupSettings.Function = 'buyvehicle'
+        },
+
+        ConfirmBuyVehicle() {
+            if (this.PlayerMoney >= this.SelectedVehicleTable.VehiclePrice) {
+                let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+                if (this.ChangedPlate) {
+                    SelectedVehiclePrice = SelectedVehiclePrice + this.PlateChangePrice
+                }
+                postNUI('BuyPlayerVehicle', {
+                    vehicleshop: this.CurrentVehicleshop,
+                    model: this.SelectedVehicleTable.VehicleHash,
+                    price: SelectedVehiclePrice,
+                    stock: this.SelectedVehicleTable.VehicleStock,
+                    plate: this.PlateInput,
+                    color: this.CurrentVehicleColor
+                })
+            } else {
+                this.ShowNotify('error', this.Language['not_enough_money'], 2000)
+            }
         },
 
         TestDrive() {
@@ -494,7 +522,7 @@ const app = Vue.createApp({
                     vehicle: this.SelectedVehicleTable.VehicleHash,
                     color: this.CurrentVehicleColor
                 })
-                this.CloseUI()
+                this.CloseUI(false)
             } else {
                 this.ShowNotify('error', this.Language['not_enough_money'], 2000)
             }
@@ -503,6 +531,8 @@ const app = Vue.createApp({
         VehicleshopPopupFunction(type) {
             if (type == 'testdrive') {
                 this.StartTestDrive()
+            } else if (type == 'buyvehicle') {
+                this.ConfirmBuyVehicle()
             }
         },
 
@@ -550,7 +580,7 @@ const app = Vue.createApp({
             }
         },
 
-        ChangePlateStatus(type) {
+        ChangePlateStatus() {
             if (this.ShowColorPicker) {
                 this.ShowColorPicker = false
                 this.ColorPickerColor = "#FFFFFF"
@@ -558,13 +588,7 @@ const app = Vue.createApp({
 
             if (this.ShowPlateChange) {
                 if (this.PlateInput.length <= 6 && this.PlateInput.length > 0) {
-                    postNUI('ChangePlate', this.PlateInput)
-                    this.ShowPlateChange = false
-                    this.ShowNotify('success', this.Language['successfully_changed_plate'], 2000)
-                    this.ChangedPlate = true
-                    setTimeout(() => {
-                        postNUI('ResetCameraToNormal')
-                    }, 1500)
+                    postNUI('CheckNewPlateStatus', this.PlateInput)
                 } else {
                     if (this.PlateInput.length == 0) {
                         if (this.ChangedPlate) {
@@ -595,6 +619,7 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleLabel = v.label
                 this.SelectedVehicleTable.VehicleModel = v.model
                 this.SelectedVehicleTable.VehiclePrice = v.price
+                this.SelectedVehicleTable.VehicleStock = v.stock
                 this.SelectedVehicleTable.VehicleTopSpeed = v.information.TopSpeed
                 this.SelectedVehicleTable.VehicleBraking = v.information.Braking
                 this.SelectedVehicleTable.VehicleAcceleration = v.information.Acceleration
@@ -1015,7 +1040,7 @@ const app = Vue.createApp({
         },
 
         // CloseUI
-        CloseUI() {
+        CloseUI(status) {
             this.Show = false
             this.MainPage = 'Normal'
             this.activePage = 'dashboard'
@@ -1124,7 +1149,7 @@ const app = Vue.createApp({
             if (this.MainPage == 'Component' && this.activePage == 'preview') {
                 this.LeavePreviewMode()
             }
-            postNUI('CloseUI')
+            postNUI('CloseUI', status)
         },
 
         // Events
@@ -1343,7 +1368,6 @@ const app = Vue.createApp({
     mounted() {
         window.addEventListener("message", event => {
             const data = event.data;
-            
             switch (data.action) {
                 case 'Setup':
                     this.Language = data.language
@@ -1400,6 +1424,21 @@ const app = Vue.createApp({
                     this.ShowTestDriveTime = false
                     this.TestDriveTime = 0
                     break;
+                case 'ChangePlateAccepted':
+                    postNUI('ChangePlate', this.PlateInput)
+                    this.ShowPlateChange = false
+                    this.ShowNotify('success', this.Language['successfully_changed_plate'], 2000)
+                    this.ChangedPlate = true
+                    setTimeout(() => {
+                        postNUI('ResetCameraToNormal')
+                    }, 1500)
+                    break;
+                case 'ShowNotify':
+                    this.ShowNotify(data.type, data.text, data.ms)
+                    break;
+                case 'CloseUI':
+                    this.CloseUI(data.status)
+                    break;
                 default:
                     break;
             }
@@ -1408,7 +1447,7 @@ const app = Vue.createApp({
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
                 if (this.Show && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
-                    this.CloseUI()
+                    this.CloseUI(true)
                 }
                 if (this.activePage == 'preview') {
                     this.LeavePreviewMode()

@@ -79,7 +79,8 @@
                                 </div>
                                 <div class="w-full h-[10%]"></div>
                                 <div class="w-full h-[60%] flex flex-wrap items-start justify-start">
-                                    <div class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(SelectedVehicleTable.VehiclePrice) }}<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
+                                    <div v-if="!ChangedPlate" class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(SelectedVehicleTable.VehiclePrice) }}<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
+                                    <div v-else class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(SelectedVehicleTable.VehiclePrice + PlateChangePrice) }}<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
                                 </div>
                             </div>
                             <div class="w-full h-[8%] flex items-start justify-start">
@@ -113,12 +114,13 @@
                                     <div class="w-full h-[10%] flex items-center justify-between">
                                         <span class="text-white text-[.8854vw] font-semibold font-['medium']">{{ Language['colors'] }}</span>
                                         <div class="w-[25%] h-full flex items-center justify-end">
-                                            <img src="./img/color-settings.png" class="w-[1.1458vw] h-[1.25vw] cursor-pointer" @click="SetColorPicker()">
+                                            <!-- <img src="./img/color-settings.png" class="w-[1.1458vw] h-[1.25vw] cursor-pointer" @click="SetColorPicker()"> -->
+                                            <img src="./img/color-settings.png" class="w-[1.1458vw] h-[1.25vw]">
                                         </div>
                                     </div>
                                     <div class="w-full h-[3%]"></div>
                                     <div class="w-full h-[19%] block overflow-y-auto overflow-x-hidden colorstable-container">
-                                        <div v-for="(v, k) in ColorsTable" :key="k" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.18vw] mb-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k }" :style="{ background: `rgb(${v[0]}, ${v[1]}, ${v[2]})` }" @click="SelectVehicleColor(k)">
+                                        <div v-for="(v, k) in ColorsTable" :key="k" class="w-[8%] h-[47%] flex items-center justify-center cursor-pointer ml-[.18vw] mb-[.2vw] float-left" :class="{ 'border-[.1vw]': SelectedColor == k }" :style="{ background: v.hex }" @click="SelectVehicleColor(k)">
                                             <svg v-if="SelectedColor == k" xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 16 12" fill="none">
                                               <path d="M5.43431 11.6971L0.234305 6.49706C-0.0781016 6.18465 -0.0781016 5.67812 0.234305 5.36568L1.36565 4.23431C1.67806 3.92187 2.18462 3.92187 2.49703 4.23431L6 7.73725L13.503 0.234305C13.8154 -0.0781016 14.3219 -0.0781016 14.6344 0.234305L15.7657 1.36568C16.0781 1.67809 16.0781 2.18462 15.7657 2.49706L6.56569 11.6971C6.25325 12.0095 5.74672 12.0095 5.43431 11.6971Z" fill="white"/>
                                             </svg>

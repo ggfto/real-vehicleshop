@@ -114,6 +114,25 @@ function GetName(source)
     end
 end
 
+function GetIdentifier(source)
+    if Config.Framework == "esx" or Config.Framework == "oldesx" then
+        local xPlayer = frameworkObject.GetPlayerFromId(tonumber(source))
+
+        if xPlayer then
+            return xPlayer.getIdentifier()
+        else
+            return "0"
+        end
+    else
+        local Player = frameworkObject.Functions.GetPlayer(tonumber(source))
+        if Player then
+            return Player.PlayerData.citizenid
+        else
+            return "0"
+        end
+    end
+end
+
 ------------------------------ Start ------------------------------
 function StartScript()
     for k, v in pairs(Config.Vehicleshops) do
@@ -130,8 +149,8 @@ function StartScript()
             ExecuteSql("INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complains, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complains, @preorders, @employees, @soldvehicles, @transactions, @perms)", {
                 ['@id'] = k,
                 ['@information'] = json.encode(Information),
-                ['@vehicles'] = json.encode(Config.BeginningVehicles),
-                ['@categories'] = json.encode(Config.Categories),
+                ['@vehicles'] = json.encode(Config.BeginningVehicles[v.Type]),
+                ['@categories'] = json.encode(Config.Categories[v.Type]),
                 ['@feedbacks'] = json.encode(v.Feedbacks),
                 ['@complains'] = json.encode(v.Complains),
                 ['@preorders'] = json.encode(v.Preorders),

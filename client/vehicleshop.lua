@@ -25,7 +25,6 @@ function OpenVehicleshop(k)
         OwnerStatus = true
     end
 
-
     if data then
         DisplayRadar(false)
         DisplayHud(false)
@@ -37,6 +36,7 @@ function OpenVehicleshop(k)
         SetEntityVisible(PlayerPedId(), false)
         SendNUIMessage({
             action = 'OpenVehicleshop',
+            allvehiclestable = Config.VehiclesData[Config.Vehicleshops[k].Type],
             hasowner = OwnerStatus,
             playername = data.Name,
             playermoney = data.Money,
@@ -45,8 +45,8 @@ function OpenVehicleshop(k)
             vehicleshopname = Config.Vehicleshops[k].CompanyName,
             vehicleshopdescription = Config.Vehicleshops[k].CompanyDescriptionText,
             vehicleshoprating = Config.Vehicleshops[k].Rating,
-            vehicles = OwnerStatus and Config.Vehicleshops[k].Vehicles or Config.VehiclesData,
-            categories = Config.Vehicleshops[k].Categories,
+            vehicles = OwnerStatus and Config.Vehicleshops[k].Vehicles or Config.VehiclesData[Config.Vehicleshops[k].Type],
+            categories = OwnerStatus and Config.Vehicleshops[k].Categories or Config.Categories[Config.Vehicleshops[k].Type],
             feedbacks = Config.Vehicleshops[k].Feedbacks,
             discount = Config.Vehicleshops[k].Discount,
             raise = Config.Vehicleshops[k].Raise,
@@ -56,23 +56,25 @@ function OpenVehicleshop(k)
     end
 end
 
-function CloseUI()
+function CloseUI(status)
     RenderScriptCams(false)
     DestroyCam(cam, true)
     SetEntityVisible(PlayerPedId(), true)
-    SetEntityCoords(PlayerPedId(), Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords, true)
     SetNuiFocus(false, false)
     IsInteriorView = false
     camAngle = 0.0
     CurrentFov = 50.0
     InsideCameraX = -0.2
     InsideCameraZ = 0.5
-    CurrentVehicleshop = nil
     cam = nil
     SelectedVehicleProps = nil
     if CreatedSelectedVehicle then
         DeleteVehicle(CreatedSelectedVehicle)
     end
+    if status then
+        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords, true)
+    end
+    CurrentVehicleshop = nil
 end
 
 local function f(n)
@@ -136,10 +138,11 @@ function CreateSelectedVehicle(vehiclehash)
     SetVehicleRadioEnabled(CreatedSelectedVehicle, false)
     SetVehicleFixed(CreatedSelectedVehicle)
     SetVehicleDirtLevel(CreatedSelectedVehicle, 0.1)
+    FreezeEntityPosition(CreatedSelectedVehicle, true)
     SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
     SendNUIMessage({
         action = 'UpdateCreateSelectedVehicle',
-        speed = math.floor(GetVehicleEstimatedMaxSpeed(CreatedSelectedVehicle) * 3.6 + 0.5),
+        speed = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel')),
         brake = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeForce") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeBiasFront") * 100 + 0.5),
         acceleration = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveForce") + 0.5),
         suspension = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fSuspensionForce') + 0.5),
@@ -147,20 +150,6 @@ function CreateSelectedVehicle(vehiclehash)
         plate = plate,
         color = GetVehicleColours(CreatedSelectedVehicle)
     })
-end
-
-function HexToRGB(hex)
-    hex = hex:gsub("#", "")
-    return tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6))
-end
-
-function GetColorIndexFromHex(hexColor)
-    for i, color in ipairs(Config.Colors) do
-        if color.color == hexColor then
-            return i - 1
-        end
-    end
-    return 0
 end
 
 function ChangeVehicleColor(color)
@@ -173,52 +162,25 @@ function ChangeVehicleColor(color)
     })
 end
 
-function RGBDistance(color1, color2)
-    local r = color2[1] - color1[1]
-    local g = color2[2] - color1[2]
-    local b = color2[3] - color1[3]
-    return math.sqrt(r * r + g * g + b * b)
-end
-
-function FindClosestColorIndex(r, g, b)
-    local minDistance = math.huge
-    local closestIndex = 0
-
-    for i, color in pairs(Config.Colors) do
-        local distance = RGBDistance({r, g, b}, color)
-        if distance < minDistance then
-            minDistance = distance
-            closestIndex = tonumber(i)
-        end
-    end
-
-    return closestIndex
-end
-
-function ChangeVehicleColorFromPopup(hex)
-    local r, g, b = HexToRGB(hex)
-    local closestColorIndex = FindClosestColorIndex(r, g, b)
-    SetVehicleColours(CreatedSelectedVehicle, closestColorIndex, closestColorIndex)
-    SetVehicleExtraColours(CreatedSelectedVehicle, 0, 0)
-end
-
-function ChangeVehicleColorPermanent()
-    local r, g, b = HexToRGB(hex)
-    local closestColorIndex = FindClosestColorIndex(r, g, b)
-    SetVehicleColours(CreatedSelectedVehicle, closestColorIndex, closestColorIndex)
-    SetVehicleExtraColours(CreatedSelectedVehicle, 0, 0)
-    SendNUIMessage({
-        action = 'ChangeCurrentVehicleColorStatus',
-        color = GetVehicleColours(CreatedSelectedVehicle)
-    })
-end
-
 function ShowPlateCamera()
     CamControl('back')
 end
 
 function ChangePlate(plate)
-    SetVehicleNumberPlateText(CreatedSelectedVehicle, plate)
+    local result = Callback('real-vehicleshop:CheckPlateStatus', plate)
+    if not result then
+        SetVehicleNumberPlateText(CreatedSelectedVehicle, plate)
+        SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
+    end
+end
+
+function CheckNewPlateStatus(plate)
+    local result = Callback('real-vehicleshop:CheckPlateStatus', plate)
+    if not result then
+        SendNUIMessage({ action = 'ChangePlateAccepted' })
+    else
+        TriggerEvent('real-vehicleshop:SendUINotify', 'error', Language('plate_already_exist'), 2000)
+    end
 end
 
 function ZoomIn()
@@ -240,11 +202,25 @@ end
 function MoveCamAroundVehicle()
     local veh = GetVehiclePedIsIn(PlayerPedId(), false)
     local vehCoords = GetEntityCoords(veh)
-    local radius = 7.0
+    local radius
+    if Config.Vehicleshops[CurrentVehicleshop].Type == 'car' then
+        radius = 7.0
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'boat' then
+        radius = 11.0
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'aircraft' then
+        radius = 16.0
+    end
 
     local camX = vehCoords.x + radius * math.cos(camAngle)
     local camY = vehCoords.y + radius * math.sin(camAngle)
-    local camZ = vehCoords.z + 0.5 -- Camera height
+    local camZ  -- Camera height
+    if Config.Vehicleshops[CurrentVehicleshop].Type == 'car' then
+        camZ = vehCoords.z + 0.5
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'boat' then
+        camZ = vehCoords.z + 1.5
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'aircraft' then
+        camZ = vehCoords.z + 2.0
+    end
 
     SetCamCoord(cam, camX, camY, camZ)
     PointCamAtCoord(cam, vehCoords.x, vehCoords.y, vehCoords.z)
@@ -326,6 +302,7 @@ function GenerateNewPlate()
         action = 'UpdatePlateInput',
         value = plate
     })
+    SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
 end
 
 function StartTestDrive(data)
@@ -395,11 +372,50 @@ function StartTestDrive(data)
     end
 end
 
+function BuyPlayerVehicle(data)
+    local Player = PlayerPedId()
+    local vehicleshop = data.vehicleshop
+    local model = data.model
+    local price = data.price
+    local stock = data.stock
+    local plate = data.plate
+    local color = data.color
+    local props = SelectedVehicleProps
+    local SendData = {
+        id = vehicleshop,
+        model = model,
+        price = price,
+        stock = stock,
+        plate = plate,
+        color = color,
+        props = props
+    }
+    local data = Callback('real-vehicleshop:BuyPlayerVehicle', SendData)
+    if data then
+        SendNUIMessage({ action = 'CloseUI', status = false })
+        Citizen.Wait(100)
+        SetEntityCoords(Player, Config.Vehicleshops[vehicleshop].SpawnCoords, true)
+        local Vehicle = CreateVehicle(model, Config.Vehicleshops[vehicleshop].SpawnCoords, true, true)
+        SetVehicleProperties(Vehicle, props)
+        SetVehicleColours(Vehicle, color, color)
+        SetVehicleExtraColours(Vehicle, 0, 0)
+        SetPedIntoVehicle(Player, Vehicle, -1)
+        Config.GiveVehicleKeys(GetVehicleNumberPlateText(Vehicle), model, Vehicle)
+    end
+end
+
+RegisterNetEvent('real-vehicleshop:SendUINotify', function(type, text, ms)
+    SendNUIMessage({
+        action = 'ShowNotify',
+        type = type,
+        text = text,
+        ms = ms
+    })
+end)
+
 RegisterNUICallback('CloseUI', CloseUI)
 RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
 RegisterNUICallback('ChangeVehicleColor', ChangeVehicleColor)
-RegisterNUICallback('ChangeVehicleColorFromPopup', ChangeVehicleColorFromPopup)
-RegisterNUICallback('ChangeVehicleColorPermanent', ChangeVehicleColorPermanent)
 RegisterNUICallback('ShowPlateCamera', ShowPlateCamera)
 RegisterNUICallback('ChangePlate', ChangePlate)
 RegisterNUICallback('ZoomIn', ZoomIn)
@@ -413,4 +429,6 @@ RegisterNUICallback('RotateCameraUp', RotateCameraUp)
 RegisterNUICallback('RotateCameraDown', RotateCameraDown)
 RegisterNUICallback('ResetCameraToNormal', ResetCameraToNormal)
 RegisterNUICallback('GenerateNewPlate', GenerateNewPlate)
+RegisterNUICallback('CheckNewPlateStatus', CheckNewPlateStatus)
 RegisterNUICallback('StartTestDrive', StartTestDrive)
+RegisterNUICallback('BuyPlayerVehicle', BuyPlayerVehicle)

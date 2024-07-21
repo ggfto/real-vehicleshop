@@ -53,7 +53,7 @@ Citizen.CreateThread(function()
             local Distance = #(PlayerCoords - v.ShopOpenCoords)
             if Distance < 2.0 then
                 sleep = 3
-                DrawText3D(Language('open_vehicleshop'), v.ShopOpenCoords)
+                DrawText3D(v.Marker, v.ShopOpenCoords)
                 if CheckPlayerJob(k) then
                     if IsControlJustReleased(0, 38) then
                         OpenVehicleshop(k)

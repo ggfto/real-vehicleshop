@@ -11,7 +11,6 @@ Citizen.CreateThread(function()
         action = 'Setup',
         language = Locales[Config.Language],
         colorstable = Config.Colors,
-        allvehiclestable = Config.VehiclesData,
         bossmenucategories = Config.BossmenuCategories,
         checkprofanities = Config.CheckProfanities,
         profanities = Config.Profanities,
