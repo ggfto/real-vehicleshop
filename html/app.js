@@ -1372,7 +1372,6 @@ const app = Vue.createApp({
                 case 'Setup':
                     this.Language = data.language
                     this.ColorsTable = data.colorstable
-                    this.AllVehicleData = data.allvehiclestable
                     this.BossmenuCategory = data.bossmenucategories
                     this.CheckProfanities = data.checkprofanities
                     this.Profanities = data.profanities
@@ -1386,6 +1385,7 @@ const app = Vue.createApp({
                     this.Show = true
                     this.MainPage = 'Normal'
                     this.HasOwner = data.hasowner
+                    this.AllVehicleData = data.allvehiclestable
                     this.PlayerName = data.playername
                     this.PlayerMoney = data.playermoney
                     this.PlayerPfp = data.playerpfp
