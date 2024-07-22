@@ -162,6 +162,7 @@ Locales['en'] = {
     ['buy_vehicle_description'] = "Buy vehicle to your company in this section.",
     ['total_price'] = "Total Price",
     ['time_left'] = "Time Left",
+    ['no_data'] = "There is no available data.",
 
     -- UI Inputs (Placeholders)
     ['feedback_input_placeholder'] = "Min 50 characters & Max 150 characters.",
@@ -203,7 +204,10 @@ Locales['en'] = {
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
+    ['bossmenu_marker'] = "~INPUT_PICKUP~ - Open Bossmenu",
+    ['buy_company_marker'] = "~INPUT_PICKUP~ - Buy This Company",
 
     -- Notify
-    ['not_allowed_to_open_vs'] = "You don't have permission to access to this shop."
+    ['not_allowed_to_open_vs'] = "You don't have permission to access to this shop.",
+    ['successfully_bought_company'] = "Congratulations! This company belongs to you now.",
 }

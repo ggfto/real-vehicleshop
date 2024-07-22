@@ -22,6 +22,32 @@ Citizen.CreateThread(function()
     })
 end)
 
+function CloseUI(status)
+    RenderScriptCams(false)
+    DestroyCam(cam, true)
+    SetEntityVisible(PlayerPedId(), true)
+    SetNuiFocus(false, false)
+    IsInteriorView = false
+    camAngle = 0.0
+    CurrentFov = 50.0
+    InsideCameraX = -0.2
+    InsideCameraZ = 0.5
+    cam = nil
+    SelectedVehicleProps = nil
+    if CreatedSelectedVehicle then
+        DeleteVehicle(CreatedSelectedVehicle)
+    end
+    if status then
+        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords, true)
+    end
+    CurrentVehicleshop = nil
+end
+
+function CloseBossmenu()
+    CurrentVehicleshop = nil
+    SetNuiFocus(false, false)
+end
+
 function CheckPlayerJob(k)
     while not frameworkObject do
         Citizen.Wait(0)
@@ -43,3 +69,16 @@ function CheckPlayerJob(k)
     end
     return false
 end
+
+function SetNuiFocusUI(boolean)
+    SetNuiFocus(boolean, boolean)
+end
+
+function SendNormalNotify(data)
+    Config.Notification(data.text, data.type, false)
+end
+
+RegisterNUICallback('CloseUI', CloseUI)
+RegisterNUICallback('CloseBossmenu', CloseBossmenu)
+RegisterNUICallback('SetNuiFocus', SetNuiFocusUI)
+RegisterNUICallback('SendNormalNotify', SendNormalNotify)

@@ -1,13 +1,13 @@
 frameworkObject = nil
 CurrentVehicleshop = nil
-local cam = nil
-local SelectedVehicleProps = nil
-local camAngle = 0.0
-local CurrentFov = 50.0
-local InsideCameraX = -0.2
-local InsideCameraZ = 0.5
-local IsInteriorView = false
-local TestDriveActive = false
+cam = nil
+SelectedVehicleProps = nil
+camAngle = 0.0
+CurrentFov = 50.0
+InsideCameraX = -0.2
+InsideCameraZ = 0.5
+IsInteriorView = false
+TestDriveActive = false
 
 Citizen.CreateThread(function()
     frameworkObject, Config.Framework = GetCore()
@@ -32,7 +32,6 @@ function OpenVehicleshop(k)
         cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Vehicleshops[k].CamSettings.Coords.x, Config.Vehicleshops[k].CamSettings.Coords.y,Config.Vehicleshops[k].CamSettings.Coords.z, 0.00, 0.00, 120.00, 50.00, false, 0)
         SetCamActive(cam, true)
         RenderScriptCams(true, false, 1, true, true)
-        DoScreenFadeIn(1000)
         SetEntityVisible(PlayerPedId(), false)
         SendNUIMessage({
             action = 'OpenVehicleshop',
@@ -54,27 +53,6 @@ function OpenVehicleshop(k)
         SetNuiFocus(true, true)
         CurrentVehicleshop = k
     end
-end
-
-function CloseUI(status)
-    RenderScriptCams(false)
-    DestroyCam(cam, true)
-    SetEntityVisible(PlayerPedId(), true)
-    SetNuiFocus(false, false)
-    IsInteriorView = false
-    camAngle = 0.0
-    CurrentFov = 50.0
-    InsideCameraX = -0.2
-    InsideCameraZ = 0.5
-    cam = nil
-    SelectedVehicleProps = nil
-    if CreatedSelectedVehicle then
-        DeleteVehicle(CreatedSelectedVehicle)
-    end
-    if status then
-        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords, true)
-    end
-    CurrentVehicleshop = nil
 end
 
 local function f(n)
@@ -413,7 +391,6 @@ RegisterNetEvent('real-vehicleshop:SendUINotify', function(type, text, ms)
     })
 end)
 
-RegisterNUICallback('CloseUI', CloseUI)
 RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
 RegisterNUICallback('ChangeVehicleColor', ChangeVehicleColor)
 RegisterNUICallback('ShowPlateCamera', ShowPlateCamera)

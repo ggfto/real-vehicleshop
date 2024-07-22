@@ -66,3 +66,36 @@ Citizen.CreateThread(function()
         Citizen.Wait(sleep)
     end
 end)
+
+-- Boss menu
+Citizen.CreateThread(function()
+    while true do
+        local sleep = 2000
+        local Player = PlayerPedId()
+        local PlayerCoords = GetEntityCoords(Player)
+        for k, v in pairs(Config.Vehicleshops) do
+            if v.Manageable then
+                local Distance = #(PlayerCoords - v.BossmenuCoords)
+                if Distance < 2.0 then
+                    sleep = 3
+                    if v.Owner ~= "" then
+                        if CheckAccess(k) then
+                            DrawText3D(Language('bossmenu_marker'), v.BossmenuCoords)
+                            if IsControlJustReleased(0, 38) then
+                                OpenBossmenu(k)
+                            end
+                        end
+                    else
+                        if v.Owner == "" then
+                            DrawText3D(Language('buy_company_marker'), v.BossmenuCoords)
+                            if IsControlJustReleased(0, 38) then
+                                BuyCompany(k)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        Citizen.Wait(sleep)
+    end
+end)

@@ -35,7 +35,7 @@
             <div class="w-[62%] h-full flex flex-col items-center justify-start left-[.8vw] top-0 absolute">
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.5vw] absolute">{{ $root.Language['company_rating'] }}</span>
                 <div class="w-full bottom-[.8vw] absolute">
-                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]" :class="{ 'text-[#FF0004]': $root.AverageRating < 3 }">{{ $root.AverageRating }}</span>
+                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]" :class="{ 'text-[#FF0004]': $root.AverageRating < 3 && $root.AverageRating > 0 }">{{ $root.AverageRating }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{ $root.Language['average'] }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']" v-if=" $root.AverageRating > 0">({{ $root.AverageRating < 3 ? $root.Language['bad'] : $root.Language['good'] }})</span>
                 </div>
@@ -55,7 +55,7 @@
             <div class="w-full h-[1.6%]"></div>
             <div class="w-full h-[84%] flex flex-col">
                 <div class="w-full h-[88%] flex flex-col flex items-center justify-start">
-                    <div v-for="(v, k) in $root.PreordersPage" class="w-[98.5%] h-[12%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.1vw]">
+                    <div v-if="$root.PreordersPage.length > 0" v-for="(v, k) in $root.PreordersPage" class="w-[98.5%] h-[12%] flex flex-wrap items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.1vw]">
                         <div class="w-[21.8%] h-full flex flex-col items-center justify-center">
                             <span class="w-full text-white text-[.7vw] text-center font-medium font-['Poppins'] mt-[.25vw]">{{ $root.Language['ordered_by'] }}</span>
                             <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.25vw]">{{ v.requestor }}</span>
@@ -83,9 +83,12 @@
                             </div>
                         </div>
                     </div>
+                    <div v-else class="w-[98.5%] h-[14%] flex items-center justify-center mt-[.3vw]">
+                        <span class="w-full text-zinc-600 text-[1vw] text-center font-semibold font-['Poppins']">{{ $root.Language['no_data'] }}</span>
+                    </div>
                 </div>
                 <div class="w-full h-[12%] relative">
-                    <div class="w-[13%] h-full flex items-center justify-between right-[.8vw] top-0 absolute">
+                    <div class="w-[13%] h-full flex items-center justify-between right-[.8vw] top-0 absolute" v-if="$root.PreordersPage.length > 0">
                         <div class="w-[47%] h-[80%] flex items-center justify-center bg-[#000000] cursor-pointer" :class="{ 'cursor-not-allowed': $root.BossmenuPageSettings.PreorderPage == 1 }" @click="$root.PrevPage('preorder')">
                             <inlinesvg class="h-[.8vw] h-[.8vw] flex items-center justify-center" src="./img/svg/left.svg"></inlinesvg>
                         </div>
@@ -93,7 +96,7 @@
                             <inlinesvg class="h-[.8vw] h-[.8vw] flex items-center justify-center" src="./img/svg/right.svg"></inlinesvg>
                         </div>
                     </div>
-                    <div class="w-[79%] h-full flex items-center justify-start left-[.6vw] top-0 absolute">
+                    <div class="w-[79%] h-full flex items-center justify-start left-[.6vw] top-0 absolute" v-if="$root.PreordersPage.length > 0">
                         <div class="w-full text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['preorder_second_description'] }}</div>
                     </div>
                 </div>
@@ -110,7 +113,7 @@
             <div class="w-full h-[1.6%]"></div>
             <div class="w-full h-[84%] flex flex-col">
                 <div class="w-full h-[88%] flex flex-col flex items-center justify-start">
-                    <div v-for="(v, k) in $root.SoldVehiclesPage" class="w-[98.5%] h-[12%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.1vw]">
+                    <div v-if="$root.SoldVehiclesPage.length > 0" v-for="(v, k) in $root.SoldVehiclesPage" class="w-[98.5%] h-[12%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.1vw]">
                         <div class="w-[21.8%] h-full flex flex-col items-center justify-center">
                             <span class="w-full text-white text-[.7vw] text-center font-medium font-['Poppins'] mt-[.25vw]">{{ $root.Language['buyer'] }}</span>
                             <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.3vw]">{{ v.buyer }}</span>
@@ -134,9 +137,12 @@
                             <div class="w-full text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.3vw]">{{ v.date }}</div>
                         </div>
                     </div>
+                    <div v-else class="w-[98.5%] h-[14%] flex items-center justify-center mt-[.3vw]">
+                        <span class="w-full text-zinc-600 text-[1vw] text-center font-semibold font-['Poppins']">{{ $root.Language['no_data'] }}</span>
+                    </div>
                 </div>
                 <div class="w-full h-[12%] relative">
-                    <div class="w-[13%] h-full flex items-center justify-between right-[.8vw] top-0 absolute">
+                    <div class="w-[13%] h-full flex items-center justify-between right-[.8vw] top-0 absolute" v-if="$root.SoldVehiclesPage.length > 0">
                         <div class="w-[47%] h-[80%] flex items-center justify-center bg-[#000000] cursor-pointer" :class="{ 'cursor-not-allowed': $root.BossmenuPageSettings.SoldVehiclesPage == 1 }" @click="$root.PrevPage('soldvehicles')">
                             <inlinesvg class="h-[.8vw] h-[.8vw] flex items-center justify-center" src="./img/svg/left.svg"></inlinesvg>
                         </div>
@@ -144,7 +150,7 @@
                             <inlinesvg class="h-[.8vw] h-[.8vw] flex items-center justify-center" src="./img/svg/right.svg"></inlinesvg>
                         </div>
                     </div>
-                    <div class="w-[79%] h-full flex items-center justify-start left-[.3vw] top-0 absolute">
+                    <div class="w-[79%] h-full flex items-center justify-start left-[.3vw] top-0 absolute" v-if="$root.SoldVehiclesPage.length > 0">
                         <div class="w-[65%] h-[75%] bg-[#5555554D] flex flex-wrap rounded-[.2vw] left-0 absolute">
                             <input type="text" class="w-[87%] h-full px-[.3vw] outline-none bossmenu-classic-search-input" :placeholder="$root.Language['bossmenu_search_input']" v-model="$root.Inputs.SoldVehiclesInput">
                             <div class="w-[13%] h-full flex items-center justify-center">

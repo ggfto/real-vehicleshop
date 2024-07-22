@@ -64,6 +64,32 @@ Config.ComplaintCharacterCheck = {
     MaximumCharacter = 150,
 }
 
+Config.DefaultPerms = {
+    { -- Dont remove this one. You can just edit label and description.
+        name = 'owner',
+        label = 'Owner',
+        permissions = {
+            { name = 'withdrawdeposit', label = 'Withdraw & Deposit', description = 'Player can withdraw and deposit money.', value = true },
+            { name = 'preorder', label = 'Preorder', description = 'Player can accept/reject preorder request.', value = true },
+            { name = 'discount', label = 'Discount', description = 'Player can start discount campaign.', value = true },
+            { name = 'removelog', label = 'Remove Log', description = 'Player can remove all log data.', value = true },
+            { name = 'bonus', label = 'Bonus', description = 'Player can give bonus to other staff members.', value = true },
+            { name = 'raise', label = 'Raise', description = 'Player can bring a raise.', value = true },
+            { name = 'fire', label = 'Fire Employees', description = 'Player can fire staff members.', value = true },
+            { name = 'rankchange', label = 'Edit Staff Rank', description = 'Player can demote and promote employees.', value = true },
+            { name = 'hire', label = 'Hire Staff', description = 'Player can hire staff members.', value = true },
+            { name = 'penalty', label = 'Give Penalty', description = 'Player can give penalty to other staff members.', value = true },
+            { name = 'category', label = 'Edit/Remove/Add Category', description = 'Player can add, remove and edit categories.', value = true },
+            { name = 'buyvehicle', label = 'Buy Vehicle Stock', description = 'Player can buy vehicle stock.', value = true },
+            { name = 'editvehicle', label = 'Edit Vehicles', description = 'Player can edit vehicle category, price, give discount etc.', value = true },
+            { name = 'removefeedback', label = 'Remove Feedbacks', description = 'Player can remove feedbacks.', value = true },
+            { name = 'removecomplaints', label = 'Remove Complaints', description = 'Player can remove complaints.', value = true }
+        },
+        removable = false,
+        editable = false,
+    },
+}
+
 Config.VehiclesData = {
     ['car'] = {
         { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },

@@ -262,7 +262,7 @@ const app = Vue.createApp({
         },
 
         // Boss menu Variables
-        CompanyMoney: 10000,
+        CompanyMoney: 0,
         BossmenuCategory: [],
         SelectedBossmenuCategory: 0,
         Preorders: [
@@ -401,6 +401,7 @@ const app = Vue.createApp({
         // TransferReq Settings
         TransferReqCompanyName: 'Oph3Z Vehicleshop',
         TransferReqCompanyPrice: 1000000,
+        TransferReqFunctions: '',
 
         // JobReq Settings
         JobReqCompanyName: 'Test Vehicleshop',
@@ -1003,6 +1004,27 @@ const app = Vue.createApp({
             }
         },
 
+        // Buy vehicleshop & Transfer Req
+        TransferReqFunction() {
+            if (this.TransferReqFunctions == 'buycompany') {
+                postNUI('BuyCompany', {
+                    id: this.CurrentVehicleshop,
+                    price: this.TransferReqCompanyPrice,
+                })
+            }
+        },
+
+        CloseTransferReq() {
+            if (this.TransferReqFunctions == 'buycompany') {
+                this.ShowPopupToTarget = ''
+                this.CurrentVehicleshop = -1
+                this.TransferReqCompanyPrice = 0
+                this.TransferReqCompanyName = ''
+                this.TransferReqFunctions = ''
+                postNUI('SetNuiFocus', false)
+            }
+        },
+
         // Camera angles
         HandleZoomScroll(event) {
             if (this.ShiftPressed) {
@@ -1046,26 +1068,6 @@ const app = Vue.createApp({
             this.activePage = 'dashboard'
             this.HasOwner = false
             this.SelectedColor = null
-            this.Inputs = {
-                SoldVehiclesInput: '',
-                CompanyNameInput: '',
-                TransferIdInput: '',
-                TransferPriceInput: '',
-                DiscountInput: '',
-                BonusesInput: '',
-                RaiseInput: '',
-                TransactionsInput: '',
-                EmployeeIdInput: '',
-                EmployeeSalaryInput: '',
-                SalaryPenaltyIdInput: '',
-                SalaryPenaltyInput: '',
-                PenaltySearchInput: '',
-                EmployeesInput: '',
-                DepositInput: '',
-                WithdrawInput: '',
-                PermNameInput: '',
-                PermLabelInput: '',
-            }
             this.SelectedVehicleTable = {
                 VehicleIndex: -1,
                 VehicleHash: "",
@@ -1086,30 +1088,6 @@ const app = Vue.createApp({
             this.ShowPlateChange = false
             this.IsSearching = false
             this.ShowFeedback = false
-            this.CompanyMoney = 0
-            this.Preorders = []
-            this.EmployeesTable = []
-            this.SoldVehiclesLog = []
-            this.Transactions = []
-            this.PermsTable = []
-            this.SelectedPerm = -1
-            this.OriginalPermsTable = null
-            this.BossmenuPageSettings = {
-                PreorderPage: 1,
-                SoldVehiclesPage: 1,
-                TransactionsPage: 1,
-                EmployeeWithPenaltyPage: 1,
-                EmployeesPage: 1,
-            }
-            this.FeedbackComplaintScreen = -1
-            this.VehicleEditScreen = -1
-            this.CurrentVehicleshop = -1
-            this.NotifySettings = {
-                Show: false,
-                Type: '',
-                Message: '',
-                Time: 0,
-            }
             this.ShowPopupScrren = false
             this.NormalPopupSettings = {
                 Show: false,
@@ -1150,6 +1128,75 @@ const app = Vue.createApp({
                 this.LeavePreviewMode()
             }
             postNUI('CloseUI', status)
+        },
+
+        CloseBossmenu() {
+            this.Show = false
+            this.MainPage = 'Normal'
+            this.activePage = 'dashboard'
+            this.Inputs = {
+                SoldVehiclesInput: '',
+                CompanyNameInput: '',
+                TransferIdInput: '',
+                TransferPriceInput: '',
+                DiscountInput: '',
+                BonusesInput: '',
+                RaiseInput: '',
+                TransactionsInput: '',
+                EmployeeIdInput: '',
+                EmployeeSalaryInput: '',
+                SalaryPenaltyIdInput: '',
+                SalaryPenaltyInput: '',
+                PenaltySearchInput: '',
+                EmployeesInput: '',
+                DepositInput: '',
+                WithdrawInput: '',
+                PermNameInput: '',
+                PermLabelInput: '',
+            }
+            this.VehiclesTable = []
+            this.Feedbacks = []
+            this.CategoryList = []
+            this.CompanyMoney = 0
+            this.Preorders = []
+            this.EmployeesTable = []
+            this.SoldVehiclesLog = []
+            this.Transactions = []
+            this.PermsTable = []
+            this.CompanyMoney = 0
+            this.SelectedPerm = -1
+            this.OriginalPermsTable = null
+            this.BossmenuPageSettings = {
+                PreorderPage: 1,
+                SoldVehiclesPage: 1,
+                TransactionsPage: 1,
+                EmployeeWithPenaltyPage: 1,
+                EmployeesPage: 1,
+            }
+            this.FeedbackComplaintScreen = -1
+            this.VehicleEditScreen = -1
+            this.CurrentVehicleshop = -1
+            this.NotifySettings = {
+                Show: false,
+                Type: '',
+                Message: '',
+                Time: 0,
+            }
+            this.ComplainTable = []
+            this.EditVehicleInputs = {
+                Name: '',
+                Model: '',
+                Img: '',
+                Discount: '',
+                Price: '',
+            }
+            this.SelectedShowCategory = 0
+            this.BuyVehicleInputs = {
+                Stock: 1,
+                Price: '',
+                SelectedCategoryIndex: -1
+            }
+            postNUI('CloseBossmenu')
         },
 
         // Events
@@ -1223,6 +1270,10 @@ const app = Vue.createApp({
         },
 
         AverageRating() {
+            if (this.Feedbacks.length == 0) {
+                return 0;
+            }
+
             const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
             return (rating / this.Feedbacks.length).toFixed(1);
         },
@@ -1433,6 +1484,35 @@ const app = Vue.createApp({
                         postNUI('ResetCameraToNormal')
                     }, 1500)
                     break;
+                case 'BuyCompany':
+                    this.ShowPopupToTarget = 'TransferRequest'
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.TransferReqCompanyPrice = data.price
+                    this.TransferReqCompanyName = data.name
+                    this.TransferReqFunctions = 'buycompany'
+                    break;
+                case 'CloseTransferReq':
+                    this.CloseTransferReq()
+                    break;
+                case 'OpenBossmenu':
+                    this.Show = true
+                    this.MainPage = 'Bossmenu'
+                    this.activePage = 'dashboard'
+                    this.AllVehicleData = data.allvehiclestable
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.PlayerName = data.playername
+                    this.PlayerMoney = data.playermoney
+                    this.PlayerPfp = data.playerpfp
+                    this.PlayerRank = data.playerrank
+                    this.VehicleShopName = data.vehicleshopname
+                    this.VehicleshopDescription = data.vehicleshopdescription
+                    this.CompanyMoney = data.companymoney
+                    this.Feedbacks = data.feedbacks
+                    this.EmployeesTable = data.employees
+                    this.VehiclesTable = data.vehicles
+                    this.SoldVehiclesLog = data.vehiclessold
+                    this.Preorders = data.preorders
+                    break;
                 case 'ShowNotify':
                     this.ShowNotify(data.type, data.text, data.ms)
                     break;
@@ -1446,8 +1526,11 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
-                if (this.Show && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
+                if (this.Show && this.MainPage != 'Bossmenu' && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI(true)
+                }
+                if (this.Show && this.MainPage == 'Bossmenu') {
+                    this.CloseBossmenu()
                 }
                 if (this.activePage == 'preview') {
                     this.LeavePreviewMode()

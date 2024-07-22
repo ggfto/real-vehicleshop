@@ -610,11 +610,11 @@
                             </div>
                         </div>
                         <div class="w-[29.5%] h-full flex flex-col items-start">
-                            <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                            <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="TransferReqFunction()">
                                 <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ Language['accept'] }}</span>
                             </div>
                             <div class="w-full h-[2.5%]"></div>
-                            <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer">
+                            <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer" @click="CloseTransferReq()">
                                 <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ Language['cancel'] }}</span>
                             </div>
                         </div>

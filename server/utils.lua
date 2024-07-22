@@ -157,7 +157,7 @@ function StartScript()
                 ['@employees'] = json.encode(v.Employees),
                 ['@soldvehicles'] = json.encode(v.SoldVehicles),
                 ['@transactions'] = json.encode(v.Transactions),
-                ['@perms'] = json.encode(v.Perms)
+                ['@perms'] = json.encode(Config.DefaultPerms)
             })
         end
         LoadData()
