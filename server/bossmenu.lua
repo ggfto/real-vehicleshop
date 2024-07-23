@@ -175,7 +175,6 @@ RegisterNetEvent('real-vehicleshop:SendTransferRequest', function(data)
         local information = json.decode(result[1].information)
         if identifier == information.Owner then
             if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-                local Player = frameworkObject.Functions.GetPlayer(data.targetid)
                 local TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
                 if TargetPlayer then
                     if src ~= data.targetid then
@@ -345,7 +344,69 @@ RegisterNetEvent('real-vehicleshop:TransferCompany', function(data)
 end)
 
 RegisterNetEvent('real-vehicleshop:SendCancelTransferReqNotifyToSender', function(src)
-    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('targetplayer_rejected'), 3000)
+    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'information', Language('targetplayer_rejected'), 3000)
+end)
+
+RegisterNetEvent('real-vehicleshop:SendJobRequest', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local perms = json.decode(result[1].perms)
+        if #perms == 1 and perms[1].name == "owner" then
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_perms'), 4000)
+            return
+        end
+        if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+            local TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
+            if TargetPlayer then
+                if src ~= data.targetid then
+                    TriggerClientEvent('real-vehicleshop:ShowJobReqToPlayer', data.targetid, src, data.targetid, data.id, data.salary)
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
+                else
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
+                end
+            else
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
+            end
+        else
+            -- ESX
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:AcceptedJobRequest', function(data)
+    local src = data.sender
+    local targetsrc = data.target
+    local result = ExecuteSql("SELECT `employees`, `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        local perms = json.decode(result[1].perms)
+        local PermToBeGive = GetPermissionWithMostFalseValues(perms)
+        if PermToBeGive then
+            local NewTable = {
+                identifier = GetIdentifier(targetsrc),
+                name = GetName(targetsrc),
+                pp = GetDiscordAvatar(targetsrc),
+                rank = PermToBeGive,
+                salary = data.salary,
+                salarypenalty = 0
+            }
+            table.insert(employees, NewTable)
+            Config.Vehicleshops[data.id].Employees = employees
+            ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            Config.Notification(Language('got_job'), 'success', true, targetsrc)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('accepted_job_offer'), 3000)
+            TriggerClientEvent('real-vehicleshop:CloseJobReqScreen', targetsrc)
+            UpdateForAllSrcTable(data.id)
+        else
+            print("Something wrong with to be give permission.")
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:SendRejectedJobReqToSender', function(src)
+    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'information', Language('rejected_job_offer'), 3000)
 end)
 
 function RemoveFromSrcTable(id, src)
@@ -373,6 +434,22 @@ function CloseBossmenuForAllTable(id)
             TriggerClientEvent('real-vehicleshop:CloseBossmenu', v)
         end
     end
+end
+
+function GetPermissionWithMostFalseValues(perms)
+    local Name = nil
+    for k, v in ipairs(perms) do
+        local FalseCount = 0
+        for a, b in pairs(v.permissions) do
+            if b.value == false then
+                FalseCount = FalseCount + 1
+            end
+        end
+        if FalseCount > 0 then
+            Name = v.name
+        end
+    end
+    return Name
 end
 
 function RemoveMoneyFromCompany(id, amount)

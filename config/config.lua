@@ -89,6 +89,30 @@ Config.DefaultPerms = {
         removable = false,
         editable = false,
     },
+    { -- Dont remove this one. You can just edit label and description.
+        name = 'worker',
+        label = 'Worker',
+        permissions = {
+            { name = 'administration', label = 'Administration', description = 'The player can, for example, change the company name and other management actions.', value = false },
+            { name = 'withdrawdeposit', label = 'Withdraw & Deposit', description = 'Player can withdraw and deposit money.', value = false },
+            { name = 'preorder', label = 'Preorder', description = 'Player can accept/reject preorder request.', value = true },
+            { name = 'discount', label = 'Discount', description = 'Player can start discount campaign.', value = false },
+            { name = 'removelog', label = 'Remove Log', description = 'Player can remove all log data.', value = false },
+            { name = 'bonus', label = 'Bonus', description = 'Player can give bonus to other staff members.', value = false },
+            { name = 'raise', label = 'Raise', description = 'Player can bring a raise.', value = false },
+            { name = 'fire', label = 'Fire Employees', description = 'Player can fire staff members.', value = false },
+            { name = 'rankchange', label = 'Edit Staff Rank', description = 'Player can demote and promote employees.', value = false },
+            { name = 'hire', label = 'Hire Staff', description = 'Player can hire staff members.', value = false },
+            { name = 'penalty', label = 'Give Penalty', description = 'Player can give penalty to other staff members.', value = false },
+            { name = 'category', label = 'Edit/Remove/Add Category', description = 'Player can add, remove and edit categories.', value = false },
+            { name = 'buyvehicle', label = 'Buy Vehicle Stock', description = 'Player can buy vehicle stock.', value = true },
+            { name = 'editvehicle', label = 'Edit Vehicles', description = 'Player can edit vehicle category, price, give discount etc.', value = false },
+            { name = 'removefeedback', label = 'Remove Feedbacks', description = 'Player can remove feedbacks.', value = false },
+            { name = 'removecomplaints', label = 'Remove Complaints', description = 'Player can remove complaints.', value = false }
+        },
+        removable = true,
+        editable = true,
+    },
 }
 
 Config.VehiclesData = {

@@ -217,56 +217,7 @@ const app = Vue.createApp({
                 type: 'withdraw'
             },
         ],
-        PermsTable: [
-            {
-                name: 'owner',
-                label: "Owner",
-                permissions: [
-                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: true },
-                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: true },
-                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: true },
-                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: true },
-                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: true },
-                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: true },
-                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: true },
-                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: true },
-                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: true },
-                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: true },
-                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: true },
-                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: true },
-                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: true },
-                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: true },
-                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: true },
-
-                ],
-                removable: false,
-                editable: false,
-            },
-            {
-                name: 'manager',
-                label: 'Manager',
-                permissions: [
-                    { name: 'withdrawdeposit', label: 'Withdraw & Deposit', description: 'Player can withdraw and deposit money.', value: false },
-                    { name: 'preorder', label: 'Preorder', description: 'Player can accept/reject preorder request.', value: true },
-                    { name: 'discount', label: 'Discount', description: 'Player can start discount campaign.', value: true },
-                    { name: 'removelog', label: 'Remove Log', description: 'Player can remove all log data.', value: true },
-                    { name: 'bonus', label: 'Bonus', description: 'Player can give bonus to other staff members.', value: true },
-                    { name: 'raise', label: 'Raise', description: 'Player can bring a raise.', value: true },
-                    { name: 'fire', label: 'Fire Employees', description: 'Player can fire staff members.', value: true },
-                    { name: 'rankchange', label: 'Edit Staff Rank', description: 'Player can demote and promote employees.', value: false },
-                    { name: 'hire', label: 'Hire Staff', description: 'Player can hire staff members.', value: true },
-                    { name: 'penalty', label: 'Give Penalty', description: 'Player can give penalty to other staff members.', value: false },
-                    { name: 'category', label: 'Edit/Remove/Add Category', description: 'Player can add, remove and edit categories.', value: true },
-                    { name: 'buyvehicle', label: 'Buy Vehicle Stock', description: 'Player can buy vehicle stock.', value: false },
-                    { name: 'editvehicle', label: 'Edit Vehicles', description: 'Player can edit vehicle category, price, give discount etc.', value: true },
-                    { name: 'removefeedback', label: 'Remove Feedbacks', description: 'Player can remove feedbacks.', value: false },
-                    { name: 'removecomplaints', label: 'Remove Complaints', description: 'Player can remove complaints.', value: false },
-
-                ],
-                removable: true,
-                editable: true,
-            },
-        ],
+        PermsTable: [],
         SelectedPerm: -1,
         OriginalPermsTable: null,
         BossmenuPageSettings: {
@@ -323,6 +274,8 @@ const app = Vue.createApp({
         // JobReq Settings
         JobReqCompanyName: 'Test Vehicleshop',
         JobReqSalary: 15000,
+        JobReqSender: null,
+        JobReqTarget: null,
 
         // Detailed Variables
         CheckProfanities: true,
@@ -1091,7 +1044,47 @@ const app = Vue.createApp({
             }
         },
 
-        // Perm Check
+        // Staff Settings
+        SendJobRequest() {
+            if (this.PermCheck(this.PlayerRank, 'hire')) {
+                if (this.Inputs.EmployeeIdInput > 0) {
+                    if (this.Inputs.EmployeeSalaryInput > 0) {
+                        postNUI('SendJobRequest', {
+                            id: this.CurrentVehicleshop,
+                            targetid: this.Inputs.EmployeeIdInput,
+                            salary: this.Inputs.EmployeeSalaryInput
+                        })
+                    } else {
+                        this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
+            }
+        },
+
+        AcceptedJobRequest() {
+            postNUI('AcceptedJobRequest', {
+                id: this.CurrentVehicleshop,
+                salary: this.JobReqSalary,
+                sender: this.JobReqSender,
+                target: this.JobReqTarget
+            })
+        },
+
+        CloseJobReq(type) {
+            if (type == 'reject') {
+                postNUI('SendRejectedJobReqToSender', this.JobReqSender)
+            }
+            this.ShowPopupToTarget = ''
+            this.CurrentVehicleshop = -1
+            this.JobReqCompanyName = ''
+            this.JobReqSalary = 0
+            this.JobReqSender = null
+            this.JobReqTarget = null
+        },
+
+        // Perm Functions
         PermCheck(name, action) {
             let Author = this.PermsTable.find(v => v.label == name)
             let Permission = Author.permissions.find(v => v.name == action)
@@ -1693,6 +1686,17 @@ const app = Vue.createApp({
                     this.TransferReqSender = data.sender
                     this.TransferReqTarget = data.target
                     this.TransferReqFunctions = 'transferreq'
+                    break;
+                case 'SendJobRequest':
+                    this.ShowPopupToTarget = 'JobReq'
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.JobReqCompanyName = data.name
+                    this.JobReqSalary = data.salary
+                    this.JobReqSender = data.sender
+                    this.JobReqTarget = data.target
+                    break;
+                case 'CloseJobReq':
+                    this.CloseJobReq('normal')
                     break;
                 case 'CloseBossmenu':
                     this.CloseBossmenu()

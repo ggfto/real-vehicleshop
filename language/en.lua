@@ -216,6 +216,8 @@ Locales['en'] = {
     ['successfully_raised'] = "You have successfully raised prices on all products.",
     ['targetplayer_does_not_have_money'] = "The other player doesn't have the money to accept your offer",
     ['targetplayer_rejected'] = "The player rejected your offer.",
+    ['not_enough_perms'] = "There is no authorization to be given to the player. Create first.",
+    ['accepted_job_offer'] = "The person has accepted your job offer.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
@@ -229,4 +231,6 @@ Locales['en'] = {
     ['player_not_found'] = "There is no such player on the server.",
     ['same_player_error'] = "You can't send requests to yourself.",
     ['sold_company'] = "You successfully sold the company.",
+    ['got_job'] = "You got a job. Congratulations.",
+    ['rejected_job_offer'] = "The person rejected your job offer.",
 }

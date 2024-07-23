@@ -116,6 +116,19 @@ function RaisePrices(data)
     TriggerServerEvent('real-vehicleshop:RaisePrices', data)
 end
 
+function SendJobRequest(data)
+    TriggerServerEvent('real-vehicleshop:SendJobRequest', data)
+end
+
+function AcceptedJobRequest(data)
+    TriggerServerEvent('real-vehicleshop:AcceptedJobRequest', data)
+end
+
+function SendRejectedJobReqToSender(src)
+    TriggerServerEvent('real-vehicleshop:SendRejectedJobReqToSender', src)
+end
+
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -158,6 +171,23 @@ RegisterNetEvent('real-vehicleshop:CloseTransferReqForTarget', function()
     SetNuiFocus(false, false)
 end)
 
+RegisterNetEvent('real-vehicleshop:ShowJobReqToPlayer', function(src, targetsrc, id, salary)
+    SendNUIMessage({
+        action = 'SendJobRequest',
+        vehicleshop = id,
+        name = Config.Vehicleshops[id].CompanyName,
+        salary = salary,
+        sender = src,
+        target = targetsrc
+    })
+    SetNuiFocus(true, true)
+end)
+
+RegisterNetEvent('real-vehicleshop:CloseJobReqScreen', function()
+    SendNUIMessage({ action = 'CloseJobReq' })
+    SetNuiFocus(false, false)
+end)
+
 RegisterNUICallback('BuyCompany', AcceptedBuyCompany)
 RegisterNUICallback('DepositMoney', DepositMoney)
 RegisterNUICallback('WithdrawMoney', WithdrawMoney)
@@ -170,3 +200,6 @@ RegisterNUICallback('CancelDiscount', CancelDiscount)
 RegisterNUICallback('DeleteAllLogs', DeleteAllLogs)
 RegisterNUICallback('SendBonusToStaff', SendBonusToStaff)
 RegisterNUICallback('RaisePrices', RaisePrices)
+RegisterNUICallback('SendJobRequest', SendJobRequest)
+RegisterNUICallback('AcceptedJobRequest', AcceptedJobRequest)
+RegisterNUICallback('SendRejectedJobReqToSender', SendRejectedJobReqToSender)
