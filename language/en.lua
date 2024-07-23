@@ -201,6 +201,8 @@ Locales['en'] = {
     ['successfully_changed_plate'] = "Successfylly changed plate!",
     ['new_generated_plate'] = "The special license plate was deleted, a new one was created and the price was reduced.",
     ['dont_leave_empty'] = "Do not leave the field empty!",
+    ['not_allowed'] = "You are not authorized to take this action",
+    ['not_enough_money_in_company'] = "Your company doesn't have that much money.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",

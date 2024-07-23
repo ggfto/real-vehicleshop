@@ -22,11 +22,11 @@
                         </div>
                     </div>
                     <div class="w-[29.5%] h-full flex flex-col items-start">
-                        <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                        <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="$root.PermCheck($root.PlayerRank, 'withdrawdeposit') && ($root.ShowBossPopup = 'deposit')">
                             <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['deposit'] }}</span>
                         </div>
                         <div class="w-full h-[2.5%]"></div>
-                        <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer">
+                        <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer" @click="$root.PermCheck($root.PlayerRank, 'withdrawdeposit') && ($root.ShowBossPopup = 'withdraw')">
                             <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['withdraw'] }}</span>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
         </div>
         <div class="w-full h-[1%]"></div>
         <div class="w-full h-[74%] flex flex-col flex items-center justify-start">
-            <div v-for="(v, k) in $root.TransactionsPage" class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
+            <div v-if="$root.TransactionsPage.length > 0" v-for="(v, k) in $root.TransactionsPage" class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
                 <div class="w-[21.5%] h-full flex flex-wrap justify-between">
                     <div class="w-[27.5%] h-full flex items-center justify-center">
                         <div class="w-[76%] h-[75%] border-[.0521vw] border-[#00F0FF] rounded-[50%]">
@@ -129,18 +129,21 @@
                     <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]">{{ v.date }}</span>
                 </div>
             </div>
+            <div v-else class="w-[98.5%] h-[14%] flex items-center justify-center mt-[.3vw]">
+                <span class="w-full text-zinc-600 text-[1vw] text-center font-semibold font-['Poppins']">{{ $root.Language['no_data'] }}</span>
+            </div>
         </div>
         <div class="w-full h-[3.7%]"></div>
         <div class="w-full h-[6%] flex flex-wrap">
             <div class="w-[1.2%] h-full"></div>
             <div class="w-[97.6%] h-full flex items-center justify-between">
-                <div class="w-[54%] h-full flex bg-[#5555554D] rounded-[.1563vw] relative">
+                <div class="w-[54%] h-full flex bg-[#5555554D] rounded-[.1563vw] relative" v-if="$root.TransactionsPage.length > 0">
                     <input type="text" class="w-[88%] h-full outline-none pl-[.5vw] bossmenu-classic-search-input left-0 absolute" :placeholder="$root.Language['bossmenu_search_input']" v-model="$root.Inputs.TransactionsInput">
                     <div class="w-[12%] h-full flex items-center justify-center right-0 absolute">
                         <inlinesvg class="w-[.9375vw] h-[.9375vw] flex item-center justify-center" src="./img/bossmenu/search.svg"></inlinesvg>
                     </div>
                 </div>
-                <div class="w-[12%] h-full flex items-center justify-between">
+                <div class="w-[12%] h-full flex items-center justify-between" v-if="$root.TransactionsPage.length > 0">
                     <div class="w-[42%] h-full flex items-center justify-center bg-[#000000] rounded-[.1563vw] cursor-pointer" :class="{ 'cursor-not-allowed': $root.BossmenuPageSettings.TransactionsPage == 1 }" @click="$root.PrevPage('transaction')">
                         <inlinesvg class="h-[.6vw] h-[.6vw] flex items-center justify-center" src="./img/svg/left.svg"></inlinesvg>
                     </div>

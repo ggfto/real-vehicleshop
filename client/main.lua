@@ -44,6 +44,7 @@ function CloseUI(status)
 end
 
 function CloseBossmenu()
+    TriggerServerEvent('real-vehicleshop:RemoveFromSrcTable', CurrentVehicleshop)
     CurrentVehicleshop = nil
     SetNuiFocus(false, false)
 end
@@ -77,6 +78,15 @@ end
 function SendNormalNotify(data)
     Config.Notification(data.text, data.type, false)
 end
+
+RegisterNetEvent('real-vehicleshop:SendUINotify', function(type, text, ms)
+    SendNUIMessage({
+        action = 'ShowNotify',
+        type = type,
+        text = text,
+        ms = ms
+    })
+end)
 
 RegisterNUICallback('CloseUI', CloseUI)
 RegisterNUICallback('CloseBossmenu', CloseBossmenu)

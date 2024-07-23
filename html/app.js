@@ -298,7 +298,7 @@ const app = Vue.createApp({
                 pfp: 'https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&',
                 rank: 'Owner',
                 amount: 10000,
-                date: '05.07 2024 | 16:25',
+                date: '05.07.2024 | 16:25',
                 type: 'withdraw'
             },
         ],
@@ -1025,6 +1025,45 @@ const app = Vue.createApp({
             }
         },
 
+        // Deposit & Withdraw
+        DepositMoney() {
+            if (this.Inputs.DepositInput > 0) {
+                postNUI('DepositMoney', {
+                    id: this.CurrentVehicleshop,
+                    value: this.Inputs.DepositInput
+                })
+                this.Inputs.DepositInput = ''
+                this.ShowBossPopup = ''
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
+        WithdrawMoney() {
+            if (this.Inputs.WithdrawInput > 0) {
+                postNUI('WithdrawMoney', {
+                    id: this.CurrentVehicleshop,
+                    value: this.Inputs.WithdrawInput
+                })
+                this.Inputs.WithdrawInput = ''
+                this.ShowBossPopup = ''
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
+        // Perm Check
+        PermCheck(name, action) {
+            let Author = this.PermsTable.find(v => v.label == name)
+            let Permission = Author.permissions.find(v => v.name == action)
+            if (Permission.value) {
+                return true
+            } else {
+                this.ShowNotify('error', this.Language['not_allowed'], 3000)
+                return false
+            }
+        },
+
         // Camera angles
         HandleZoomScroll(event) {
             if (this.ShiftPressed) {
@@ -1154,6 +1193,7 @@ const app = Vue.createApp({
                 PermNameInput: '',
                 PermLabelInput: '',
             }
+            this.SelectedBossmenuCategory = 0
             this.VehiclesTable = []
             this.Feedbacks = []
             this.CategoryList = []
@@ -1512,6 +1552,21 @@ const app = Vue.createApp({
                     this.VehiclesTable = data.vehicles
                     this.SoldVehiclesLog = data.vehiclessold
                     this.Preorders = data.preorders
+                    this.Transactions = data.transactions
+                    this.PermsTable = data.perms
+                    break;
+                case 'UpdateUI':
+                    this.PlayerMoney = data.playermoney
+                    this.PlayerRank = data.playerrank
+                    this.VehicleShopName = data.vehicleshopname
+                    this.CompanyMoney = data.companymoney
+                    this.Feedbacks = data.feedbacks
+                    this.EmployeesTable = data.employees
+                    this.VehiclesTable = data.vehicles
+                    this.SoldVehiclesLog = data.vehiclessold
+                    this.Preorders = data.preorders
+                    this.Transactions = data.transactions
+                    this.PermsTable = data.perms
                     break;
                 case 'ShowNotify':
                     this.ShowNotify(data.type, data.text, data.ms)

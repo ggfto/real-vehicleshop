@@ -52,6 +52,8 @@ function OpenBossmenu(k)
             vehiclessold = Config.Vehicleshops[k].SoldVehicles,
             feedbacks = Config.Vehicleshops[k].Feedbacks,
             preorders = Config.Vehicleshops[k].Preorders,
+            transactions = Config.Vehicleshops[k].Transactions,
+            perms = Config.Vehicleshops[k].Perms
         })
         SetNuiFocus(true, true)
         CurrentVehicleshop = k
@@ -68,4 +70,34 @@ function AcceptedBuyCompany(data)
     end
 end
 
+function DepositMoney(data)
+    TriggerServerEvent('real-vehicleshop:MoneyAction', 'deposit', data)
+end
+
+function WithdrawMoney(data)
+    TriggerServerEvent('real-vehicleshop:MoneyAction', 'withdraw', data)
+end
+
+RegisterNetEvent('real-vehicleshop:UpdateUI', function()
+    local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
+    if data then
+        SendNUIMessage({
+            action = 'UpdateUI',
+            playermoney = data.Money,
+            playerrank = data.PlayerRank,
+            vehicleshopname = Config.Vehicleshops[CurrentVehicleshop].CompanyName,
+            companymoney = Config.Vehicleshops[CurrentVehicleshop].CompanyMoney,
+            employees = Config.Vehicleshops[CurrentVehicleshop].Employees,
+            vehicles = Config.Vehicleshops[CurrentVehicleshop].Vehicles,
+            vehiclessold = Config.Vehicleshops[CurrentVehicleshop].SoldVehicles,
+            feedbacks = Config.Vehicleshops[CurrentVehicleshop].Feedbacks,
+            preorders = Config.Vehicleshops[CurrentVehicleshop].Preorders,
+            transactions = Config.Vehicleshops[CurrentVehicleshop].Transactions,
+            perms = Config.Vehicleshops[CurrentVehicleshop].Perms
+        })
+    end
+end)
+
 RegisterNUICallback('BuyCompany', AcceptedBuyCompany)
+RegisterNUICallback('DepositMoney', DepositMoney)
+RegisterNUICallback('WithdrawMoney', WithdrawMoney)

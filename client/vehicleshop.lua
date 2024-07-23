@@ -382,15 +382,6 @@ function BuyPlayerVehicle(data)
     end
 end
 
-RegisterNetEvent('real-vehicleshop:SendUINotify', function(type, text, ms)
-    SendNUIMessage({
-        action = 'ShowNotify',
-        type = type,
-        text = text,
-        ms = ms
-    })
-end)
-
 RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
 RegisterNUICallback('ChangeVehicleColor', ChangeVehicleColor)
 RegisterNUICallback('ShowPlateCamera', ShowPlateCamera)
