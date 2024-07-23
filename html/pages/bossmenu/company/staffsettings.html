@@ -85,7 +85,7 @@
                                 <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                                 <div class="w-[18.3%] h-full flex flex-col items-center justify-center">
                                     <span class="w-full text-white text-[.7292vw] text-center font-medium font-['Poppins']">{{ $root.Language['rank'] }}</span>
-                                    <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins']">{{ v.rank }}</span>
+                                    <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.GetPermLabel(v.rank) }}</span>
                                 </div>
                                 <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                                 <div class="w-[16%] h-full flex flex-col items-center justify-center">
@@ -137,13 +137,13 @@
             <div class="w-full h-[12%] bg-[#000000BF] relative">
                 <img src="./img/bossmenu/employee-bg.png" class="w-[13.3333vw] h-[3.63vw] right-0 bottom-0 absolute">
                 <div class="w-[73%] h-full flex flex-col items-start justify-center left-[1.5%] top-0 absolute">
-                    <span class="w-full text-[#C3C3C3] text-[.8333vw] font-semibold font-['Poppins'] mt-[.2vw]">{{ $root.Language['deposit_withdraw_transaction'] }}</span>
-                    <span class="w-full text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['dwt_description'] }}</span>
+                    <span class="w-full text-[#C3C3C3] text-[.8333vw] font-semibold font-['Poppins'] mt-[.2vw]">{{ $root.Language['staff_settings_header'] }}</span>
+                    <span class="w-full text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['staff_settings_description'] }}</span>
                 </div>
             </div>
             <div class="w-full h-[1%]"></div>
             <div class="w-full h-[74%] flex flex-col flex items-center justify-start">
-                <div v-for="(v, k) in $root.EmployeesPage" class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
+                <div v-if="$root.FilterEmployeesTable.length > 0" v-for="(v, k) in $root.EmployeesPage" class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
                     <div class="w-[21.5%] h-full flex flex-wrap justify-between">
                         <div class="w-[27.5%] h-full flex items-center justify-center">
                             <div class="w-[76%] h-[75%] border-[.0521vw] border-[#00F0FF] rounded-[50%]">
@@ -158,7 +158,7 @@
                     <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                     <div class="w-[20%] h-full flex flex-col items-center justify-center">
                         <span class="w-full text-white text-[.7292vw] text-center font-medium font-['Poppins'] mt-[.3vw]">{{ $root.Language['rank'] }}</span>
-                        <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]">{{ v.rank }}</span>
+                        <span class="w-full text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]">{{ $root.GetPermLabel(v.rank) }}</span>
                     </div>
                     <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                     <div class="w-[20%] h-full flex flex-col items-center justify-center">
@@ -177,6 +177,9 @@
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{ $root.Language['fire'] }}</span>
                         </div>
                     </div>
+                </div>
+                <div v-else class="w-[98.5%] h-[14%] flex items-center justify-center mt-[.3vw]">
+                    <span class="w-full text-zinc-600 text-[1vw] text-center font-semibold font-['Poppins']">{{ $root.Language['no_data'] }}</span>
                 </div>
             </div>
             <div class="w-full h-[3.7%]"></div>

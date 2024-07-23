@@ -53,7 +53,9 @@ function OpenBossmenu(k)
             feedbacks = Config.Vehicleshops[k].Feedbacks,
             preorders = Config.Vehicleshops[k].Preorders,
             transactions = Config.Vehicleshops[k].Transactions,
-            perms = Config.Vehicleshops[k].Perms
+            perms = Config.Vehicleshops[k].Perms,
+            discount = Config.Vehicleshops[k].Discount,
+            categories = Config.Vehicleshops[k].Categories
         })
         SetNuiFocus(true, true)
         CurrentVehicleshop = k
@@ -78,6 +80,42 @@ function WithdrawMoney(data)
     TriggerServerEvent('real-vehicleshop:MoneyAction', 'withdraw', data)
 end
 
+function ChangeCompanyName(data)
+    TriggerServerEvent('real-vehicleshop:ChangeCompanyName', data)
+end
+
+function SendTransferRequest(data)
+    TriggerServerEvent('real-vehicleshop:SendTransferRequest', data)
+end
+
+function AcceptedTransferReq(data)
+    TriggerServerEvent('real-vehicleshop:TransferCompany', data)
+end
+
+function SendCancelTransferReqNotifyToSender(src)
+    TriggerServerEvent('real-vehicleshop:SendCancelTransferReqNotifyToSender', src)
+end
+
+function MakeDiscount(data)
+    TriggerServerEvent('real-vehicleshop:MakeDiscount', data)
+end
+
+function CancelDiscount(data)
+    TriggerServerEvent('real-vehicleshop:CancelDiscount', data)
+end
+
+function DeleteAllLogs(data)
+    TriggerServerEvent('real-vehicleshop:DeleteAllLogs', data)
+end
+
+function SendBonusToStaff(data)
+    TriggerServerEvent('real-vehicleshop:SendBonusToStaff', data)
+end
+
+function RaisePrices(data)
+    TriggerServerEvent('real-vehicleshop:RaisePrices', data)
+end
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -93,11 +131,42 @@ RegisterNetEvent('real-vehicleshop:UpdateUI', function()
             feedbacks = Config.Vehicleshops[CurrentVehicleshop].Feedbacks,
             preorders = Config.Vehicleshops[CurrentVehicleshop].Preorders,
             transactions = Config.Vehicleshops[CurrentVehicleshop].Transactions,
-            perms = Config.Vehicleshops[CurrentVehicleshop].Perms
+            perms = Config.Vehicleshops[CurrentVehicleshop].Perms,
+            discount = Config.Vehicleshops[CurrentVehicleshop].Discount
         })
     end
+end)
+
+RegisterNetEvent('real-vehicleshop:ShowTransferReqToPlayer', function(src, targetsrc, id, price)
+    SendNUIMessage({
+        action = 'SendTransferRequest',
+        vehicleshop = id,
+        name = Config.Vehicleshops[id].CompanyName,
+        price = price,
+        sender = src,
+        target = targetsrc
+    })
+    SetNuiFocus(true, true)
+end)
+
+RegisterNetEvent('real-vehicleshop:CloseBossmenu', function()
+    SendNUIMessage({ action = 'CloseBossmenu' })
+end)
+
+RegisterNetEvent('real-vehicleshop:CloseTransferReqForTarget', function()
+    SendNUIMessage({ action = 'CloseTransferReq' })
+    SetNuiFocus(false, false)
 end)
 
 RegisterNUICallback('BuyCompany', AcceptedBuyCompany)
 RegisterNUICallback('DepositMoney', DepositMoney)
 RegisterNUICallback('WithdrawMoney', WithdrawMoney)
+RegisterNUICallback('ChangeCompanyName', ChangeCompanyName)
+RegisterNUICallback('SendTransferRequest', SendTransferRequest)
+RegisterNUICallback('AcceptedTransferReq', AcceptedTransferReq)
+RegisterNUICallback('SendCancelTransferReqNotifyToSender', SendCancelTransferReqNotifyToSender)
+RegisterNUICallback('MakeDiscount', MakeDiscount)
+RegisterNUICallback('CancelDiscount', CancelDiscount)
+RegisterNUICallback('DeleteAllLogs', DeleteAllLogs)
+RegisterNUICallback('SendBonusToStaff', SendBonusToStaff)
+RegisterNUICallback('RaisePrices', RaisePrices)

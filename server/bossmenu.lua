@@ -115,26 +115,29 @@ RegisterNetEvent('real-vehicleshop:MoneyAction', function(type, data)
         if type == 'deposit' then
             if PlayerBank >= data.value then
                 RemoveAddBankMoneyOnline('remove', data.value, src)
-                information.Money += data.value
-                Config.Vehicleshops[data.id].CompanyMoney += data.value
+                information.Money = information.Money + data.value
+                Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + data.value
                 AddTransactions(src, data.id, 'deposit', data.value)
                 ActionStatus = true
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('successfully_deposited'), 3000)
             elseif PlayerCash >= data.value then
                 RemoveAddCash('remove', data.value, src)
-                information.Money += data.value
-                Config.Vehicleshops[data.id].CompanyMoney += data.value
+                information.Money = information.Money + data.value
+                Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + data.value
                 AddTransactions(src, data.id, 'deposit', data.value)
                 ActionStatus = true
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('successfully_deposited'), 3000)
             else
                 TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_money'), 3000)
             end
         elseif type == 'withdraw' then
             if information.Money >= data.value then
                 RemoveAddBankMoneyOnline('add', data.value, src)
-                information.Money -= data.value
-                Config.Vehicleshops[data.id].CompanyMoney -= data.value
+                information.Money = information.Money - data.value
+                Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney - data.value
                 AddTransactions(src, data.id, 'withdraw', data.value)
                 ActionStatus = true
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('successfully_withdrawn'), 3000)
             else
                 TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_money_in_company'), 3000)
             end
@@ -150,6 +153,199 @@ end)
 RegisterNetEvent('real-vehicleshop:RemoveFromSrcTable', function(id)
     local src = source
     RemoveFromSrcTable(id, src)
+end)
+
+RegisterNetEvent('real-vehicleshop:ChangeCompanyName', function(data)
+    local result = ExecuteSql("SELECT `information` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        information.Name = data.value
+        Config.Vehicleshops[data.id].CompanyName = data.value
+        ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:SendTransferRequest', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `information` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local identifier = GetIdentifier(src)
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        if identifier == information.Owner then
+            if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                local Player = frameworkObject.Functions.GetPlayer(data.targetid)
+                local TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
+                if TargetPlayer then
+                    if src ~= data.targetid then
+                        TriggerClientEvent('real-vehicleshop:ShowTransferReqToPlayer', data.targetid, src, data.targetid, data.id, data.price)
+                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
+                    else
+                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
+                    end
+                else
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
+                end
+            else
+                -- ESX
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:MakeDiscount', function(data)
+    local result = ExecuteSql("SELECT `information`, `vehicles` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        local vehicles = json.decode(result[1].vehicles)
+        for k, v in ipairs(vehicles) do
+            v.discount = 0
+        end
+        information.Discount = data.value
+        Config.Vehicleshops[data.id].Discount = data.value
+        Config.Vehicleshops[data.id].Vehicles = vehicles
+        ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:CancelDiscount', function(id)
+    local result = ExecuteSql("SELECT `information` FROM `real_vehicleshop` WHERE `id` = '"..id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        information.Discount = 0
+        Config.Vehicleshops[id].Discount = 0
+        ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."' WHERE `id` = '"..id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(id)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:DeleteAllLogs', function(id)
+    Config.Vehicleshops[id].SoldVehicles = {}
+    Config.Vehicleshops[id].Transactions = {}
+    ExecuteSql("UPDATE `real_vehicleshop` SET `soldvehicles` = @soldvehicles, `transactions` = @transactions WHERE `id` = @id", {
+        ['@id'] = id,
+        ['@soldvehicles'] = json.encode(Config.Vehicleshops[id].SoldVehicles),
+        ['@transactions'] = json.encode(Config.Vehicleshops[id].Transactions)
+    })
+    TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+    UpdateForAllSrcTable(id)
+end)
+
+RegisterNetEvent('real-vehicleshop:SendBonusToStaff', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `information`, `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        local employees = json.decode(result[1].employees)
+        local Check = false
+        if #employees == 1 and employees[1].rank == 'owner' then
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_employee_for_bonus'), 5000)
+            return
+        end
+        local TotalBonus = 0
+        for k, v in ipairs(employees) do
+            if v.rank ~= 'owner' then
+                TotalBonus = TotalBonus + data.value
+            end
+        end
+        if RemoveMoneyFromCompany(data.id, TotalBonus) then
+            if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                for k, v in ipairs(employees) do
+                    if v.rank ~= 'owner' then
+                        local Player = frameworkObject.Functions.GetSource(v.identifier)
+                        if Player then
+                            RemoveAddBankMoneyOnline('add', data.value, Player)
+                            Check = true
+                            -- Send Mail To Target Player
+                        else
+                            AddBankMoneyOffline(v.identifier, data.value)
+                            Check = true
+                            -- Send Mail To Target Player
+                        end
+                    end
+                end
+            else
+                for k, v in ipairs(employees) do
+                    if v.rank ~= 'owner' then
+                        local Player = frameworkObject.GetPlayerFromIdentifier(v.identifier)
+                        if Player then
+                            RemoveAddBankMoneyOnline('add', data.value, Player)
+                            Check = true
+                            -- Send Mail To Target Player
+                        else
+                            AddBankMoneyOffline(v.identifier, data.value)
+                            Check = true
+                            -- Send Mail To Target Player
+                        end
+                    end
+                end
+            end
+        else
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_money_in_company'), 3000)
+        end
+        if Check then
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('successfully_sent_bonus'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:RaisePrices', function(data)
+    local result = ExecuteSql("SELECT `vehicles`, `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local vehicles = json.decode(result[1].vehicles)
+        for k, v in ipairs(vehicles) do
+            v.price = v.price + (v.price * data.value / 100)
+        end
+        Config.Vehicleshops[data.id].Vehicles = vehicles
+        ExecuteSql("UPDATE `real_vehicleshop` SET `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:TransferCompany', function(data)
+    local src = data.sender
+    local targetsrc = data.target
+    local result = ExecuteSql("SELECT `information`, `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local TargetIdentifier = GetIdentifier(targetsrc)
+    local TargetBank = GetPlayerMoneyOnline(targetsrc, 'bank')
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        local employees = json.decode(result[1].employees)
+        if TargetBank >= data.price then
+            RemoveAddBankMoneyOnline('remove', data.price, targetsrc)
+            RemoveAddBankMoneyOnline('add', data.price, src)
+            information.Owner = TargetIdentifier
+            Config.Vehicleshops[data.id].Owner = TargetIdentifier
+            for k, v in ipairs(employees) do
+                if v.rank == 'owner' then
+                    v.identifier = TargetIdentifier
+                    v.name = GetName(targetsrc)
+                    v.pp = GetDiscordAvatar(targetsrc)
+                    break
+                end
+            end
+            Config.Vehicleshops[data.id].Employees = employees
+            CloseBossmenuForAllTable(data.id)
+            Config.Notification(Language('sold_company'), 'success', true, src)
+            Config.Notification(Language('successfully_bought_company'), 'success', true, targetsrc)
+            ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            TriggerClientEvent('real-vehicleshop:CloseTransferReqForTarget', targetsrc)
+        else
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('targetplayer_does_not_have_money'), 3000)
+            Config.Notification(Language('not_enough_money'), 'error', true, targetsrc)
+            TriggerClientEvent('real-vehicleshop:CloseTransferReqForTarget', targetsrc)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:SendCancelTransferReqNotifyToSender', function(src)
+    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('targetplayer_rejected'), 3000)
 end)
 
 function RemoveFromSrcTable(id, src)
@@ -169,6 +365,30 @@ function UpdateForAllSrcTable(id)
             TriggerClientEvent('real-vehicleshop:UpdateUI', v)
         end
     end
+end
+
+function CloseBossmenuForAllTable(id)
+    if SrcTable[id] then
+        for k, v in ipairs(SrcTable[id]) do
+            TriggerClientEvent('real-vehicleshop:CloseBossmenu', v)
+        end
+    end
+end
+
+function RemoveMoneyFromCompany(id, amount)
+    local result = ExecuteSql("SELECT `information` FROM `real_vehicleshop` WHERE `id` = '"..id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        if information.Money >= amount then
+            information.Money = information.Money - amount
+            Config.Vehicleshops[id].CompanyMoney = Config.Vehicleshops[id].CompanyMoney - amount
+            ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."' WHERE `id` = '"..id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(id)
+            return true
+        end
+    end
+    return false
 end
 
 function AddTransactions(source, id, type, amount)

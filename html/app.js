@@ -85,7 +85,6 @@ const app = Vue.createApp({
         VehicleshopDescription: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat illum aperiam neque nisi nemo itaque error voluptatem, ut minus, eaque ex similique maxime!",
         VehicleShopStar: 4,
         Discount: 0,
-        Raise: 0,
         TestDrivePrice: 7500,
         ShowColorPicker: false,
         ColorPickerColor: "#FFFFFF",
@@ -117,91 +116,6 @@ const app = Vue.createApp({
                     Handling: 89
                 }
             },
-            {
-                name: 'elegy',
-                label: 'Elegy',
-                model: 'Custom',
-                category: 'sports',
-                price: 2500000,
-                stock: 0,
-                img: 'https://docs.fivem.net/vehicles/elegy.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-            {
-                name: 'sultanrs',
-                label: 'Sultan RS',
-                model: 'Normal',
-                category: 'sedans',
-                price: 1000000,
-                stock: 2,
-                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 123,
-                    Braking: 75,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 45
-                }
-            },
-            {
-                name: 'sultanrs',
-                label: 'Sultan RS',
-                model: 'Normal',
-                category: 'sedans',
-                price: 1000000,
-                stock: 2,
-                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-            {
-                name: 'sultanrs',
-                label: 'Sultan RS',
-                model: 'Normal',
-                category: 'sedans',
-                price: 1000000,
-                stock: 2,
-                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-            {
-                name: 'sultanrs',
-                label: 'Sultan RS',
-                model: 'Normal',
-                category: 'sedans',
-                price: 1000000,
-                stock: 2,
-                img: 'https://docs.fivem.net/vehicles/sultanrs.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
         ],
         AllVehicleData: [],
         SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında | Boss menu)
@@ -212,6 +126,7 @@ const app = Vue.createApp({
             VehicleModel: "",
             VehiclePrice: 0,
             VehicleStock: null,
+            VehicleDiscount: 0,
             VehicleTopSpeed: 0,
             VehicleBraking: 0,
             VehicleAcceleration: 0,
@@ -402,6 +317,8 @@ const app = Vue.createApp({
         TransferReqCompanyName: 'Oph3Z Vehicleshop',
         TransferReqCompanyPrice: 1000000,
         TransferReqFunctions: '',
+        TransferReqSender: null,
+        TransferReqTarget: null,
 
         // JobReq Settings
         JobReqCompanyName: 'Test Vehicleshop',
@@ -479,10 +396,16 @@ const app = Vue.createApp({
             this.ShowPopupScrren = true
             this.NormalPopupSettings.Show = true
             this.NormalPopupSettings.HeaderOne = this.Language['buyvehicle_header']
+            let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+            if (this.Discount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
+            }
             if (this.ChangedPlate) {
-                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(this.SelectedVehicleTable.VehiclePrice) + ' + ' + this.FormatMoney(this.PlateChangePrice)
+                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(SelectedVehiclePrice) + ' + ' + this.FormatMoney(this.PlateChangePrice)
             } else {
-                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(this.SelectedVehicleTable.VehiclePrice)
+                this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(SelectedVehiclePrice)
             }
             this.NormalPopupSettings.Description = this.Language['buyvehicle_description']
             this.NormalPopupSettings.Function = 'buyvehicle'
@@ -491,6 +414,11 @@ const app = Vue.createApp({
         ConfirmBuyVehicle() {
             if (this.PlayerMoney >= this.SelectedVehicleTable.VehiclePrice) {
                 let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+                if (this.Discount > 0) {
+                    SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
+                } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+                    SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
+                }
                 if (this.ChangedPlate) {
                     SelectedVehiclePrice = SelectedVehiclePrice + this.PlateChangePrice
                 }
@@ -621,6 +549,7 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleModel = v.model
                 this.SelectedVehicleTable.VehiclePrice = v.price
                 this.SelectedVehicleTable.VehicleStock = v.stock
+                this.SelectedVehicleTable.VehicleDiscount = v.discount
                 this.SelectedVehicleTable.VehicleTopSpeed = v.information.TopSpeed
                 this.SelectedVehicleTable.VehicleBraking = v.information.Braking
                 this.SelectedVehicleTable.VehicleAcceleration = v.information.Acceleration
@@ -1011,6 +940,13 @@ const app = Vue.createApp({
                     id: this.CurrentVehicleshop,
                     price: this.TransferReqCompanyPrice,
                 })
+            } else if (this.TransferReqFunctions == 'transferreq') {
+                postNUI('AcceptedTransferReq', {
+                    id: this.CurrentVehicleshop,
+                    price: this.TransferReqCompanyPrice,
+                    sender: this.TransferReqSender,
+                    target: this.TransferReqTarget
+                })
             }
         },
 
@@ -1021,6 +957,16 @@ const app = Vue.createApp({
                 this.TransferReqCompanyPrice = 0
                 this.TransferReqCompanyName = ''
                 this.TransferReqFunctions = ''
+                postNUI('SetNuiFocus', false)
+            } else if (this.TransferReqFunctions == 'transferreq') {
+                postNUI('SendCancelTransferReqNotifyToSender', this.TransferReqSender)
+                this.ShowPopupToTarget = ''
+                this.CurrentVehicleshop = -1
+                this.TransferReqCompanyPrice = 0
+                this.TransferReqCompanyName = ''
+                this.TransferReqFunctions = ''
+                this.TransferReqTarget = null
+                this.TransferReqSender = null
                 postNUI('SetNuiFocus', false)
             }
         },
@@ -1052,6 +998,99 @@ const app = Vue.createApp({
             }
         },
 
+        // Company Settings
+        ChangeCompanyName() {
+            if (this.Inputs.CompanyNameInput.length > 0) {
+                if (this.PermCheck(this.PlayerRank, 'administration')) {
+                    postNUI('ChangeCompanyName', {
+                        id: this.CurrentVehicleshop,
+                        value: this.Inputs.CompanyNameInput
+                    })
+                    this.Inputs.CompanyNameInput = ''
+                    this.ShowNotify('success', this.Language['successfully_changed_company_name'], 3000)
+                }
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
+        SendTransferRequest() {
+            if (this.GetPermName(this.PlayerRank) && this.GetPermName(this.PlayerRank) == 'owner') {
+                if (this.Inputs.TransferIdInput > 0) {
+                    if (this.Inputs.TransferPriceInput > 0) {
+                        postNUI('SendTransferRequest', {
+                            id: this.CurrentVehicleshop,
+                            targetid: this.Inputs.TransferIdInput,
+                            price: this.Inputs.TransferPriceInput
+                        })
+                    } else {
+                        this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
+            }
+        },
+
+        MakeDiscount() {
+            if (this.Inputs.DiscountInput > 0) {
+                if (this.PermCheck(this.PlayerRank, 'discount')) {
+                    postNUI('MakeDiscount', {
+                        id: this.CurrentVehicleshop,
+                        value: this.Inputs.DiscountInput
+                    })
+                    this.Inputs.DiscountInput = ''
+                    this.ShowNotify('success', this.Language['successfully_launched_discount'], 3000)
+                }
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
+        CancelDiscount() {
+            if (this.PermCheck(this.PlayerRank, 'discount')) {
+                postNUI('CancelDiscount', this.CurrentVehicleshop)
+                this.Inputs.DiscountInput = ''
+                this.ShowNotify('information', this.Language['successfully_canceled_discount'], 3000)
+            }
+        },
+
+        DeleteAllLogs() {
+            if (this.PermCheck(this.PlayerRank, 'removelog')) {
+                postNUI('DeleteAllLogs', this.CurrentVehicleshop)
+                this.ShowNotify('success', this.Language['successfully_deleted_logs'], 3000)
+            }
+        },
+
+        SendBonusToStaff() {
+            if (this.Inputs.BonusesInput > 0) {
+                if (this.PermCheck(this.PlayerRank, 'bonus')) {
+                    postNUI('SendBonusToStaff', {
+                        id:  this.CurrentVehicleshop,
+                        value: this.Inputs.BonusesInput
+                    })
+                    this.Inputs.BonusesInput = ''
+                }
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
+        RaisePrices() {
+            if (this.Inputs.RaiseInput > 0) {
+                if (this.PermCheck(this.PlayerRank, 'raise')) {
+                    postNUI('RaisePrices', {
+                        id: this.CurrentVehicleshop,
+                        value: this.Inputs.RaiseInput
+                    })
+                    this.Inputs.RaiseInput = ''
+                    this.ShowNotify('success', this.Language['successfully_raised'], 3000)
+                }
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
+        },
+
         // Perm Check
         PermCheck(name, action) {
             let Author = this.PermsTable.find(v => v.label == name)
@@ -1061,6 +1100,24 @@ const app = Vue.createApp({
             } else {
                 this.ShowNotify('error', this.Language['not_allowed'], 3000)
                 return false
+            }
+        },
+
+        GetPermName(label) {
+            let Author = this.PermsTable.find(v => v.label == label)
+            if (Author) {
+                return Author.name
+            } else {
+                return null
+            }
+        },
+
+        GetPermLabel(name) {
+            let Author = this.PermsTable.find(v => v.name == name)
+            if (Author) {
+                return Author.label
+            } else {
+                return null
             }
         },
 
@@ -1265,6 +1322,19 @@ const app = Vue.createApp({
                 this.DraggingCheck = false
             }
         },
+
+        // Important Functions
+        DiscountedPriceWithValue(vprice) {
+            let price = vprice
+      
+            if (this.Discount > 0) {
+              return price - (price * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+              return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
+            } else {
+              return price
+            }
+        },
     },  
     
     computed: {
@@ -1394,16 +1464,16 @@ const app = Vue.createApp({
 
         FilterEmployeesTable() {
             if (!this.Inputs.EmployeesInput) {
-                return this.EmployeesTable
+                return this.EmployeesTable.filter(v => v.rank != 'owner')
             }
 
             const input = this.Inputs.EmployeesInput.toLowerCase();
 
             return this.EmployeesTable.filter(v => {
                 return (
-                    v.name.toLowerCase().includes(input) ||
-                    v.identifier.toLowerCase().includes(input) ||
-                    v.salary.toString().includes(this.Inputs.EmployeesInput)
+                    v.name.toLowerCase().includes(input) && v.rank != 'owner' ||
+                    v.identifier.toLowerCase().includes(input) && v.rank != 'owner' ||
+                    v.salary.toString().includes(this.Inputs.EmployeesInput) && v.rank != 'owner'
                 );
             });
         },
@@ -1430,6 +1500,45 @@ const app = Vue.createApp({
 
         FilterCategories() {
             return this.CategoryList.filter(v => v.name != 'all')
+        },
+
+        TotalProfit() {
+            let total = 0
+      
+            this.SoldVehiclesLog.forEach(v => {
+              total += v.price
+            })
+      
+            this.Transactions.forEach(v => {
+                if (v.type === 'deposit') {
+                  total += v.amount
+                }
+            })
+      
+            return total
+        },
+
+        TotalPayout() {
+            let total = 0
+            this.Transactions.forEach(v => {
+                if (v.type === 'withdraw') {
+                  total += v.amount
+                }
+            })
+      
+            return total
+        },
+
+        DiscountedPrice() {
+            let price = this.SelectedVehicleTable.VehiclePrice
+      
+            if (this.Discount > 0) {
+              return price - (price * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+              return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
+            } else {
+              return price
+            }
         },
     },
 
@@ -1488,7 +1597,6 @@ const app = Vue.createApp({
                     this.CategoryList = data.categories
                     this.Feedbacks = data.feedbacks
                     this.Discount = data.discount
-                    this.Raise = data.raise
                     break;
                 case 'UpdateCreateSelectedVehicle':
                     this.SelectedVehicleTable.VehicleTopSpeed = data.speed
@@ -1554,6 +1662,11 @@ const app = Vue.createApp({
                     this.Preorders = data.preorders
                     this.Transactions = data.transactions
                     this.PermsTable = data.perms
+                    this.Discount = data.discount
+                    this.CategoryList = data.categories
+                    if (this.Discount > 0) {
+                        this.Inputs.DiscountInput = data.discount
+                    }
                     break;
                 case 'UpdateUI':
                     this.PlayerMoney = data.playermoney
@@ -1567,6 +1680,22 @@ const app = Vue.createApp({
                     this.Preorders = data.preorders
                     this.Transactions = data.transactions
                     this.PermsTable = data.perms
+                    this.Discount = data.discount
+                    if (this.Discount > 0) {
+                        this.Inputs.DiscountInput = data.discount
+                    }
+                    break;
+                case 'SendTransferRequest':
+                    this.ShowPopupToTarget = 'TransferRequest'
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.TransferReqCompanyPrice = data.price
+                    this.TransferReqCompanyName = data.name
+                    this.TransferReqSender = data.sender
+                    this.TransferReqTarget = data.target
+                    this.TransferReqFunctions = 'transferreq'
+                    break;
+                case 'CloseBossmenu':
+                    this.CloseBossmenu()
                     break;
                 case 'ShowNotify':
                     this.ShowNotify(data.type, data.text, data.ms)
@@ -1584,7 +1713,7 @@ const app = Vue.createApp({
                 if (this.Show && this.MainPage != 'Bossmenu' && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI(true)
                 }
-                if (this.Show && this.MainPage == 'Bossmenu') {
+                if (this.Show && this.MainPage == 'Bossmenu' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && !this.ShowBossPopup) {
                     this.CloseBossmenu()
                 }
                 if (this.activePage == 'preview') {
@@ -1629,7 +1758,6 @@ const app = Vue.createApp({
 });
 
 app.component('inlinesvg', inlinesvg);
-
 app.use(store).mount("#app");
 
 const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : "real-vehicleshop";

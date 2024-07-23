@@ -8,7 +8,7 @@
                         <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['company_money_description'] }}</span>
                     </div>
                 </div>
-                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-[3.63vw] right-0 top-0 absolute">
+                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-full right-0 top-0 absolute">
             </div>
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
@@ -42,7 +42,7 @@
                         <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['profit_description'] }}</span>
                     </div>
                 </div>
-                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-[3.63vw] right-0 top-0 absolute">
+                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-full right-0 top-0 absolute">
             </div>
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98.5%] h-[86%] flex flex-col left-[.3vw] top-[.25vw] absolute">
@@ -52,7 +52,7 @@
                     <div class="w-full h-[5%]"></div>
                     <div class="w-full h-[40%] flex items-center bg-[#000000DE]">
                         <div class="w-full flex items-center justify-center">
-                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">$7 500</span>
+                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">${{ $root.FormatMoney($root.TotalProfit) }}</span>
                             <span class="text-white text-[.7813vw] font-semibold font-['Poppins']">{{ $root.Language['earned'] }}</span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                         <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['payout_description'] }}</span>
                     </div>
                 </div>
-                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-[3.63vw] right-0 top-0 absolute">
+                <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-full right-0 top-0 absolute">
             </div>
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98.5%] h-[86%] flex flex-col left-[.3vw] top-[.25vw] absolute">
@@ -78,7 +78,7 @@
                     <div class="w-full h-[5%]"></div>
                     <div class="w-full h-[40%] flex items-center bg-[#000000DE]">
                         <div class="w-full flex items-center justify-center">
-                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">$7 500</span>
+                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">${{ $root.FormatMoney($root.TotalPayout) }}</span>
                             <span class="text-white text-[.7813vw] font-semibold font-['Poppins']">{{ $root.Language['was_spent'] }}</span>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
     </div>
     <div class="w-[49.5%] h-[98%] flex flex-col bg-[#000000BF] rounded-[.2604vw]">
         <div class="w-full h-[12%] bg-[#000000BF] relative">
-            <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-[3.63vw] right-0 bottom-0 absolute">
+            <img src="./img/bossmenu/dashboard/dollar.png" class="w-[13.3333vw] h-full right-0 bottom-0 absolute">
             <div class="w-[73%] h-full flex flex-col items-start justify-center left-[1.5%] top-0 absolute">
                 <span class="w-full text-[#C3C3C3] text-[.8333vw] font-semibold font-['Poppins'] mt-[.2vw]">{{ $root.Language['deposit_withdraw_transaction'] }}</span>
                 <span class="w-full text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{ $root.Language['dwt_description'] }}</span>
@@ -137,7 +137,7 @@
         <div class="w-full h-[6%] flex flex-wrap">
             <div class="w-[1.2%] h-full"></div>
             <div class="w-[97.6%] h-full flex items-center justify-between">
-                <div class="w-[54%] h-full flex bg-[#5555554D] rounded-[.1563vw] relative" v-if="$root.TransactionsPage.length > 0">
+                <div class="w-[54%] h-full flex bg-[#5555554D] rounded-[.1563vw] relative">
                     <input type="text" class="w-[88%] h-full outline-none pl-[.5vw] bossmenu-classic-search-input left-0 absolute" :placeholder="$root.Language['bossmenu_search_input']" v-model="$root.Inputs.TransactionsInput">
                     <div class="w-[12%] h-full flex items-center justify-center right-0 absolute">
                         <inlinesvg class="w-[.9375vw] h-[.9375vw] flex item-center justify-center" src="./img/bossmenu/search.svg"></inlinesvg>

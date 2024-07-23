@@ -78,7 +78,11 @@
                                     <span class="w-full text-white text-[.8854vw] font-semibold font-['medium']">{{ Language['vehicle_setup_and_information'] }}</span>
                                 </div>
                                 <div class="w-full h-[10%]"></div>
-                                <div class="w-full h-[60%] flex flex-wrap items-start justify-start">
+                                <div class="w-full h-[60%] flex flex-wrap items-start justify-start" v-if="Discount > 0 || SelectedVehicleTable.VehicleDiscount > 0">
+                                    <div v-if="!ChangedPlate" class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(DiscountedPrice) }}<del class="opacity-70 text-[#ff3f3f] text-[2.0833vw] font-semibold font-['Poppins'] ml-[.4vw] italic">${{ FormatMoney(SelectedVehicleTable.VehiclePrice) }}</del><span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
+                                    <div v-else class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(DiscountedPrice + PlateChangePrice) }}<del class="opacity-70 text-[#ff3f3f] text-[2.0833vw] font-semibold font-['Poppins'] ml-[.4vw] italic">${{ FormatMoney(SelectedVehicleTable.VehiclePrice) }}</del><span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
+                                </div>
+                                <div class="w-full h-[60%] flex flex-wrap items-start justify-start" v-else>
                                     <div v-if="!ChangedPlate" class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(SelectedVehicleTable.VehiclePrice) }}<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
                                     <div v-else class="w-full"><span class="text-cyan-400 text-[1.9833vw] font-semibold font-['bold']">$ {{ FormatMoney(SelectedVehicleTable.VehiclePrice + PlateChangePrice) }}<span class="text-white text-[.9375vw] font-medium font-['regular'] italic ml-[.8vw]">{{ Language['price'] }}</span></span></div>
                                 </div>
@@ -286,9 +290,13 @@
                                     </div>
                                     <div class="w-full h-[3%] left-0 top-[78.5%] absolute"></div>
                                     <div class="w-full h-[18.5%] flex items-center justify-between left-0 bottom-0 bg-[#000000DE] rounded-[.2604vw] absolute">
-                                        <span class="w-[50%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }" v-if="HasOwner">{{ Language['stock'] + ': ' + v.stock }}</span>
-                                        <span class="w-[50%] text-white text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" v-else>{{ Language['stock'] + ': ' + Language['available'] }}</span>
-                                        <span class="w-[50%] text-[.8333vw] text-right font-semibold font-['regular'] right-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(v.price) }}</span>
+                                        <span class="w-[40%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }" v-if="HasOwner">{{ Language['stock'] + ': ' + v.stock }}</span>
+                                        <span class="w-[40%] text-white text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" v-else>{{ Language['stock'] + ': ' + Language['available'] }}</span>
+                                        <div v-if="Discount > 0 || SelectedVehicleTable.VehicleDiscount > 0" class="w-[60%] flex items-center justify-end right-[.65vw] absolute">
+                                            <span class="w-[60%] text-[.8333vw] text-right font-semibold font-['regular']" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(DiscountedPriceWithValue(v.price)) }}</span>
+                                            <del class="w-[40%] text-[#FF4040] text-[.65vw] text-right font-semibold font-['regular']">$ {{ FormatMoney(v.price) }}</del>
+                                        </div>
+                                        <span v-else class="w-[60%] text-[.8333vw] text-right font-semibold font-['regular'] right-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(v.price) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -425,8 +433,12 @@
                                     </div>
                                     <div class="w-full h-[3%] left-0 top-[78.5%] absolute"></div>
                                     <div class="w-full h-[18.5%] flex items-center justify-between left-0 bottom-0 bg-[#000000DE] rounded-[.2604vw] absolute">
-                                        <span class="w-[50%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }">{{ Language['stock'] + ': ' + v.stock }}</span>
-                                        <span class="w-[50%] text-[.8333vw] text-[#fff] text-right font-semibold font-['regular'] right-[.65vw] absolute">$ {{ FormatMoney(v.price) }}</span>
+                                        <span class="w-[40%] text-[.8333vw] font-semibold font-['regular'] left-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-white': v.stock > 0 }">{{ Language['stock'] + ': ' + v.stock }}</span>
+                                        <div v-if="Discount > 0 || SelectedVehicleTable.VehicleDiscount > 0" class="w-[60%] flex items-center justify-end right-[.65vw] absolute">
+                                            <span class="w-[60%] text-[.8333vw] text-right font-semibold font-['regular']" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(DiscountedPriceWithValue(v.price)) }}</span>
+                                            <del class="w-[40%] text-[#FF4040] text-[.65vw] text-right font-semibold font-['regular']">$ {{ FormatMoney(v.price) }}</del>
+                                        </div>
+                                        <span v-else class="w-[60%] text-[.8333vw] text-right font-semibold font-['regular'] right-[.65vw] absolute" :class="{ 'text-[#989898]': v.stock == 0, 'text-[#fff]': SelectedVehicleTable.VehicleIndex != k && v.stock > 0, 'text-cyan-400': SelectedVehicleTable.VehicleIndex == k }">$ {{ FormatMoney(v.price) }}</span>
                                     </div>
                                 </div>
                             </div>

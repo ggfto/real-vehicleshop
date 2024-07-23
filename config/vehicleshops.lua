@@ -21,7 +21,6 @@ Config.Vehicleshops = {
         Transactions = {}, -- Dont touch
         Perms = {}, -- Dont touch
         Discount = 0, -- Dont touch
-        Raise = 0, -- Dont touch
 
         BlipSettings = {
             Enable = true,

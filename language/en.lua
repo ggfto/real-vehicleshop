@@ -103,6 +103,8 @@ Locales['en'] = {
     ['was_spent'] = "Was Spent",
     ['deposit_withdraw_transaction'] = "Deposit and Withdrawal Transactions",
     ['dwt_description'] = "The company's withdrawal and deposit history.",
+    ['staff_settings_header'] = "Employee settings",
+    ['staff_settings_description'] = "Here you can edit the rank and salary of employees.",
     ['staff'] = "Staff",
     ['rank'] = "Rank",
     ['amount'] = "Amount",
@@ -203,6 +205,17 @@ Locales['en'] = {
     ['dont_leave_empty'] = "Do not leave the field empty!",
     ['not_allowed'] = "You are not authorized to take this action",
     ['not_enough_money_in_company'] = "Your company doesn't have that much money.",
+    ['successfully_deposited'] = "You have successfully deposited money.",
+    ['successfully_withdrawn'] = "You have successfully withdrawn money.",
+    ['successfully_changed_company_name'] = "You successfully changed the name of the company.",
+    ['successfully_launched_discount'] = "Successfully launched a discount campaign.",
+    ['successfully_canceled_discount'] = "The discount campaign is over.",
+    ['successfully_deleted_logs'] = "All logs were successfully deleted.",
+    ['successfully_sent_bonus'] = "Successfully distributed bonuses to all employees",
+    ['not_enough_employee_for_bonus'] = "There is only one employee and he is the owner of the company. You can't give a bonus to the owner of the company.",
+    ['successfully_raised'] = "You have successfully raised prices on all products.",
+    ['targetplayer_does_not_have_money'] = "The other player doesn't have the money to accept your offer",
+    ['targetplayer_rejected'] = "The player rejected your offer.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
@@ -212,4 +225,8 @@ Locales['en'] = {
     -- Notify
     ['not_allowed_to_open_vs'] = "You don't have permission to access to this shop.",
     ['successfully_bought_company'] = "Congratulations! This company belongs to you now.",
+    ['request_sent'] = "Request sent to the target player.",
+    ['player_not_found'] = "There is no such player on the server.",
+    ['same_player_error'] = "You can't send requests to yourself.",
+    ['sold_company'] = "You successfully sold the company.",
 }

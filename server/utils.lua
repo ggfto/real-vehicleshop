@@ -118,6 +118,20 @@ function RemoveAddCash(type, amount, id)
     end
 end
 
+function AddBankMoneyOffline(identifier, payment)
+    if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+        local result = ExecuteSql("SELECT money FROM players WHERE citizenid = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].money)
+        targetMoney.bank = targetMoney.bank + payment
+        ExecuteSql("UPDATE players SET money = '"..json.encode(targetMoney).."' WHERE citizenid = '"..identifier.."'")
+    else
+        local result = ExecuteSql("SELECT accounts FROM users WHERE identifier = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].accounts)
+        targetMoney.bank = targetMoney.bank + payment
+        ExecuteSql("UPDATE users SET accounts = '"..json.encode(targetMoney).."' WHERE identifier = '"..identifier.."'")
+    end
+end
+
 function GetName(source)
     if Config.Framework == "esx" or Config.Framework == "oldesx" then
         local Player = frameworkObject.GetPlayerFromId(tonumber(source))
@@ -165,7 +179,6 @@ function StartScript()
             Money = v.CompanyMoney,
             Rating = 0,
             Discount = 0,
-            Raise = 0
         }
         if next(result) == nil and #result == 0 then
             ExecuteSql("INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complains, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complains, @preorders, @employees, @soldvehicles, @transactions, @perms)", {
@@ -203,7 +216,6 @@ function LoadData()
         Config.Vehicleshops[k].CompanyMoney = information.Money
         Config.Vehicleshops[k].Rating = information.Rating
         Config.Vehicleshops[k].Discount = information.Discount
-        Config.Vehicleshops[k].Raise = information.Raise
         Config.Vehicleshops[k].Vehicles = json.decode(v.vehicles)
         Config.Vehicleshops[k].Categories = json.decode(v.categories)
         Config.Vehicleshops[k].Feedbacks = json.decode(v.feedbacks)
