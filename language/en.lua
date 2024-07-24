@@ -218,6 +218,13 @@ Locales['en'] = {
     ['targetplayer_rejected'] = "The player rejected your offer.",
     ['not_enough_perms'] = "There is no authorization to be given to the player. Create first.",
     ['accepted_job_offer'] = "The person has accepted your job offer.",
+    ['salary_penalty_applied'] = "Salary penalty applied.",
+    ['removed_penalty'] = "The person's sentence was terminated.",
+    ['no_higher_rank'] = "There is no higher rank to be given. There is no other higher rank other than Owner. Create one.",
+    ['no_lower_rank'] = "There is no lower rank to be given.",
+    ['rank_changed'] = "The rank was successfully changed.",
+    ['fired_employee'] = "The employee was fired from the company.",
+    ['cant_fine_owner'] = "You can't fine the owner of the company.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
@@ -233,4 +240,5 @@ Locales['en'] = {
     ['sold_company'] = "You successfully sold the company.",
     ['got_job'] = "You got a job. Congratulations.",
     ['rejected_job_offer'] = "The person rejected your job offer.",
+    ['same_player_error_second'] = "You can't enter your own id.",
 }

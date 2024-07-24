@@ -89,7 +89,7 @@ Config.DefaultPerms = {
         removable = false,
         editable = false,
     },
-    { -- Dont remove this one. You can just edit label and description.
+    {
         name = 'worker',
         label = 'Worker',
         permissions = {

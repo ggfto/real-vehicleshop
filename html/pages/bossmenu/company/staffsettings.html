@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="w-[29.5%] h-full flex items-start">
-                            <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                            <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="$root.GiveSalaryPenalty()">
                                 <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['punish'] }}</span>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                                 <div class="w-[23.7%] h-full flex flex-col items-center justify-center">
-                                    <div class="w-[80%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.15vw] cursor-pointer">
+                                    <div class="w-[80%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.15vw] cursor-pointer" @click="$root.EndThePunishment(v.identifier)">
                                         <span class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.Language['end_the_punishment'] }}</span>
                                     </div>
                                 </div>
@@ -166,14 +166,14 @@
                         <div class="w-full text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]">${{ $root.FormatMoney(v.salary) }}</div>
                     </div>
                     <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
-                    <div class="w-[38.2%] h-full flex flex-wrap items-center justify-evenly">
-                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#5E5E5E] cursor-pointer">
+                    <div class="w-[38.2%] h-full flex flex-wrap items-center justify-evenly" v-if="v.name != $root.PlayerName">
+                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#5E5E5E] cursor-pointer" @click="$root.RankUpEmployee(v.identifier)">
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{ $root.Language['rank_up'] }}</span>
                         </div>
-                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#5E5E5E] cursor-pointer">
+                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#5E5E5E] cursor-pointer" @click="$root.ReduceEmployeeRank(v.identifier)">
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{ $root.Language['reduce_rank'] }}</span>
                         </div>
-                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#00F0FF] cursor-pointer">
+                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#00F0FF] cursor-pointer" @click="$root.FireEmployee(v.identifier)">
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{ $root.Language['fire'] }}</span>
                         </div>
                     </div>

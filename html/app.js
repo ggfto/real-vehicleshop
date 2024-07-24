@@ -976,6 +976,8 @@ const app = Vue.createApp({
                             targetid: this.Inputs.TransferIdInput,
                             price: this.Inputs.TransferPriceInput
                         })
+                        this.Inputs.TransferIdInput = ''
+                        this.Inputs.TransferPriceInput = ''
                     } else {
                         this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
                     }
@@ -1054,6 +1056,8 @@ const app = Vue.createApp({
                             targetid: this.Inputs.EmployeeIdInput,
                             salary: this.Inputs.EmployeeSalaryInput
                         })
+                        this.Inputs.EmployeeIdInput = ''
+                        this.Inputs.EmployeeSalaryInput = ''
                     } else {
                         this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
                     }
@@ -1082,6 +1086,70 @@ const app = Vue.createApp({
             this.JobReqSalary = 0
             this.JobReqSender = null
             this.JobReqTarget = null
+        },
+
+        GiveSalaryPenalty() {
+            if (this.PermCheck(this.PlayerRank, 'penalty')) {
+                if (this.Inputs.SalaryPenaltyIdInput > 0) {
+                    if (this.Inputs.SalaryPenaltyInput > 0) {
+                        postNUI('GiveSalaryPenalty', {
+                            id: this.CurrentVehicleshop,
+                            targetid: this.Inputs.SalaryPenaltyIdInput,
+                            penalty: this.Inputs.SalaryPenaltyInput
+                        })
+                        this.Inputs.SalaryPenaltyIdInput = ''
+                        this.Inputs.SalaryPenaltyInput = ''
+                    } else {
+                        this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
+            }
+        },
+
+        EndThePunishment(identifier) {
+            if (this.PermCheck(this.PlayerRank, 'penalty')) {
+                if (identifier) {
+                    postNUI('EndThePunishment', {
+                        id: this.CurrentVehicleshop,
+                        identifier: identifier
+                    })
+                }
+            }
+        },
+
+        RankUpEmployee(identifier) {
+            if (this.PermCheck(this.PlayerRank, 'rankchange')) {
+                if (identifier) {
+                    postNUI('RankUpEmployee', {
+                        id: this.CurrentVehicleshop,
+                        identifier: identifier
+                    })
+                }
+            }
+        },
+
+        ReduceEmployeeRank(identifier) {
+            if (this.PermCheck(this.PlayerRank, 'rankchange')) {
+                if (identifier) {
+                    postNUI('ReduceEmployeeRank', {
+                        id: this.CurrentVehicleshop,
+                        identifier: identifier
+                    })
+                }
+            }
+        },
+
+        FireEmployee(identifier) {
+            if (this.PermCheck(this.PlayerRank, 'fire')) {
+                if (identifier) {
+                    postNUI('FireEmployee', {
+                        id: this.CurrentVehicleshop,
+                        identifier: identifier
+                    })
+                }
+            }
         },
 
         // Perm Functions

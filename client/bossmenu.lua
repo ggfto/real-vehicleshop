@@ -128,6 +128,25 @@ function SendRejectedJobReqToSender(src)
     TriggerServerEvent('real-vehicleshop:SendRejectedJobReqToSender', src)
 end
 
+function GiveSalaryPenalty(data)
+    TriggerServerEvent('real-vehicleshop:GiveSalaryPenalty', data)
+end
+
+function EndThePunishment(data)
+    TriggerServerEvent('real-vehicleshop:EndThePunishment', data)
+end
+
+function RankUpEmployee(data)
+    TriggerServerEvent('real-vehicleshop:RankUpEmployee', data)
+end
+
+function ReduceEmployeeRank(data)
+    TriggerServerEvent('real-vehicleshop:ReduceEmployeeRank', data)
+end
+
+function FireEmployee(data)
+    TriggerServerEvent('real-vehicleshop:FireEmployee', data)
+end
 
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
@@ -203,3 +222,8 @@ RegisterNUICallback('RaisePrices', RaisePrices)
 RegisterNUICallback('SendJobRequest', SendJobRequest)
 RegisterNUICallback('AcceptedJobRequest', AcceptedJobRequest)
 RegisterNUICallback('SendRejectedJobReqToSender', SendRejectedJobReqToSender)
+RegisterNUICallback('GiveSalaryPenalty', GiveSalaryPenalty)
+RegisterNUICallback('EndThePunishment', EndThePunishment)
+RegisterNUICallback('RankUpEmployee', RankUpEmployee)
+RegisterNUICallback('ReduceEmployeeRank', ReduceEmployeeRank)
+RegisterNUICallback('FireEmployee', FireEmployee)

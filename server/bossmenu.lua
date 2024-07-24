@@ -173,21 +173,22 @@ RegisterNetEvent('real-vehicleshop:SendTransferRequest', function(data)
     local identifier = GetIdentifier(src)
     if #result > 0 then
         local information = json.decode(result[1].information)
+        local TargetPlayer = nil
         if identifier == information.Owner then
             if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-                local TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
-                if TargetPlayer then
-                    if src ~= data.targetid then
-                        TriggerClientEvent('real-vehicleshop:ShowTransferReqToPlayer', data.targetid, src, data.targetid, data.id, data.price)
-                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
-                    else
-                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
-                    end
+                TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
+            else
+                TargetPlayer = frameworkObject.GetPlayerFromId(data.targetid)
+            end
+            if TargetPlayer then
+                if src ~= data.targetid then
+                    TriggerClientEvent('real-vehicleshop:ShowTransferReqToPlayer', data.targetid, src, data.targetid, data.id, data.price)
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
                 else
-                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
                 end
             else
-                -- ESX
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
             end
         end
     end
@@ -241,6 +242,7 @@ RegisterNetEvent('real-vehicleshop:SendBonusToStaff', function(data)
         local information = json.decode(result[1].information)
         local employees = json.decode(result[1].employees)
         local Check = false
+        local Player = nil
         if #employees == 1 and employees[1].rank == 'owner' then
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_employee_for_bonus'), 5000)
             return
@@ -253,33 +255,20 @@ RegisterNetEvent('real-vehicleshop:SendBonusToStaff', function(data)
         end
         if RemoveMoneyFromCompany(data.id, TotalBonus) then
             if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-                for k, v in ipairs(employees) do
-                    if v.rank ~= 'owner' then
-                        local Player = frameworkObject.Functions.GetSource(v.identifier)
-                        if Player then
-                            RemoveAddBankMoneyOnline('add', data.value, Player)
-                            Check = true
-                            -- Send Mail To Target Player
-                        else
-                            AddBankMoneyOffline(v.identifier, data.value)
-                            Check = true
-                            -- Send Mail To Target Player
-                        end
-                    end
-                end
+                Player = frameworkObject.Functions.GetSource(v.identifier)
             else
-                for k, v in ipairs(employees) do
-                    if v.rank ~= 'owner' then
-                        local Player = frameworkObject.GetPlayerFromIdentifier(v.identifier)
-                        if Player then
-                            RemoveAddBankMoneyOnline('add', data.value, Player)
-                            Check = true
-                            -- Send Mail To Target Player
-                        else
-                            AddBankMoneyOffline(v.identifier, data.value)
-                            Check = true
-                            -- Send Mail To Target Player
-                        end
+                Player = frameworkObject.GetPlayerFromIdentifier(v.identifier)
+            end
+            for k, v in ipairs(employees) do
+                if v.rank ~= 'owner' then
+                    if Player then
+                        RemoveAddBankMoneyOnline('add', data.value, Player)
+                        Check = true
+                        -- Send Mail To Target Player
+                    else
+                        AddBankMoneyOffline(v.identifier, data.value)
+                        Check = true
+                        -- Send Mail To Target Player
                     end
                 end
             end
@@ -352,24 +341,25 @@ RegisterNetEvent('real-vehicleshop:SendJobRequest', function(data)
     local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
     if #result > 0 then
         local perms = json.decode(result[1].perms)
+        local TargetPlayer = nil
         if #perms == 1 and perms[1].name == "owner" then
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_perms'), 4000)
             return
         end
         if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-            local TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
-            if TargetPlayer then
-                if src ~= data.targetid then
-                    TriggerClientEvent('real-vehicleshop:ShowJobReqToPlayer', data.targetid, src, data.targetid, data.id, data.salary)
-                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
-                else
-                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
-                end
+            TargetPlayer = frameworkObject.Functions.GetPlayer(data.targetid)
+        else
+            TargetPlayer = frameworkObject.GetPlayerFromId(data.targetid)
+        end
+        if TargetPlayer then
+            if src ~= data.targetid then
+                TriggerClientEvent('real-vehicleshop:ShowJobReqToPlayer', data.targetid, src, data.targetid, data.id, data.salary)
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('request_sent'), 3000)
             else
-                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error'), 3000)
             end
         else
-            -- ESX
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
         end
     end
 end)
@@ -407,6 +397,175 @@ end)
 
 RegisterNetEvent('real-vehicleshop:SendRejectedJobReqToSender', function(src)
     TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'information', Language('rejected_job_offer'), 3000)
+end)
+
+RegisterNetEvent('real-vehicleshop:GiveSalaryPenalty', function(data)
+    local src = source
+    local targetsrc = data.targetid
+    local result = ExecuteSql("SELECT `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        local TargetPlayer = nil
+        if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+            TargetPlayer = frameworkObject.Functions.GetPlayer(targetsrc)
+        else
+            TargetPlayer = frameworkObject.GetPlayerFromId(targetsrc)
+        end
+        if TargetPlayer then
+            if src ~= targetsrc then
+                local TargetIdentifier = GetIdentifier(targetsrc)
+                for k, v in ipairs(employees) do
+                    if v.identifier == TargetIdentifier then
+                        if v.rank ~= 'owner' then
+                            if v.salarypenalty == 0 then
+                                v.salarypenalty = data.penalty
+                            elseif v.salarypenalty > 0 then
+                                v.salarypenalty =  v.salarypenalty + data.penalty
+                            end
+                            break
+                        else
+                            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('cant_fine_owner'), 3000)
+                            break
+                        end
+                    end
+                end
+                Config.Vehicleshops[data.id].Employees = employees
+                ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+                TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+                UpdateForAllSrcTable(data.id)
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('salary_penalty_applied'), 3000)
+                -- Send Mail To Target Player
+            else
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error_second'), 3000)
+            end
+        else
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('player_not_found'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:EndThePunishment', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        for k, v in ipairs(employees) do
+            if v.identifier == data.identifier then
+                v.salarypenalty = 0
+                break
+            end
+        end
+        Config.Vehicleshops[data.id].Employees = employees
+        ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('removed_penalty'), 3000)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:RankUpEmployee', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `employees`, `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local TargetIdentifier = data.identifier
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        local perms = json.decode(result[1].perms)
+        local NextRankName = nil
+        for k, v in ipairs(employees) do
+            if v.identifier == TargetIdentifier then
+                local CurrentRank = v.rank
+                local NexRankIndex = nil
+                for a, b in ipairs(perms) do
+                    if b.name == CurrentRank then
+                        NexRankIndex = a - 1
+                        break
+                    end
+                end
+                if NexRankIndex and NexRankIndex > 0 then
+                    NextRankName = perms[NexRankIndex].name
+                    if NextRankName ~= 'owner' then
+                        v.rank = NextRankName
+                    else
+                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('no_higher_rank'), 4000)
+                        NextRankName = nil
+                    end
+                end
+            end
+        end
+        if NextRankName then
+            Config.Vehicleshops[data.id].Employees = employees
+            ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('rank_changed'), 3000)
+            -- Send Mail To Target Player
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:ReduceEmployeeRank', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `employees`, `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local TargetIdentifier = data.identifier
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        local perms = json.decode(result[1].perms)
+        local NextRankName = nil
+        for k, v in ipairs(employees) do
+            if v.identifier == TargetIdentifier then
+                local CurrentRank = v.rank
+                local NexRankIndex = nil
+                for a, b in ipairs(perms) do
+                    if b.name == CurrentRank then
+                        NexRankIndex = a + 1
+                        break
+                    end
+                end
+                if NexRankIndex and NexRankIndex <= #perms then
+                    NextRankName = perms[NexRankIndex].name
+                    if NextRankName ~= 'owner' then
+                        v.rank = NextRankName
+                    else
+                        TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('no_lower_rank'), 3000)
+                        NextRankName = nil
+                    end
+                end
+            end
+        end
+        if NextRankName then
+            Config.Vehicleshops[data.id].Employees = employees
+            ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('rank_changed'), 3000)
+            -- Send Mail To Target Player
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:FireEmployee', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `employees` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local TargetIdentifier = data.identifier
+    if #result > 0 then
+        local employees = json.decode(result[1].employees)
+        local EmployeeFound = false
+        for i = #employees, 1, -1 do
+            if employees[i].identifier == TargetIdentifier then
+                table.remove(employees, i)
+                EmployeeFound = true
+                break
+            end
+        end
+        if EmployeeFound then
+            Config.Vehicleshops[data.id].Employees = employees
+            ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'information', Language('fired_employee'), 3000)
+            -- Send Mail To Target Player
+        end
+    end
 end)
 
 function RemoveFromSrcTable(id, src)
