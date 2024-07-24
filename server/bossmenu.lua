@@ -254,12 +254,12 @@ RegisterNetEvent('real-vehicleshop:SendBonusToStaff', function(data)
             end
         end
         if RemoveMoneyFromCompany(data.id, TotalBonus) then
-            if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
-                Player = frameworkObject.Functions.GetSource(v.identifier)
-            else
-                Player = frameworkObject.GetPlayerFromIdentifier(v.identifier)
-            end
             for k, v in ipairs(employees) do
+                if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                    Player = frameworkObject.Functions.GetSource(v.identifier)
+                else
+                    Player = frameworkObject.GetPlayerFromIdentifier(v.identifier)
+                end
                 if v.rank ~= 'owner' then
                     if Player then
                         RemoveAddBankMoneyOnline('add', data.value, Player)
@@ -452,6 +452,7 @@ RegisterNetEvent('real-vehicleshop:EndThePunishment', function(data)
         for k, v in ipairs(employees) do
             if v.identifier == data.identifier then
                 v.salarypenalty = 0
+                SendMailToOfflinePlayer(v.identifier, Config.Vehicleshops[data.id].CompanyName, Language('punishmentend_subject'), Language('punishmentend_message'))
                 break
             end
         end
@@ -460,7 +461,6 @@ RegisterNetEvent('real-vehicleshop:EndThePunishment', function(data)
         TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
         UpdateForAllSrcTable(data.id)
         TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('removed_penalty'), 3000)
-        SendMailToOfflinePlayer(data.identifier, Config.Vehicleshops[data.id].CompanyName, Language('punishmentend_subject'), Language('punishmentend_message'))
     end
 end)
 
@@ -721,7 +721,7 @@ function GiveSalaryToEmployees(companyname, identifier, salary)
             local PlayerSource = Player.PlayerData.source
             if PlayerSource and PlayerSource > 0 then
                 RemoveAddBankMoneyOnline('add', salary, PlayerSource)
-                TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', companyname, Language('salary_subject'), Language('salary_message'))
+                TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', PlayerSource, companyname, Language('salary_subject'), Language('salary_message'))
             end
         else
             AddBankMoneyOffline(identifier, salary)
@@ -731,7 +731,7 @@ function GiveSalaryToEmployees(companyname, identifier, salary)
         local Player = frameworkObject.GetPlayerFromIdentifier(identifier)
         if Player then
             Player.addAccountMoney('bank', salary)
-            TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', companyname, Language('salary_subject'), Language('salary_message'))
+            TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', Player, companyname, Language('salary_subject'), Language('salary_message'))
         else
             AddBankMoneyOffline(identifier, salary)
             SendMailToOfflinePlayer(identifier, companyname, Language('salary_subject'), Language('salary_message'))

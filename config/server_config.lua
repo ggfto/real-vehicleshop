@@ -3,7 +3,7 @@ Config.BucketID = 0 -- Default
 Config.PhoneMailOffline = 'qb-phone:server:sendNewEventMail'
 
 function SendMailToOfflinePlayer(identifier, sender, subject, message)
-    TriggerEvent(Config.PhoneMail, identifier, {
+    TriggerEvent(Config.PhoneMailOffline, identifier, {
         sender = sender,
         subject = subject,
         Message = message
