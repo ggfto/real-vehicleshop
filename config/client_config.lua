@@ -99,3 +99,11 @@ Citizen.CreateThread(function()
         Citizen.Wait(sleep)
     end
 end)
+
+RegisterNetEvent('real-vehicleshop:SendMailToOnlinePlayer', function(sender, subject, message)
+    TriggerServerEvent(Config.PhoneMailOnline, {
+        sender = sender,
+        subject = subject,
+        message = message
+    })
+end)

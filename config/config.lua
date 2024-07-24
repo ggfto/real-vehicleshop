@@ -11,6 +11,12 @@ Config.PlateChange = true
 Config.PlateChangePrice = 1000
 
 Config.DefaultGarage = 'pillboxgarage' -- Garage when buying vehicles
+Config.PhoneMailOnline = 'qb-phone:server:sendNewMail'
+
+Config.CheckSalaryStatus = {
+    Hour = 12,
+    Minute = 00,
+}
 
 Config.GiveVehicleKey = true
 Config.VehicleKeySystem = 'qb-vehiclekeys' -- cd_garage | qs-vehiclekeys | wasabi-carlock | qb-vehiclekeys | custom

@@ -241,4 +241,22 @@ Locales['en'] = {
     ['got_job'] = "You got a job. Congratulations.",
     ['rejected_job_offer'] = "The person rejected your job offer.",
     ['same_player_error_second'] = "You can't enter your own id.",
+
+    -- Mail
+    ['salary_subject'] = 'Your salary has been paid!',
+    ['salary_message'] = "Your salary was paid by the company you work for. You can go to the bank app and check the incoming price.",
+    ['fired_subject'] = "You're fired!",
+    ['fired_message'] = "I'm afraid you've been fired from the company you work for. You can contact the manager or owner of the company for more information.",
+    ['reduce_rank_subject'] = "Your authority has been reduced!",
+    ['reduce_rank_message'] = "Unfortunately, you have been demoted for your bad deeds and low activity. For more information, you can contact the company officials.",
+    ['rankup_subject'] = "You have risen in rank!",
+    ['rankup_message'] = "Congratulations! We've rewarded you for the work you've done for this company so far. We've elevated your authority. Keep up the good work...",
+    ['punishmentend_subject'] = "Your sentence is terminated!",
+    ['punishmentend_message'] = "Your punishment is over. Don't make the same mistake next time!",
+    ['penalty_subject'] = "You've been punished!",
+    ['penalty_message'] = "You were given a salary penalty for your mistakes. I hope this will prevent you from making mistakes again.",
+    ['bonus_subject'] = "Employees received bonuses!",
+    ['bonus_message'] = "Thanks to your efficiency and willingness to work, the company is growing day by day. For this, we have distributed an award to all of you.",
+    ['not_enough_salary_subject'] = "Your salary has not been paid!",
+    ['not_enough_salary_message'] = "Unfortunately, there is not enough money in the company's coffers to pay the employees. That's why your salary could not be paid this month.",
 }

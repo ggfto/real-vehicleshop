@@ -111,13 +111,13 @@
         <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input" :placeholder="$root.Language['enter_vehicle_price']" v-model="$root.EditVehicleInputs.Price">
         <div class="w-full h-[.4vw]"></div>
         <div class="w-full h-[1.8229vw] flex items-center justify-center bg-[#000000DE] select-wrapper relative">
-            <div class="w-full h-full flex items-center justify-center">
+            <div class="w-full h-full flex items-center justify-center absolute">
                 <select v-model="$root.SelectedVehicleEditCategory" class="top-0 absolute cursor-pointer">
                     <option class="w-full" v-for="(v, k) in $root.FilterCategories" :value="k">{{ v.label }}</option>
                 </select>
             </div>
             <span v-if="$root.SelectedVehicleEditCategory >= 0" class="text-neutral-400 text-[.7813vw] text-center font-semibold font-['Poppins'] absolute">{{ $root.CategoryList[$root.SelectedVehicleEditCategory].label }}</span>
-            <div v-else class="w-full flex items-center justify-center">
+            <div v-else class="w-[30%] flex items-center justify-center absolute">
                 <div class="w-full flex items-center justify-center">
                     <img src="./img/bossmenu/select-icon.png" class="w-[.7813vw] h-[.7813vw]">
                     <span class="text-neutral-400 text-[.7813vw] text-center font-semibold font-['Poppins'] ml-[.5vw]">{{ $root.Language['select_category'] }}</span>

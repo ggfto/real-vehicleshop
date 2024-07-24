@@ -264,11 +264,11 @@ RegisterNetEvent('real-vehicleshop:SendBonusToStaff', function(data)
                     if Player then
                         RemoveAddBankMoneyOnline('add', data.value, Player)
                         Check = true
-                        -- Send Mail To Target Player
+                        TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', Player, Config.Vehicleshops[data.id].CompanyName, Language('bonus_subject'), Language('bonus_message'))
                     else
                         AddBankMoneyOffline(v.identifier, data.value)
                         Check = true
-                        -- Send Mail To Target Player
+                        SendMailToOfflinePlayer(v.identifier, Config.Vehicleshops[data.id].CompanyName, Language('bonus_subject'), Language('bonus_message'))
                     end
                 end
             end
@@ -434,7 +434,7 @@ RegisterNetEvent('real-vehicleshop:GiveSalaryPenalty', function(data)
                 TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
                 UpdateForAllSrcTable(data.id)
                 TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('salary_penalty_applied'), 3000)
-                -- Send Mail To Target Player
+                TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', targetsrc, Config.Vehicleshops[data.id].CompanyName, Language('penalty_subject'), Language('penalty_message'))
             else
                 TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('same_player_error_second'), 3000)
             end
@@ -460,6 +460,7 @@ RegisterNetEvent('real-vehicleshop:EndThePunishment', function(data)
         TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
         UpdateForAllSrcTable(data.id)
         TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('removed_penalty'), 3000)
+        SendMailToOfflinePlayer(data.identifier, Config.Vehicleshops[data.id].CompanyName, Language('punishmentend_subject'), Language('punishmentend_message'))
     end
 end)
 
@@ -498,7 +499,7 @@ RegisterNetEvent('real-vehicleshop:RankUpEmployee', function(data)
             TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
             UpdateForAllSrcTable(data.id)
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('rank_changed'), 3000)
-            -- Send Mail To Target Player
+            SendMailToOfflinePlayer(TargetIdentifier, Config.Vehicleshops[data.id].CompanyName, Language('rankup_subject'), Language('rankup_message'))
         end
     end
 end)
@@ -538,7 +539,7 @@ RegisterNetEvent('real-vehicleshop:ReduceEmployeeRank', function(data)
             TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
             UpdateForAllSrcTable(data.id)
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('rank_changed'), 3000)
-            -- Send Mail To Target Player
+            SendMailToOfflinePlayer(TargetIdentifier, Config.Vehicleshops[data.id].CompanyName, Language('reduce_rank_subject'), Language('reduce_rank_message'))
         end
     end
 end)
@@ -563,7 +564,7 @@ RegisterNetEvent('real-vehicleshop:FireEmployee', function(data)
             TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
             UpdateForAllSrcTable(data.id)
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'information', Language('fired_employee'), 3000)
-            -- Send Mail To Target Player
+            SendMailToOfflinePlayer(TargetIdentifier, Config.Vehicleshops[data.id].CompanyName, Language('fired_subject'), Language('fired_message'))
         end
     end
 end)
@@ -666,3 +667,76 @@ function AddTransactions(source, id, type, amount)
         ExecuteSql("UPDATE `real_vehicleshop` SET `transactions` = '"..json.encode(transactions).."' WHERE `id` = '"..id.."'")
     end
 end
+
+function CheckSalaryTime()
+    local result = ExecuteSql("SELECT * FROM `real_vehicleshop`")
+    local Check = false
+    if #result > 0 then
+        for k, v in ipairs(result) do
+            local employees = json.decode(v.employees)
+            local TotalSalary = 0
+            
+            for a, b in pairs(employees) do
+                if b.rank ~= 'owner' then
+                    TotalSalary = TotalSalary + b.salary
+                end
+            end
+
+            local CompanyInformation = ExecuteSql("SELECT `information` FROM `real_vehicleshop` WHERE `id` = '"..k.."'")
+            local information = json.decode(CompanyInformation[1].information)
+            if #CompanyInformation > 0 and information.Money < TotalSalary then
+                for a, b in pairs(employees) do
+                    if b.rank ~= 'owner' then
+                        SendMailToOfflinePlayer(b.identifier, information.Name, Language('not_enough_salary_subject'), Language('not_enough_salary_message'))
+                    end
+                end
+            else
+                information.Money = information.Money - TotalSalary
+                Config.Vehicleshops[k].CompanyMoney = Config.Vehicleshops[k].CompanyMoney - TotalSalary
+                for a, b in pairs(employees) do
+                    local salary = b.salary
+                    local salarypenalty = b.salarypenalty
+                    if b.rank ~= 'owner' then
+                        if salarypenalty > 0 then
+                            salarypenalty = salarypenalty - 1
+                        else
+                            GiveSalaryToEmployees(Config.Vehicleshops[k].CompanyName, b.identifier, salary)
+                        end
+                    end
+                end
+            end
+            ExecuteSql("UPDATE `real_vehicleshop` SET `employees` = '"..json.encode(employees).."', `information` = '"..json.encode(information).."' WHERE `id` = '"..k.."'")
+            Check = true
+        end
+        if Check then
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        end
+    end
+end
+
+function GiveSalaryToEmployees(companyname, identifier, salary)
+    if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayerByCitizenId(identifier)
+        if Player then
+            local PlayerSource = Player.PlayerData.source
+            if PlayerSource and PlayerSource > 0 then
+                RemoveAddBankMoneyOnline('add', salary, PlayerSource)
+                TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', companyname, Language('salary_subject'), Language('salary_message'))
+            end
+        else
+            AddBankMoneyOffline(identifier, salary)
+            SendMailToOfflinePlayer(identifier, companyname, Language('salary_subject'), Language('salary_message'))
+        end
+    else
+        local Player = frameworkObject.GetPlayerFromIdentifier(identifier)
+        if Player then
+            Player.addAccountMoney('bank', salary)
+            TriggerClientEvent('real-vehicleshop:SendMailToOnlinePlayer', companyname, Language('salary_subject'), Language('salary_message'))
+        else
+            AddBankMoneyOffline(identifier, salary)
+            SendMailToOfflinePlayer(identifier, companyname, Language('salary_subject'), Language('salary_message'))
+        end
+    end
+end
+
+TriggerEvent('cron:runAt', Config.CheckSalaryStatus.Hour, Config.CheckSalaryStatus.Minute, CheckSalaryTime)
