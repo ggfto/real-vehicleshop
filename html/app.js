@@ -847,14 +847,28 @@ const app = Vue.createApp({
         },
 
         CreateCategory() {
-            // NOTE: Perm check, Existing name check, Existing label check
-
-            // Name input: this.Inputs.PermNameInput
-            // Label input: this.Inputs.PermLabelInput
-            // Vehicleshop: this.CurrentVehicleshop
+            if (this.PermCheck(this.PlayerRank, 'category')) {
+                if (this.Inputs.CategoryNameInput.length > 0 && this.Inputs.CategoryLabelInput.length > 0) {
+                    postNUI('CreateCategory', {
+                        id: this.CurrentVehicleshop,
+                        name: this.Inputs.CategoryNameInput,
+                        label: this.Inputs.CategoryLabelInput
+                    })
+                    this.Inputs.CategoryNameInput = ''
+                    this.Inputs.CategoryLabelInput = ''
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
+            }
         },
 
         RemoveCategory(name) {
+            if (this.PermCheck(this.PlayerRank, 'category')) {
+                postNUI('RemoveCategory', {
+                    id: this.CurrentVehicleshop,
+                    name: name
+                })
+            }
             // NOTE: Perm check and If category has vehicle check
 
             // Close popup (this.ShowBossPopup)
@@ -864,8 +878,17 @@ const app = Vue.createApp({
         },
 
         EditCategory(label) {
-            // this.SelectedShowCategory
-            // this.Inputs.CategoryLabelInput
+            if (this.PermCheck(this.PlayerRank, 'category')) {
+                if (label.length > 0) {
+                    postNUI('EditCategory', {
+                        id: this.CurrentVehicleshop,
+                        name: this.SelectedEditCategoryName,
+                        label: label,
+                    })
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
+            }
         },
 
         // Buy Vehicle Page
@@ -883,6 +906,19 @@ const app = Vue.createApp({
                 Stock: 1,
                 Price: '',
                 SelectedCategoryIndex: -1
+            }
+        },
+
+        // Close Bossmenu Popup
+        CloseBossPopup(type) {
+            if (type == 'createcategory') {
+                this.ShowBossPopup = ''
+                this.Inputs.CategoryNameInput = ''
+                this.Inputs.CategoryLabelInput = ''
+            } else if (type == 'editcategory') {
+                this.ShowBossPopup = ''
+                this.Inputs.CategoryLabelInput = ''
+                this.SelectedEditCategoryName = null
             }
         },
 
@@ -1271,6 +1307,7 @@ const app = Vue.createApp({
                 Price: '',
             }
             this.SelectedShowCategory = 0
+            this.SelectedEditCategoryName = null
             this.BuyVehicleInputs = {
                 Stock: 1,
                 Price: '',
@@ -1312,6 +1349,7 @@ const app = Vue.createApp({
                 PermLabelInput: '',
             }
             this.SelectedBossmenuCategory = 0
+            this.SelectedEditCategoryName = null
             this.VehiclesTable = []
             this.Feedbacks = []
             this.CategoryList = []
@@ -1742,6 +1780,7 @@ const app = Vue.createApp({
                     this.Transactions = data.transactions
                     this.PermsTable = data.perms
                     this.Discount = data.discount
+                    this.CategoryList = data.categories
                     if (this.Discount > 0) {
                         this.Inputs.DiscountInput = data.discount
                     }
@@ -1769,6 +1808,9 @@ const app = Vue.createApp({
                 case 'CloseBossmenu':
                     this.CloseBossmenu()
                     break;
+                case 'CloseBossPopup':
+                    this.CloseBossPopup(data.type)
+                    break;
                 case 'ShowNotify':
                     this.ShowNotify(data.type, data.text, data.ms)
                     break;
@@ -1785,7 +1827,7 @@ const app = Vue.createApp({
                 if (this.Show && this.MainPage != 'Bossmenu' && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI(true)
                 }
-                if (this.Show && this.MainPage == 'Bossmenu' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && !this.ShowBossPopup) {
+                if (this.Show && this.MainPage == 'Bossmenu' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowBossPopup) {
                     this.CloseBossmenu()
                 }
                 if (this.activePage == 'preview') {

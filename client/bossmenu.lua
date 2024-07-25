@@ -148,6 +148,18 @@ function FireEmployee(data)
     TriggerServerEvent('real-vehicleshop:FireEmployee', data)
 end
 
+function CreateCategory(data)
+    TriggerServerEvent('real-vehicleshop:CreateCategory', data)
+end
+
+function RemoveCategory(data)
+    TriggerServerEvent('real-vehicleshop:RemoveCategory', data)
+end
+
+function EditCategory(data)
+    TriggerServerEvent('real-vehicleshop:EditCategory', data)
+end
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -164,7 +176,8 @@ RegisterNetEvent('real-vehicleshop:UpdateUI', function()
             preorders = Config.Vehicleshops[CurrentVehicleshop].Preorders,
             transactions = Config.Vehicleshops[CurrentVehicleshop].Transactions,
             perms = Config.Vehicleshops[CurrentVehicleshop].Perms,
-            discount = Config.Vehicleshops[CurrentVehicleshop].Discount
+            discount = Config.Vehicleshops[CurrentVehicleshop].Discount,
+            categories = Config.Vehicleshops[CurrentVehicleshop].Categories
         })
     end
 end)
@@ -207,6 +220,13 @@ RegisterNetEvent('real-vehicleshop:CloseJobReqScreen', function()
     SetNuiFocus(false, false)
 end)
 
+RegisterNetEvent('real-vehicleshop:CloseBossPopup', function(type)
+    SendNUIMessage({
+        action = 'CloseBossPopup',
+        type = type
+    })
+end)
+
 RegisterNUICallback('BuyCompany', AcceptedBuyCompany)
 RegisterNUICallback('DepositMoney', DepositMoney)
 RegisterNUICallback('WithdrawMoney', WithdrawMoney)
@@ -227,3 +247,6 @@ RegisterNUICallback('EndThePunishment', EndThePunishment)
 RegisterNUICallback('RankUpEmployee', RankUpEmployee)
 RegisterNUICallback('ReduceEmployeeRank', ReduceEmployeeRank)
 RegisterNUICallback('FireEmployee', FireEmployee)
+RegisterNUICallback('CreateCategory', CreateCategory)
+RegisterNUICallback('RemoveCategory', RemoveCategory)
+RegisterNUICallback('EditCategory', EditCategory)

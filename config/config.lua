@@ -123,20 +123,20 @@ Config.DefaultPerms = {
 
 Config.VehiclesData = {
     ['car'] = {
-        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'nero', label = 'Nero', model = 'Super', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/nero.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', category = 'sports', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', category = 'sedans', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'nero', label = 'Nero', model = 'Super', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/nero.webp', category = 'sports', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 
     ['boat'] = {
-        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'toro2', label = 'Toro', model = 'Luxry', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/toro2.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'toro2', label = 'Toro', model = 'Luxry', price = 100000, stock = 1, img = 'https://docs.fivem.net/vehicles/toro2.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 
     ['aircraft'] = {
-        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 }
 
@@ -190,18 +190,18 @@ Config.BossmenuCategories = { -- Dont touch names. Just edit labels.
 
 Config.BeginningVehicles = {
     ['car'] = {
-        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 't20', label = 'T20', model = 'Custom', price = 150000, stock = 1, img = 'https://docs.fivem.net/vehicles/t20.webp', category = 'sports', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'sultanrs', label = 'Sultan RS', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/sultanrs.webp', category = 'sedans', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 
     ['boat'] = {
-        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark2', label = 'Seashark2', model = 'Normal', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark2.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'seashark3', label = 'Seashark3', model = 'Turbo', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/seashark3.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 
     ['aircraft'] = {
-        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
-        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'hydra', label = 'Hydra', model = '', price = 15000, stock = 1, img = 'https://docs.fivem.net/vehicles/hydra.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
+        { name = 'volatus', label = 'Volatus', model = '', price = 50000, stock = 1, img = 'https://docs.fivem.net/vehicles/volatus.webp', category = 'all', discount = 0, information = {TopSpeed = 273, Braking = 100, Acceleration = 89, Suspension = 100, Handling = 89} },
     },
 }
 

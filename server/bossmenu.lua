@@ -569,6 +569,105 @@ RegisterNetEvent('real-vehicleshop:FireEmployee', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:CreateCategory', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `categories` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local categories = json.decode(result[1].categories)
+        local Check = true
+        for k, v in ipairs(categories) do
+            if v.name == data.name then
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('category_name_exist'), 3000)
+                Check = false
+                break
+            elseif v.label == data.label then
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('category_label_exist'), 3000)
+                Check = false
+                break
+            end
+        end
+        if Check then
+            table.insert(categories, {
+                name = data.name,
+                label = data.label
+            })
+            Config.Vehicleshops[data.id].Categories = categories
+            ExecuteSql("UPDATE `real_vehicleshop` SET `categories` = '"..json.encode(categories).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('category_created'), 3000)
+            TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'createcategory')
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:RemoveCategory', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `categories`, `vehicles` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local categories = json.decode(result[1].categories)
+        local vehicles = json.decode(result[1].vehicles)
+        local Check = false
+        for k, v in ipairs(categories) do
+            if v.name == data.name then
+                Check = true
+                for a, b in ipairs(vehicles) do
+                    if b.category == data.name then
+                        b.category = 'all'
+                    end
+                end
+                table.remove(categories, k)
+                break
+            end
+        end
+
+        if Check then
+            ExecuteSql("UPDATE `real_vehicleshop` SET `categories` = '"..json.encode(categories).."', `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+            Config.Vehicleshops[data.id].Categories = categories
+            Config.Vehicleshops[data.id].Vehicles = vehicles
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('category_removed'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:EditCategory', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `categories` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local categories = json.decode(result[1].categories)
+        local LabelExists = false
+        local CanEdit = false
+        for k, v in ipairs(categories) do
+            if v.name == data.name then
+                if v.label ~= data.label then
+                    for a, b in ipairs(categories) do
+                        if b.label == data.label then
+                            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('category_label_exist'), 3000)
+                            LabelExists = true
+                            break
+                        end
+                    end
+                    if not LabelExists then
+                        v.label = data.label
+                        CanEdit = true
+                        break
+                    end
+                end
+            end
+        end
+        if CanEdit then
+            ExecuteSql("UPDATE `real_vehicleshop` SET `categories` = '"..json.encode(categories).."' WHERE `id` = '"..data.id.."'")
+            Config.Vehicleshops[data.id].Categories = categories
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('category_updated'), 3000)
+            TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'editcategory')
+        end
+    end
+end)
+
 function RemoveFromSrcTable(id, src)
     if SrcTable[id] then
         for k, v in ipairs(SrcTable[id]) do

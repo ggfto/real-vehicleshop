@@ -225,6 +225,11 @@ Locales['en'] = {
     ['rank_changed'] = "The rank was successfully changed.",
     ['fired_employee'] = "The employee was fired from the company.",
     ['cant_fine_owner'] = "You can't fine the owner of the company.",
+    ['category_name_exist'] = "There is already a category with this name.",
+    ['category_label_exist'] = "There is already a category with this label.",
+    ['category_created'] = "Category created.",
+    ['category_removed'] = "Category removed.",
+    ['category_updated'] = "Category updated.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
