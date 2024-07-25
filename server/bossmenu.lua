@@ -668,6 +668,108 @@ RegisterNetEvent('real-vehicleshop:EditCategory', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:EditVehicle', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `vehicles` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local vehicles = json.decode(result[1].vehicles)
+        local Check = false
+        for k, v in ipairs(vehicles) do
+            if v.name == data.hash then
+                v.label = data.name
+                v.model = data.model
+                v.img = data.img
+                v.category = data.category
+                v.discount = data.discount
+                v.price = data.price
+                Check = true
+                break
+            end
+        end
+        if Check then
+            ExecuteSql("UPDATE `real_vehicleshop` SET `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+            Config.Vehicleshops[data.id].Vehicles = vehicles
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('vehicle_updated'), 3000)
+            TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'editvehicle')
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:BuyVehicle', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `information`, `vehicles` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        local vehicles = json.decode(result[1].vehicles)
+        local Check = false
+        local ExistVehicleCategory = nil
+        if information.Money >= data.carprice then
+            for k, v in ipairs(vehicles) do
+                if v.name == data.hash then
+                    v.stock = v.stock + data.stock
+                    Check = true
+                    break
+                end
+            end
+            if Check then
+                information.Money = information.Money - data.carprice
+                Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney - data.carprice
+                ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+                Config.Vehicleshops[data.id].Vehicles = vehicles
+                TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+                UpdateForAllSrcTable(data.id)
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('stock_updated'), 3000)
+                TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'buyvehicle')
+            else
+                if data.price ~= '' and tonumber(data.price) > 0 and data.category ~= '' then
+                    local hash = data.hash
+                    local price = data.price
+                    local category = data.category
+                    local stock = data.stock
+                    local label = ''
+                    local model = ''
+                    local img = ''
+                    local infotable = {}
+                    for k, v in pairs(Config.VehiclesData[Config.Vehicleshops[data.id].Type]) do
+                        if v.name == hash then
+                            label = v.label
+                            model = v.model
+                            img = v.img
+                            infotable = v.information
+                            break
+                        end
+                    end
+                    information.Money = information.Money - data.carprice
+                    Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney - data.carprice
+                    table.insert(vehicles, {
+                        name = hash,
+                        label = label,
+                        model = model,
+                        price = price,
+                        stock = stock,
+                        img = img,
+                        category = category,
+                        discount = 0,
+                        information = infotable
+                    })
+                    Config.Vehicleshops[data.id].Vehicles = vehicles
+                    ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
+                    TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+                    UpdateForAllSrcTable(data.id)
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('bought_vehicle'), 3000)
+                    TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'buyvehicle')
+                else
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('dont_leave_empty'), 3000)
+                end
+            end
+        else
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('not_enough_money_in_company'), 3000)
+        end
+    end
+end)
+
 function RemoveFromSrcTable(id, src)
     if SrcTable[id] then
         for k, v in ipairs(SrcTable[id]) do

@@ -160,6 +160,14 @@ function EditCategory(data)
     TriggerServerEvent('real-vehicleshop:EditCategory', data)
 end
 
+function EditVehicle(data)
+    TriggerServerEvent('real-vehicleshop:EditVehicle', data)
+end
+
+function BuyVehicle(data)
+    TriggerServerEvent('real-vehicleshop:BuyVehicle', data)
+end
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -250,3 +258,5 @@ RegisterNUICallback('FireEmployee', FireEmployee)
 RegisterNUICallback('CreateCategory', CreateCategory)
 RegisterNUICallback('RemoveCategory', RemoveCategory)
 RegisterNUICallback('EditCategory', EditCategory)
+RegisterNUICallback('EditVehicle', EditVehicle)
+RegisterNUICallback('BuyVehicle', BuyVehicle)

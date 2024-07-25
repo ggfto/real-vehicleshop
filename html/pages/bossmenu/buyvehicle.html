@@ -24,7 +24,7 @@
                         <div class="w-[70%] h-full flex items-center justify-center right-0 top-0 absolute">
                             <img :src="v.img" class="w-full h-auto">
                         </div>
-                        <div class="w-[26%] h-[13%] flex items-center justify-center bg-[#00F0FF] rounded-[.1vw] left-[.45vw] bottom-[1vw] absolute cursor-pointer" @click="$root.ShowBossPopup = 'buyvehicle'; $root.SelectedBuyVehicle = k;">
+                        <div class="w-[26%] h-[13%] flex items-center justify-center bg-[#00F0FF] rounded-[.1vw] left-[.45vw] bottom-[1vw] absolute cursor-pointer" @click="$root.OpenBuyVehicleScreen(k)">
                             <span class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.Language['buy'] }}</span>
                         </div>
                     </div>

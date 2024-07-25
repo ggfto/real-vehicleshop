@@ -230,6 +230,10 @@ Locales['en'] = {
     ['category_created'] = "Category created.",
     ['category_removed'] = "Category removed.",
     ['category_updated'] = "Category updated.",
+    ['vehicle_edit_no_change'] = "No changes were made to the vehicle information.",
+    ['vehicle_updated'] = "The vehicle's information has been updated.",
+    ['stock_updated'] = "Stock of the vehicle has been updated.",
+    ['bought_vehicle'] = "You have successfully purchased the vehicle. Congratulations.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",

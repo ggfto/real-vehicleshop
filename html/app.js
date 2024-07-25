@@ -96,27 +96,10 @@ const app = Vue.createApp({
         PlateInput: "",
         ChangedPlate: false,
         CategoryList: [],
+        NewCategoryList: [],
         SelectedVehicleEditCategory: -1,
         SelectedVehicleCategory: 'all',
-        VehiclesTable: [
-            {
-                name: 't20',
-                label: 'T20',
-                model: 'Super',
-                category: 'sports',
-                price: 13000000,
-                stock: 20,
-                img: 'https://docs.fivem.net/vehicles/t20.webp',
-                discount: '',
-                information: {
-                    TopSpeed: 273,
-                    Braking: 100,
-                    Acceleration: 89,
-                    Suspension: 100,
-                    Handling: 89
-                }
-            },
-        ],
+        VehiclesTable: [],
         AllVehicleData: [],
         SelectedBuyVehicle: -1, // Seçilen araç (Araç satın alma ekranında | Boss menu)
         SelectedVehicleTable: {
@@ -189,34 +172,9 @@ const app = Vue.createApp({
                 price: 10000000
             },
         ],
-        EmployeesTable: [
-            {
-                identifier: "",
-                name: "Oph3Z Test",
-                pp: "https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&",
-                rank: "Worker",
-                salary: 1000,
-                salarypenalty: 0
-            },
-        ],
-        SoldVehiclesLog: [
-            {
-                buyer: 'Oph3Z Sane',
-                vehicle: "T20",
-                price: 1000000,
-                date: '05.07.2024 | 16:25'
-            },
-        ],
-        Transactions: [
-            {
-                name: 'Oph3Z Second',
-                pfp: 'https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&',
-                rank: 'Owner',
-                amount: 10000,
-                date: '05.07.2024 | 16:25',
-                type: 'withdraw'
-            },
-        ],
+        EmployeesTable: [],
+        SoldVehiclesLog: [],
+        Transactions: [],
         PermsTable: [],
         SelectedPerm: -1,
         OriginalPermsTable: null,
@@ -803,17 +761,17 @@ const app = Vue.createApp({
 
         // Edit Vehicle
         OpenEditVehicleScreen(k, label, model, img, discount, price, category) {
-            // NOTE: Perm check
-
-            const CategoryIndex = this.CategoryList.findIndex(v => v.name == category)
-            this.SelectedVehicleEditCategory = CategoryIndex
-            this.ShowBossPopup = 'vehicleedit'
-            this.VehicleEditScreen = k
-            this.EditVehicleInputs.Name = label
-            this.EditVehicleInputs.Model = model
-            this.EditVehicleInputs.Img = img
-            this.EditVehicleInputs.Discount = discount
-            this.EditVehicleInputs.Price = price
+            if (this.PermCheck(this.PlayerRank, 'editvehicle')) {
+                const CategoryIndex = this.NewCategoryList.findIndex(v => v.name == category)
+                this.SelectedVehicleEditCategory = CategoryIndex
+                this.ShowBossPopup = 'vehicleedit'
+                this.VehicleEditScreen = k
+                this.EditVehicleInputs.Name = label
+                this.EditVehicleInputs.Model = model
+                this.EditVehicleInputs.Img = img
+                this.EditVehicleInputs.Discount = discount
+                this.EditVehicleInputs.Price = price
+            }
         },
 
         CloseEditVehicleScreen() {
@@ -828,12 +786,23 @@ const app = Vue.createApp({
         },
 
         SaveEditVehicleSection() {
-            // this.CurrentVehicleshop
-            
-            if (this.BossMenuFilterVehicles[ this.VehicleEditScreen].label == this.EditVehicleInputs.Name && this.BossMenuFilterVehicles[ this.VehicleEditScreen].model == this.EditVehicleInputs.Model && this.BossMenuFilterVehicles[ this.VehicleEditScreen].img == this.EditVehicleInputs.Img && this.BossMenuFilterVehicles[ this.VehicleEditScreen].discount == this.EditVehicleInputs.Discount && this.BossMenuFilterVehicles[ this.VehicleEditScreen].price == this.EditVehicleInputs.Price) {
-                // No change notify
+            if (this.BossMenuFilterVehicles[this.VehicleEditScreen].label == this.EditVehicleInputs.Name && this.BossMenuFilterVehicles[this.VehicleEditScreen].model == this.EditVehicleInputs.Model && this.BossMenuFilterVehicles[this.VehicleEditScreen].img == this.EditVehicleInputs.Img && this.BossMenuFilterVehicles[this.VehicleEditScreen].discount == this.EditVehicleInputs.Discount && this.BossMenuFilterVehicles[this.VehicleEditScreen].price == this.EditVehicleInputs.Price && this.BossMenuFilterVehicles[this.VehicleEditScreen].category == this.NewCategoryList[this.SelectedVehicleEditCategory].name) {
+                this.ShowNotify('error', this.Language['vehicle_edit_no_change'], 3000)
             } else {
-                // Change action
+                if (this.EditVehicleInputs.Name.length > 0 && this.EditVehicleInputs.Model.length > 0 && this.EditVehicleInputs.Img.length > 0 && this.EditVehicleInputs.Discount > 0 || this.EditVehicleInputs.Discount == '' && this.EditVehicleInputs.Price > 0) {
+                    postNUI('EditVehicle', {
+                        id: this.CurrentVehicleshop,
+                        hash: this.BossMenuFilterVehicles[this.VehicleEditScreen].name,
+                        name: this.EditVehicleInputs.Name,
+                        model: this.EditVehicleInputs.Model,
+                        img: this.EditVehicleInputs.Img,
+                        category: this.NewCategoryList[this.SelectedVehicleEditCategory].name,
+                        discount: this.EditVehicleInputs.Discount,
+                        price: this.EditVehicleInputs.Price
+                    })
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+                }
             }
         },
 
@@ -869,12 +838,6 @@ const app = Vue.createApp({
                     name: name
                 })
             }
-            // NOTE: Perm check and If category has vehicle check
-
-            // Close popup (this.ShowBossPopup)
-            // this.SelectedShowCategory
-            // this.CategoryList
-            // this.CurrentVehicleshop
         },
 
         EditCategory(label) {
@@ -892,11 +855,30 @@ const app = Vue.createApp({
         },
 
         // Buy Vehicle Page
-        BuyVehicleSection() {
-            // NOTE: Perm check
+        OpenBuyVehicleScreen(k) {
+            if (this.PermCheck(this.PlayerRank, 'buyvehicle')) {
+                this.ShowBossPopup = 'buyvehicle'
+                this.SelectedBuyVehicle = k
+            }
+        },
 
-            // this.CurrentVehicleshop
-            // Alt kısımda bilgiler var
+        BuyVehicleSection() {
+            if (this.BuyVehicleInputs.Stock >= 1) {
+                let category = ""
+                if (this.BuyVehicleInputs.SelectedCategoryIndex >= 0) {
+                    category = this.NewCategoryList[this.BuyVehicleInputs.SelectedCategoryIndex].name
+                }
+                postNUI('BuyVehicle', {
+                    id: this.CurrentVehicleshop,
+                    hash: this.AllVehicleData[this.SelectedBuyVehicle].name,
+                    stock: this.BuyVehicleInputs.Stock,
+                    price: this.BuyVehicleInputs.Price,
+                    category: category,
+                    carprice: this.AllVehicleData[this.SelectedBuyVehicle].price * this.BuyVehicleInputs.Stock
+                })
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
         },
 
         CloseBuyVehicleSection() {
@@ -919,6 +901,10 @@ const app = Vue.createApp({
                 this.ShowBossPopup = ''
                 this.Inputs.CategoryLabelInput = ''
                 this.SelectedEditCategoryName = null
+            } else if (type == 'editvehicle') {
+                this.CloseEditVehicleScreen()
+            } else if (type == 'buyvehicle') {
+                this.CloseBuyVehicleSection()
             }
         },
 
@@ -1254,6 +1240,16 @@ const app = Vue.createApp({
             }
         },
 
+        // Important Functions
+        FilterNewCategoryForBoss() {
+            this.NewCategoryList = []
+            this.CategoryList.forEach(v => {
+                if (v.name != 'all') {
+                    this.NewCategoryList.push(v)
+                }
+            })
+        },
+
         // CloseUI
         CloseUI(status) {
             this.Show = false
@@ -1273,6 +1269,7 @@ const app = Vue.createApp({
                 VehicleSuspension: 0,
                 VehicleHandling: 0,
             }
+            this.SelectedVehicleCategory = 'all'
             this.VehiclesTable = []
             this.Feedbacks = []
             this.CategoryList = []
@@ -1306,7 +1303,6 @@ const app = Vue.createApp({
                 Discount: '',
                 Price: '',
             }
-            this.SelectedShowCategory = 0
             this.SelectedEditCategoryName = null
             this.BuyVehicleInputs = {
                 Stock: 1,
@@ -1597,10 +1593,6 @@ const app = Vue.createApp({
             return [...complaints, ...feedbacks];
         },
 
-        FilterCategories() {
-            return this.CategoryList.filter(v => v.name != 'all')
-        },
-
         TotalProfit() {
             let total = 0
       
@@ -1763,6 +1755,7 @@ const app = Vue.createApp({
                     this.PermsTable = data.perms
                     this.Discount = data.discount
                     this.CategoryList = data.categories
+                    this.FilterNewCategoryForBoss()
                     if (this.Discount > 0) {
                         this.Inputs.DiscountInput = data.discount
                     }
@@ -1859,7 +1852,7 @@ const app = Vue.createApp({
                     this.SelectedColor = null
                     this.ColorPickerColor = "#FFF"
                 }
-                if (this.activePage == 'buyvehicle') {
+                if (this.activePage == 'buyvehicle' && !this.ShowBossPopup) {
                     this.setActivePage('vehicles')
                 }
             } else if (event.key == 'Shift') {
