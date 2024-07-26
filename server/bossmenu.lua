@@ -770,6 +770,58 @@ RegisterNetEvent('real-vehicleshop:BuyVehicle', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:CreatePermission', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local perms = json.decode(result[1].perms)
+        local Check = true
+        for k, v in ipairs(perms) do
+            if v.name == data.name then
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('perm_name_exist'), 3000)
+                Check = false
+                break
+            elseif v.label == data.label then
+                TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('perm_label_exist'), 3000)
+                Check = false
+                break
+            end
+        end
+        if Check then
+            table.insert(perms, {
+                name = data.name,
+                label = data.label,
+                permissions = {
+                    { name = 'administration', label = Language('administration'), description = Language('administration_description'), value = false },
+                    { name = 'withdrawdeposit', label = Language('withdraw_deposit'), description = Language('withdraw_deposit_description'), value = false },
+                    { name = 'preorder', label = Language('preorder_perm'), description = Language('preorder_description_perm'), value = false },
+                    { name = 'discount', label = Language('discount'), description = Language('discount_description_perm'), value = false },
+                    { name = 'removelog', label = Language('remove_log'), description = Language('remove_log_description'), value = false },
+                    { name = 'bonus', label = Language('bonus'), description = Language('bonus_description'), value = false },
+                    { name = 'raise', label = Language('raise'), description = Language('raise_description_perm'), value = false },
+                    { name = 'fire', label = Language('fire_employees'), description = Language('fire_employees_description'), value = false },
+                    { name = 'rankchange', label = Language('edit_staff_rank'), description = Language('edit_staff_rank_description'), value = false },
+                    { name = 'hire', label = Language('hire_staff'), description = Language('hire_staff_description'), value = false },
+                    { name = 'penalty', label = Language('give_penalty'), description = Language('give_penalty_description'), value = false },
+                    { name = 'category', label = Language('edit_remove_add_category'), description = Language('edit_remove_add_category_description'), value = false },
+                    { name = 'buyvehicle', label = Language('buy_vehicle_stock'), description = Language('buy_vehicle_stock_description'), value = false },
+                    { name = 'editvehicle', label = Language('edit_vehicles'), description = Language('edit_vehicles_description'), value = false },
+                    { name = 'removefeedback', label = Language('remove_feedbacks'), description = Language('remove_feedbacks_description'), value = false },
+                    { name = 'removecomplaints', label = Language('remove_complaints'), description = Language('remove_complaints_description'), value = false }
+                },
+                removable = true,
+                editable = true,
+            })
+            Config.Vehicleshops[data.id].Perms = perms
+            ExecuteSql("UPDATE `real_vehicleshop` SET `perms` = '"..json.encode(perms).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('created_perm'), 3000)
+            TriggerClientEvent('real-vehicleshop:CloseBossPopup', src, 'createperm')
+        end
+    end
+end)
+
 function RemoveFromSrcTable(id, src)
     if SrcTable[id] then
         for k, v in ipairs(SrcTable[id]) do

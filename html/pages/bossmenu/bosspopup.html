@@ -78,11 +78,11 @@
                     <input type="text" class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]" :placeholder="$root.Language['enter_perm_label']" v-model="$root.Inputs.PermLabelInput">
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
-                    <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer">
+                    <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="$root.CreatePerm()">
                         <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['create'] }}</span>
                     </div>
                     <div class="w-full h-[2.5%]"></div>
-                    <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer" @click="$root.ShowBossPopup = ''; $root.Inputs.PermNameInput = ''; $root.Inputs.PermLabelInput = '';">
+                    <div class="w-[99%] h-[42%] flex items-center justify-center bg-[#000000DE] ml-[1%] cursor-pointer" @click="$root.CloseBossPopup('createperm')">
                         <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{ $root.Language['cancel'] }}</span>
                     </div>
                 </div>

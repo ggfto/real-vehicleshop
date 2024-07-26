@@ -699,12 +699,15 @@ const app = Vue.createApp({
 
         // Perms
         CreatePerm() {
-            // NOTE: Perm check, Existing name check, Existing label check
-
-            this.ShowBossPopup = 'createperm'
-            // Name input: this.Inputs.PermNameInput
-            // Label input: this.Inputs.PermLabelInput
-            // Vehicleshop: this.CurrentVehicleshop
+            if (this.Inputs.PermNameInput.length > 0 && this.Inputs.PermLabelInput.length > 0) {
+                postNUI('CreatePermission', {
+                    id: this.CurrentVehicleshop,
+                    name: this.Inputs.PermNameInput,
+                    label: this.Inputs.PermLabelInput
+                })
+            } else {
+                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
+            }
         },
 
         RemovePerm(k) {
@@ -905,6 +908,10 @@ const app = Vue.createApp({
                 this.CloseEditVehicleScreen()
             } else if (type == 'buyvehicle') {
                 this.CloseBuyVehicleSection()
+            } else if (type == 'createperm') {
+                this.ShowBossPopup = ''
+                this.Inputs.PermNameInput = ''
+                this.Inputs.PermLabelInput = ''
             }
         },
 
