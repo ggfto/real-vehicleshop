@@ -69,7 +69,7 @@ const app = Vue.createApp({
         PlayerName: "Oph3Z Second",
         PlayerRank: 'Owner',
         PlayerMoney: 1000000,
-        PlayerPfp: "https://cdn.discordapp.com/attachments/926499504922959922/1258479292023832709/image.png?ex=668a2bec&is=6688da6c&hm=b5c4fcc212b673d6d36c870239620b9f0574ce58944b991ff1a3e533437849f9&",
+        PlayerPfp: "URL",
 
         // Main Informations
         CurrentVehicleshop: -1,
@@ -82,7 +82,7 @@ const app = Vue.createApp({
 
         // Vehicleshop Variables
         VehicleShopName: "Oph3Z's Dealership",
-        VehicleshopDescription: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat illum aperiam neque nisi nemo itaque error voluptatem, ut minus, eaque ex similique maxime!",
+        VehicleshopDescription: "",
         VehicleShopStar: 4,
         Discount: 0,
         TestDrivePrice: 7500,
@@ -124,30 +124,6 @@ const app = Vue.createApp({
                 name: "Oph3Z Test",
                 pfp: "./img/background.png",
                 stars: 4,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 2,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 3,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 4,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 1,
                 message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
             },
         ],
@@ -711,12 +687,12 @@ const app = Vue.createApp({
         },
 
         RemovePerm(k) {
-            // NOTE: Perm check
-
-            // postNUI('RemovePerm', {
-            //     vehicleshop: this.CurrentVehicleshop,
-            //     name: this.PermsTable[k].name,
-            // })
+            if (this.PermCheck(this.PlayerRank, 'administration')) {
+                postNUI('RemovePerm', {
+                    id: this.CurrentVehicleshop,
+                    name: this.PermsTable[k].name,
+                })
+            }
         },
 
         TogglePerms(k) {
@@ -740,18 +716,19 @@ const app = Vue.createApp({
         },
 
         SaveNewPermissions() {
-            // NOTE: Perm check
-
-            if (this.OriginalPermsTable) {
-                this.PermsTable[this.SelectedPerm].permissions = JSON.parse(JSON.stringify(this.OriginalPermsTable));
-                this.OriginalPermsTable = null;
-                // postNUI('SaveNewPermissions', { // Bu kısım açılacak
-                //     vehicleshop: this.CurrentVehicleshop,
-                //     name: this.PermsTable[this.SelectedPerm].name,
-                //     table: this.PermsTable[this.SelectedPerm].permissions,
-                // })
-            } else {
-                // Değişiklik yapılmamış hatası/notify
+            if (this.PermCheck(this.PlayerRank, 'administration')) {
+                if (this.OriginalPermsTable) {
+                    postNUI('SaveNewPermissions', {
+                        id: this.CurrentVehicleshop,
+                        name: this.PermsTable[this.SelectedPerm].name,
+                        table: this.PermsTable[this.SelectedPerm].permissions,
+                    })
+                    this.PermsTable[this.SelectedPerm].permissions = JSON.parse(JSON.stringify(this.OriginalPermsTable));
+                    this.SelectedPerm = -1
+                    this.OriginalPermsTable = null;
+                } else {
+                    this.ShowNotify('error', this.Language['no_change'], 3000)
+                }
             }
         },
 

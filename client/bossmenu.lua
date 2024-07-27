@@ -172,6 +172,14 @@ function CreatePermission(data)
     TriggerServerEvent('real-vehicleshop:CreatePermission', data)
 end
 
+function RemovePerm(data)
+    TriggerServerEvent('real-vehicleshop:RemovePerm', data)
+end
+
+function SaveNewPermissions(data)
+    TriggerServerEvent('real-vehicleshop:SaveNewPermissions', data)
+end
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -265,3 +273,5 @@ RegisterNUICallback('EditCategory', EditCategory)
 RegisterNUICallback('EditVehicle', EditVehicle)
 RegisterNUICallback('BuyVehicle', BuyVehicle)
 RegisterNUICallback('CreatePermission', CreatePermission)
+RegisterNUICallback('RemovePerm', RemovePerm)
+RegisterNUICallback('SaveNewPermissions', SaveNewPermissions)

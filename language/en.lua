@@ -237,6 +237,9 @@ Locales['en'] = {
     ['perm_name_exist'] = "There is already a perm with this name.",
     ['perm_label_exist'] = "There is already a perm with this label.",
     ['created_perm'] = "Successfully created perm.",
+    ['perm_deleted'] = "Perm was successfully deleted.",
+    ['no_change'] = "No changes have been made.",
+    ['perm_settings_saved'] = "Perm settings saved.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",

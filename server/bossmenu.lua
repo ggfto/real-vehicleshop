@@ -822,6 +822,52 @@ RegisterNetEvent('real-vehicleshop:CreatePermission', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:RemovePerm', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local perms = json.decode(result[1].perms)
+        local Check = false
+        for k, v in ipairs(perms) do
+            if v.name == data.name then
+                table.remove(perms, k)
+                Check = true
+                break
+            end
+        end
+        if Check then
+            Config.Vehicleshops[data.id].Perms = perms
+            ExecuteSql("UPDATE `real_vehicleshop` SET `perms` = '"..json.encode(perms).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('perm_deleted'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:SaveNewPermissions', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local perms = json.decode(result[1].perms)
+        local Check = false
+        for k, v in ipairs(perms) do
+            if v.name == data.name then
+                v.permissions = data.table
+                Check = true
+                break
+            end
+        end
+        if Check then
+            Config.Vehicleshops[data.id].Perms = perms
+            ExecuteSql("UPDATE `real_vehicleshop` SET `perms` = '"..json.encode(perms).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('perm_settings_saved'), 3000)
+        end
+    end
+end)
+
 function RemoveFromSrcTable(id, src)
     if SrcTable[id] then
         for k, v in ipairs(SrcTable[id]) do
