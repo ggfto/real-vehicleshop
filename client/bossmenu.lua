@@ -193,12 +193,24 @@ function SendComplaint(data)
     TriggerServerEvent('real-vehicleshop:SendComplaint', data)
 end
 
+function SendFeedback(data)
+    TriggerServerEvent('real-vehicleshop:SendFeedback', data)
+end
+
 function RemoveComplaint(data)
     TriggerServerEvent('real-vehicleshop:RemoveComplaint', data)
 end
 
 function RemoveFeedback(data)
     TriggerServerEvent('real-vehicleshop:RemoveFeedback', data)
+end
+
+function DeclinePreorder(data)
+    TriggerServerEvent('real-vehicleshop:DeclinePreorder', data)
+end
+
+function AcceptPreorder(data)
+    TriggerServerEvent('real-vehicleshop:AcceptPreorder', data)
 end
 
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
@@ -269,6 +281,14 @@ RegisterNetEvent('real-vehicleshop:CloseBossPopup', function(type)
     })
 end)
 
+RegisterNetEvent('real-vehicleshop:ShowFeedbackScreen', function(data)
+    SendNUIMessage({
+        action = 'ShowFeedbackScreen',
+        id = data
+    })
+    SetNuiFocus(true, true)
+end)
+
 RegisterNUICallback('BuyCompany', AcceptedBuyCompany)
 RegisterNUICallback('DepositMoney', DepositMoney)
 RegisterNUICallback('WithdrawMoney', WithdrawMoney)
@@ -300,3 +320,6 @@ RegisterNUICallback('SaveNewPermissions', SaveNewPermissions)
 RegisterNUICallback('SendComplaint', SendComplaint)
 RegisterNUICallback('RemoveComplaint', RemoveComplaint)
 RegisterNUICallback('RemoveFeedback', RemoveFeedback)
+RegisterNUICallback('SendFeedback', SendFeedback)
+RegisterNUICallback('DeclinePreorder', DeclinePreorder)
+RegisterNUICallback('AcceptPreorder', AcceptPreorder)

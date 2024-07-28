@@ -1,11 +1,12 @@
-Config.DiscordBotToken = 'OTMwODI3Mzg1MzI5MzA3NzMx.GQPatL.q0qjstbgFANq6d21rMjZK7A4v__UmNNxF0dti8' -- Discord bot token
-Config.BucketID = 0 -- Default
-Config.PhoneMailOffline = 'qb-phone:server:sendNewEventMail'
+Config.DiscordBotToken = '' -- Discord bot token (For profile picutre)
+Config.DefaultProfilePicture = 'https://cdn.discordapp.com/attachments/1187803888271757444/1192875266855419994/Frame_81_3.png?ex=66a7caaa&is=66a6792a&hm=9c8cda780422470f657505c5ee828130a2a3c598003b2a3060edf464c3cab3df&' -- URL | The default profile image to use when Config.DiscordBotToken is empty.
+Config.BucketID = 0 -- Default | You don't need to touch here.
+Config.PhoneMailOffline = 'qb-phone:server:sendNewEventMail' -- Email event for offline players
 Config.DefaultPerms = {
-    { -- Dont remove this one. You can just edit label and description (Check language folder).
-        name = 'owner',
-        label = 'Owner',
-        permissions = {
+    { -- Dont remove this table.
+        name = 'owner', -- Dont touch
+        label = 'Owner', -- You can edit this one
+        permissions = { -- You can just edit label and description (Check language folder). Dont touch anything else.
             { name = 'administration', label = Language('administration'), description = Language('administration_description'), value = true },
             { name = 'withdrawdeposit', label = Language('withdraw_deposit'), description = Language('withdraw_deposit_description'), value = true },
             { name = 'preorder', label = Language('preorder_perm'), description = Language('preorder_description_perm'), value = true },
@@ -28,10 +29,10 @@ Config.DefaultPerms = {
     },
 }
 
-function SendMailToOfflinePlayer(identifier, sender, subject, message)
+function SendMailToOfflinePlayer(identifier, sender, subject, message) -- Send mail to offline players function
     TriggerEvent(Config.PhoneMailOffline, identifier, {
         sender = sender,
         subject = subject,
-        Message = message
+        message = message
     })
 end

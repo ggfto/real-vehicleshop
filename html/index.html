@@ -97,8 +97,11 @@
                                 <div class="w-[58.8%] h-full flex flex-col">
                                     <div class="w-full h-[9%]"></div>
                                     <div class="w-full h-[42%] flex flex-col">
-                                        <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer" @click="BuyVehicle()">
+                                        <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer" @click="BuyVehicle()" v-if="SelectedVehicleTable.VehicleStock > 0">
                                             <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['medium']">{{ Language['buy_this_car'] }}</span>
+                                        </div>
+                                        <div class="w-full h-[39%] flex items-center justify-center bg-[#00EFFF] cursor-pointer" @click="PreOrderVehicle()" v-else>
+                                            <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['medium']">{{ Language['preorder_button'] }}</span>
                                         </div>
                                         <div class="w-full h-[4.5%]"></div>
                                         <div class="w-full h-[26%] flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="TestDrive()">
@@ -106,10 +109,13 @@
                                         </div>
                                         <div class="w-full h-[4.5%]"></div>
                                         <div class="w-full h-[26%] flex items-center justify-between">
-                                            <div class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" :class="{ 'w-full': !AllowPlateChange }" @click="MainPage = 'Component'; setActivePage('preview')">
+                                            <div v-if="SelectedVehicleTable.VehicleStock == 0 || !AllowPlateChange" class="w-full h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="MainPage = 'Component'; setActivePage('preview')">
                                                 <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['regular']">{{ Language['preview'] }}</div>
                                             </div>
-                                            <div class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="ChangePlateStatus()" v-if="AllowPlateChange">
+                                            <div v-else class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="MainPage = 'Component'; setActivePage('preview')">
+                                                <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['regular']">{{ Language['preview'] }}</div>
+                                            </div>
+                                            <div class="w-[49%] h-full flex items-center justify-center bg-[#000000DE] cursor-pointer" @click="ChangePlateStatus()" v-if="AllowPlateChange && SelectedVehicleTable.VehicleStock > 0">
                                                 <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['regular']">{{ Language['change_plate'] }}</div>
                                             </div>
                                         </div>
@@ -272,7 +278,7 @@
                             </div>
                             <div class="w-[.4%] h-full"></div>
                             <div class="w-[92.7%] h-full flex flex-row whitespace-nowrap overflow-x-hidden overflow-y-hidden" ref="vc">
-                                <div class="w-[19%] h-full flex flex-col shrink-0 mr-[1.15vw] relative cursor-pointer" v-for="(v, k) in FilterVehicles" :class="{ 'opacity-[.7]': v.stock == 0, 'cursor-not-allowed': v.stock == 0, 'hover:scale-[.97]': v.stock > 0 }" @click="SelectVehicle(k, v)">
+                                <div class="w-[19%] h-full flex flex-col shrink-0 mr-[1.15vw] relative cursor-pointer" v-for="(v, k) in FilterVehicles" :class="{ 'opacity-[.7]': v.stock == 0, 'hover:scale-[.97]': v.stock > 0 }" @click="SelectVehicle(k, v)">
                                     <div class="w-full h-[78.5%] bg-[#000000DE] rounded-[.2604vw] left-0 top-0 absolute">
                                         <img src="./img/vehicle-container-effect-gray.png" class="w-[14.5833vw] h-full right-0 absolute" v-if="SelectedVehicleTable.VehicleIndex != k">
                                         <img src="./img/vehicle-container-effect-blue.png" class="w-[14.5833vw] h-full right-0 absolute" v-else>

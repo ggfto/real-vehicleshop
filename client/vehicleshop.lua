@@ -368,8 +368,8 @@ function BuyPlayerVehicle(data)
         color = color,
         props = props
     }
-    local data = Callback('real-vehicleshop:BuyPlayerVehicle', SendData)
-    if data then
+    local datas = Callback('real-vehicleshop:BuyPlayerVehicle', SendData)
+    if datas then
         SendNUIMessage({ action = 'CloseUI', status = false })
         Citizen.Wait(100)
         SetEntityCoords(Player, Config.Vehicleshops[vehicleshop].SpawnCoords, true)
@@ -378,8 +378,12 @@ function BuyPlayerVehicle(data)
         SetVehicleColours(Vehicle, color, color)
         SetVehicleExtraColours(Vehicle, 0, 0)
         SetPedIntoVehicle(Player, Vehicle, -1)
-        Config.GiveVehicleKeys(GetVehicleNumberPlateText(Vehicle), model, Vehicle)
+        Config.GiveVehicleKeys(data.plate, model, Vehicle)
     end
+end
+
+function PreOrderVehicle(data)
+    TriggerServerEvent('real-vehicleshop:PreOrderVehicle', data, SelectedVehicleProps)
 end
 
 RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
@@ -400,3 +404,4 @@ RegisterNUICallback('GenerateNewPlate', GenerateNewPlate)
 RegisterNUICallback('CheckNewPlateStatus', CheckNewPlateStatus)
 RegisterNUICallback('StartTestDrive', StartTestDrive)
 RegisterNUICallback('BuyPlayerVehicle', BuyPlayerVehicle)
+RegisterNUICallback('PreOrderVehicle', PreOrderVehicle)

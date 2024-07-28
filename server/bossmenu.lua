@@ -886,6 +886,25 @@ RegisterNetEvent('real-vehicleshop:SendComplaint', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:SendFeedback', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `feedbacks` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local feedbacks = json.decode(result[1].feedbacks)
+        table.insert(feedbacks, {
+            name = GetName(src),
+            pfp = GetDiscordAvatar(src),
+            stars = data.rating,
+            message = data.message
+        })
+        Config.Vehicleshops[data.id].Feedbacks = feedbacks
+        ExecuteSql("UPDATE `real_vehicleshop` SET `feedbacks` = '"..json.encode(feedbacks).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+        Config.Notification(Language('feedback_sent'), 'success', true, src)
+    end
+end)
+
 RegisterNetEvent('real-vehicleshop:RemoveComplaint', function(data)
     local src = source
     local result = ExecuteSql("SELECT `complaints` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
@@ -928,6 +947,106 @@ RegisterNetEvent('real-vehicleshop:RemoveFeedback', function(data)
             TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
             UpdateForAllSrcTable(data.id)
             TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('feedback_deleted'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:DeclinePreorder', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `information`, `preorders` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local information = json.decode(result[1].information)
+        local preorders = json.decode(result[1].preorders)
+        local targetIdentifier = nil
+        local price = nil
+        local Check = false
+        for k, v in ipairs(preorders) do
+            if v.requestor == data.requestor and v.vehiclemodel == data.vehicle then
+                targetIdentifier = v.identifier
+                price = v.price
+                SendMailToOfflinePlayer(v.identifier, Config.Vehicleshops[data.id].CompanyName, Language('preorder_declined_subject'), Language('preorder_declined_message'))
+                table.remove(preorders, k)
+                Check = true
+                break
+            end
+        end
+        if Check then
+            if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                local Player = frameworkObject.Functions.GetPlayerByCitizenId(targetIdentifier)
+                if Player then
+                    RemoveAddBankMoneyOnline('add', price, Player.PlayerData.source)
+                else
+                    AddBankMoneyOffline(targetIdentifier, price)
+                end
+            else
+                local Player = frameworkObject.GetPlayerFromIdentifier(targetIdentifier)
+                if Player then
+                    Player.addAccountMoney('money', price)
+                else
+                    AddBankMoneyOffline(targetIdentifier, price)
+                end
+            end
+            information.Money = information.Money - data.price
+            Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney - data.price
+            Config.Vehicleshops[data.id].Preorders = preorders
+            ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `preorders` = '"..json.encode(preorders).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('preorder_declined'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:AcceptPreorder', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `information`, `preorders` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local preorders = json.decode(result[1].preorders)
+        local targetIdentifier = nil
+        local vehicle = nil
+        local vehicleprops = nil
+        local plate = nil
+        local vehicleprice = nil
+        local Check = false
+        for k, v in ipairs(preorders) do
+            if v.requestor == data.requestor and v.vehiclemodel == data.vehicle then
+                targetIdentifier = v.identifier
+                vehicle = v.vehiclehash
+                vehicleprops = v.props
+                plate = v.plate
+                vehicleprice = v.price
+                table.remove(preorders, k)
+                Check = true
+                break
+            end
+        end
+        if Check then
+            if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+                local PlayerLicense = GetOfflinePlayerLicenseQBCore(targetIdentifier)
+                ExecuteSql("INSERT INTO `player_vehicles` (license, citizenid, vehicle, hash, mods, plate, garage, state) VALUES (@license, @citizenid, @vehicle, @hash, @mods, @plate, @garage, @state)", {
+                    ['@license'] = PlayerLicense,
+                    ['@citizenid'] = targetIdentifier,
+                    ['@vehicle'] = vehicle,
+                    ['@hash'] = GetHashKey(vehicleprops.model),
+                    ['@mods'] = json.encode(vehicleprops),
+                    ['@plate'] = plate,
+                    ['@garage'] = Config.DefaultGarage,
+                    ['@state'] = 0
+                })
+            else
+                ExecuteSql("INSERT INTO `owned_vehicles` (owner, plate, vehicle) VALUES (@owner, @plate, @vehicle)", {
+                    ['@owner'] = targetIdentifier,
+                    ['@plate'] = plate,
+                    ['@vehicle'] = json.encode(vehicleprops),
+                })
+            end
+            SendMailToOfflinePlayer(targetIdentifier, Config.Vehicleshops[data.id].CompanyName, Language('preorder_accepted_subject'), Language('preorder_accepted_message') .. ' ' .. plate)
+            AddSoldVehicles(GetOfflinePlayerName(targetIdentifier), data.id, vehicle, vehicleprice)
+            Config.Vehicleshops[data.id].Preorders = preorders
+            ExecuteSql("UPDATE `real_vehicleshop` SET `preorders` = '"..json.encode(preorders).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('preorder_accepted'), 3000)
         end
     end
 end)
@@ -1028,6 +1147,22 @@ function AddTransactions(source, id, type, amount)
         table.insert(transactions, NewTable)
         table.insert(Config.Vehicleshops[id].Transactions, NewTable)
         ExecuteSql("UPDATE `real_vehicleshop` SET `transactions` = '"..json.encode(transactions).."' WHERE `id` = '"..id.."'")
+    end
+end
+
+function AddSoldVehicles(name, id, vehicle, price)
+    local result = ExecuteSql("SELECT `soldvehicles` FROM `real_vehicleshop` WHERE `id` = '"..id.."'")
+    if #result > 0 then
+        local soldvehicles = json.decode(result[1].soldvehicles)
+        local date = os.date('%d.%m.%Y | %H:%M')
+        table.insert(soldvehicles, {
+            buyer = name,
+            vehicle = vehicle,
+            price = price,
+            date = date
+        })
+        Config.Vehicleshops[id].SoldVehicles = soldvehicles
+        ExecuteSql("UPDATE `real_vehicleshop` SET `soldvehicles` = '"..json.encode(soldvehicles).."' WHERE `id` = '"..id.."'")
     end
 end
 

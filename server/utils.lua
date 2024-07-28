@@ -132,6 +132,14 @@ function AddBankMoneyOffline(identifier, payment)
     end
 end
 
+function GetOfflinePlayerLicenseQBCore(identifier)
+    local result = ExecuteSql("SELECT `license` FROM `players` WHERE `citizenid` = '"..identifier.."'")
+    if #result > 0 then
+        local license = result[1].license
+        return license
+    end
+end
+
 function GetName(source)
     if Config.Framework == "esx" or Config.Framework == "oldesx" then
         local Player = frameworkObject.GetPlayerFromId(tonumber(source))
@@ -150,10 +158,22 @@ function GetName(source)
     end
 end
 
+function GetOfflinePlayerName(identifier)
+    if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
+        local result = ExecuteSql("SELECT charinfo FROM players WHERE citizenid = '"..identifier.."'")
+        local charinfo = json.decode(result[1].charinfo)
+        return charinfo.firstname .. ' ' .. charinfo.lastname
+    else
+        local result = ExecuteSql("SELECT firstname, lastname FROM users WHERE identifier = '"..identifier.."'")
+        local firstname = result[1].firstname
+        local lastname = result[1].lastname
+        return firstname .. ' ' .. lastname
+    end
+end
+
 function GetIdentifier(source)
     if Config.Framework == "esx" or Config.Framework == "oldesx" then
         local xPlayer = frameworkObject.GetPlayerFromId(tonumber(source))
-
         if xPlayer then
             return xPlayer.getIdentifier()
         else
@@ -226,7 +246,6 @@ function LoadData()
         Config.Vehicleshops[k].Transactions = json.decode(v.transactions)
         Config.Vehicleshops[k].Perms = json.decode(v.perms)
     end
-    print("^2[real-vehicleshop]^0 - Vehicle shops loaded successfully")
 end
 
 Citizen.CreateThread(StartScript)

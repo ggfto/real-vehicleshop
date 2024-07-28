@@ -75,10 +75,10 @@
                         </div>
                         <div class="w-[.2%] h-[38.5%] bg-[#636363]"></div>
                         <div class="w-[29.5%] h-full flex items-center justify-center">
-                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#5E5E5E] rounded-[.1042vw] cursor-pointer mr-[.125vw]">
+                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#5E5E5E] rounded-[.1042vw] cursor-pointer mr-[.125vw]" @click="$root.DeclinePreorder(v.requestor, v.vehiclemodel, v.price)">
                                 <span class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.Language['decline'] }}</span>
                             </div>
-                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#00F0FF] rounded-[.1042vw] cursor-pointer ml-[.125vw]">
+                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#00F0FF] rounded-[.1042vw] cursor-pointer ml-[.125vw]" @click="$root.AcceptPreorder(v.requestor, v.vehiclemodel, v.price)">
                                 <span class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.Language['accept'] }}</span>
                             </div>
                         </div>

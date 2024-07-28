@@ -119,14 +119,7 @@ const app = Vue.createApp({
         SearchInput: "",
         IsSearching: false,
         ShowFeedback: false,
-        Feedbacks: [
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                stars: 4,
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-        ],
+        Feedbacks: [],
         VehicleStatisticMaxValues: {
             MaxSpeed: 500,
             MaxBrake: 200,
@@ -292,17 +285,32 @@ const app = Vue.createApp({
             this.NormalPopupSettings.Function = 'buyvehicle'
         },
 
+        PreOrderVehicle() {
+            this.ShowPopupScrren = true
+            this.NormalPopupSettings.Show = true
+            this.NormalPopupSettings.HeaderOne = this.Language['preordervehicle_header']
+            let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+            if (this.Discount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
+            }
+            this.NormalPopupSettings.HeaderTwo = '$' + this.FormatMoney(SelectedVehiclePrice)
+            this.NormalPopupSettings.Description = this.Language['preordervehicle_description']
+            this.NormalPopupSettings.Function = 'preordervehicle'
+        },
+
         ConfirmBuyVehicle() {
-            if (this.PlayerMoney >= this.SelectedVehicleTable.VehiclePrice) {
-                let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
-                if (this.Discount > 0) {
-                    SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
-                } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
-                    SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
-                }
-                if (this.ChangedPlate) {
-                    SelectedVehiclePrice = SelectedVehiclePrice + this.PlateChangePrice
-                }
+            let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+            if (this.Discount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
+            }
+            if (this.ChangedPlate) {
+                SelectedVehiclePrice = SelectedVehiclePrice + this.PlateChangePrice
+            }
+            if (this.PlayerMoney >= SelectedVehiclePrice) {
                 postNUI('BuyPlayerVehicle', {
                     vehicleshop: this.CurrentVehicleshop,
                     model: this.SelectedVehicleTable.VehicleHash,
@@ -311,6 +319,28 @@ const app = Vue.createApp({
                     plate: this.PlateInput,
                     color: this.CurrentVehicleColor
                 })
+                this.ClosePopup('normal')
+            } else {
+                this.ShowNotify('error', this.Language['not_enough_money'], 2000)
+            }
+        },
+
+        ConfirmPreorderVehicle() {
+            let SelectedVehiclePrice = this.SelectedVehicleTable.VehiclePrice
+            if (this.Discount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.Discount / 100)
+            } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
+                SelectedVehiclePrice = SelectedVehiclePrice - (SelectedVehiclePrice * this.SelectedVehicleTable.VehicleDiscount / 100)
+            }
+            if (this.PlayerMoney >= SelectedVehiclePrice) {
+                postNUI('PreOrderVehicle', {
+                    id: this.CurrentVehicleshop,
+                    model: this.SelectedVehicleTable.VehicleHash,
+                    price: SelectedVehiclePrice,
+                    plate: this.PlateInput,
+                    color: this.CurrentVehicleColor
+                })
+                this.ClosePopup('normal')
             } else {
                 this.ShowNotify('error', this.Language['not_enough_money'], 2000)
             }
@@ -343,6 +373,8 @@ const app = Vue.createApp({
                 this.StartTestDrive()
             } else if (type == 'buyvehicle') {
                 this.ConfirmBuyVehicle()
+            } else if (type == 'preordervehicle') {
+                this.ConfirmPreorderVehicle()
             }
         },
 
@@ -423,7 +455,7 @@ const app = Vue.createApp({
         },
 
         SelectVehicle(index, v) {
-            if (this.SelectedVehicleTable.VehicleIndex != index && v.stock > 0) {
+            if (this.SelectedVehicleTable.VehicleIndex != index) {
                 this.SelectedVehicleTable.VehicleIndex = index
                 this.SelectedVehicleTable.VehicleHash = v.name
                 this.SelectedVehicleTable.VehicleLabel = v.label
@@ -566,7 +598,12 @@ const app = Vue.createApp({
                         if (this.CheckProfanities) {
                             const SearchProfanities = this.Profanities.filter(v => this.FeedbackPopupSettings.Message.includes(v))
                             if (SearchProfanities.length == 0) {
-                                // Table Insert (this.Feedbacks)
+                                postNUI('SendFeedback', {
+                                    id: this.CurrentVehicleshop,
+                                    rating: this.FeedbackPopupSettings.Rating,
+                                    message: this.FeedbackPopupSettings.Message
+                                })
+                                this.CloseComplaintAndFeedback()
                             } else {
                                 postNUI('SendNormalNotify', {
                                     text: this.Language['feedback_stop_using_bad_words'],
@@ -574,7 +611,12 @@ const app = Vue.createApp({
                                 })
                             }
                         } else {
-                            // Table Insert (this.Feedbacks)
+                            postNUI('SendFeedback', {
+                                id: this.CurrentVehicleshop,
+                                rating: this.FeedbackPopupSettings.Rating,
+                                message: this.FeedbackPopupSettings.Message
+                            })
+                            this.CloseComplaintAndFeedback()
                         }
                     } else {
                         postNUI('SendNormalNotify', {
@@ -752,6 +794,29 @@ const app = Vue.createApp({
                 } else {
                     this.ShowNotify('error', this.Language['no_change'], 3000)
                 }
+            }
+        },
+
+        // Pre-order
+        DeclinePreorder(requestor, vehicle, price) {
+            if (this.PermCheck(this.PlayerRank, 'preorder')) {
+                postNUI('DeclinePreorder', {
+                    id: this.CurrentVehicleshop,
+                    requestor: requestor,
+                    vehicle: vehicle,
+                    price: price
+                })
+            }
+        },
+
+        AcceptPreorder(requestor, vehicle, price) {
+            if (this.PermCheck(this.PlayerRank, 'preorder')) {
+                postNUI('AcceptPreorder', {
+                    id: this.CurrentVehicleshop,
+                    requestor: requestor,
+                    vehicle: vehicle,
+                    price: price
+                })
             }
         },
 
@@ -1037,25 +1102,32 @@ const app = Vue.createApp({
         },
 
         MakeDiscount() {
-            if (this.Inputs.DiscountInput > 0) {
-                if (this.PermCheck(this.PlayerRank, 'discount')) {
-                    postNUI('MakeDiscount', {
-                        id: this.CurrentVehicleshop,
-                        value: this.Inputs.DiscountInput
-                    })
-                    this.Inputs.DiscountInput = ''
-                    this.ShowNotify('success', this.Language['successfully_launched_discount'], 3000)
+            if (this.PermCheck(this.PlayerRank, 'discount')) {
+                if (this.Inputs.DiscountInput > 0) {
+                    if (this.Inputs.DiscountInput != this.Discount) {
+                        postNUI('MakeDiscount', {
+                            id: this.CurrentVehicleshop,
+                            value: this.Inputs.DiscountInput
+                        })
+                        this.ShowNotify('success', this.Language['successfully_launched_discount'], 3000)
+                    } else {
+                        this.ShowNotify('error', this.Language['same_discount'], 3000)          
+                    }
+                } else {
+                    this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
                 }
-            } else {
-                this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
             }
         },
 
         CancelDiscount() {
             if (this.PermCheck(this.PlayerRank, 'discount')) {
-                postNUI('CancelDiscount', this.CurrentVehicleshop)
-                this.Inputs.DiscountInput = ''
-                this.ShowNotify('information', this.Language['successfully_canceled_discount'], 3000)
+                if (this.Discount > 0) {
+                    postNUI('CancelDiscount', this.CurrentVehicleshop)
+                    this.Inputs.DiscountInput = ''
+                    this.ShowNotify('information', this.Language['successfully_canceled_discount'], 3000)
+                } else {
+                    this.ShowNotify('error', this.Language['no_discount_campaign'], 3000)
+                }
             }
         },
 
@@ -1814,9 +1886,7 @@ const app = Vue.createApp({
                     this.Discount = data.discount
                     this.CategoryList = data.categories
                     this.ComplainTable = data.complaints
-                    if (this.Discount > 0) {
-                        this.Inputs.DiscountInput = data.discount
-                    }
+                    this.Inputs.DiscountInput = data.discount
                     break;
                 case 'SendTransferRequest':
                     this.ShowPopupToTarget = 'TransferRequest'
@@ -1838,6 +1908,10 @@ const app = Vue.createApp({
                 case 'OpenComplaintForm':
                     this.CurrentVehicleshop = data.vehicleshop
                     this.ComplaintPopupSettings.Show = true
+                    break;
+                case 'ShowFeedbackScreen':
+                    this.CurrentVehicleshop = data.id
+                    this.FeedbackPopupSettings.Show = true
                     break;
                 case 'CloseJobReq':
                     this.CloseJobReq('normal')

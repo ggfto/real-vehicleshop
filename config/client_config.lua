@@ -122,7 +122,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent('real-vehicleshop:SendMailToOnlinePlayer', function(sender, subject, message)
+RegisterNetEvent('real-vehicleshop:SendMailToOnlinePlayer', function(sender, subject, message) -- Here is the place to send mail to active players. You can organize it according to yourself.
     TriggerServerEvent(Config.PhoneMailOnline, {
         sender = sender,
         subject = subject,

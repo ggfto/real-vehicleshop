@@ -3,6 +3,7 @@ Locales['en'] = {
     ['vehicle_setup_and_information'] = "Vehicle Information & Setup",
     ['price'] = "Price",
     ['buy_this_car'] = "Buy this car",
+    ['preorder_button'] = "Pre-order Now!",
     ['test_drive'] = "Test Drive",
     ['preview'] = "Preview",
     ['change_plate'] = "Change Plate",
@@ -39,6 +40,8 @@ Locales['en'] = {
     ['buyvehicle_header'] = "Check the vehicle's details before buying",
     ['buyvehicle_description'] = "You can test drive the vehicle before you buy it, you can also change the color of the vehicle and if you are not happy with the license plate, you can change it by paying a certain fee.",
     ['plate_already_exist'] = "License plates are already in use.",
+    ['preordervehicle_header'] = "You are pre-ordering the car",
+    ['preordervehicle_description'] = "You can test drive the vehicle before you pre-order it, you can also choose the color of the vehicle. You will pay directly, and if not accepted, a refund will be given.",
 
     -- UI (Boss menu)
     ['vehicle_stock_list'] = "Stock of vehicles in your company",
@@ -243,6 +246,11 @@ Locales['en'] = {
     ['complaint_deleted'] = "Complaint successfully deleted.",
     ['feedback_deleted'] = "Feedback successfully deleted.",
     ['already_has_a_discount'] = "The company already has a discount campaign.",
+    ['no_discount_campaign'] = "There is no discount campaign available.",
+    ['same_discount'] = "You cannot rewrite the current discount %.",
+    ['preorder_request_sent'] = "Request Sent.",
+    ['preorder_declined'] = "Pre-order denied.",
+    ['preorder_accepted'] = "Pre-order accepted",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
@@ -261,6 +269,7 @@ Locales['en'] = {
     ['rejected_job_offer'] = "The person rejected your job offer.",
     ['same_player_error_second'] = "You can't enter your own id.",
     ['complaint_sent'] = "Your complaint form has been successfully submitted.",
+    ['feedback_sent'] = "Sent feedback.",
 
     -- Mail
     ['salary_subject'] = 'Your salary has been paid!',
@@ -279,6 +288,12 @@ Locales['en'] = {
     ['bonus_message'] = "Thanks to your efficiency and willingness to work, the company is growing day by day. For this, we have distributed an award to all of you.",
     ['not_enough_salary_subject'] = "Your salary has not been paid!",
     ['not_enough_salary_message'] = "Unfortunately, there is not enough money in the company's coffers to pay the employees. That's why your salary could not be paid this month.",
+    ['preorder_rejected_subject'] = "Your Pre-Order has been rejected!",
+    ['preorder_rejected_message'] = "Hello, since there was no response to your pre-order and 24 hours have passed, it was automatically rejected by the system and your money was refunded. We wish you a good day...",
+    ['preorder_declined_subject'] = "Your Pre-Order has been denied!",
+    ['preorder_declined_message'] = "Hello, your pre-order was declined by the company and your money was refunded. You can check your bank. We wish you a good day...",
+    ['preorder_accepted_subject'] = "Your pre-order has been accepted!",
+    ['preorder_accepted_message'] = "Congratulations on your new vehicle. The company has accepted your pre-order and the vehicle has been sent to your garage. Have a safe drive. Vehicle plate:",
 
     -- Permissions
     ['administration'] = 'Administration',
