@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `real_vehicleshop` (
   `vehicles` longtext DEFAULT NULL,
   `categories` longtext DEFAULT NULL,
   `feedbacks` longtext DEFAULT NULL,
-  `complains` longtext DEFAULT NULL,
+  `complaints` longtext DEFAULT NULL,
   `preorders` longtext DEFAULT NULL,
   `employees` longtext DEFAULT NULL,
   `soldvehicles` longtext DEFAULT NULL,

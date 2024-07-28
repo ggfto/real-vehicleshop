@@ -55,11 +55,20 @@ function OpenBossmenu(k)
             transactions = Config.Vehicleshops[k].Transactions,
             perms = Config.Vehicleshops[k].Perms,
             discount = Config.Vehicleshops[k].Discount,
-            categories = Config.Vehicleshops[k].Categories
+            categories = Config.Vehicleshops[k].Categories,
+            complaints = Config.Vehicleshops[k].Complaints,
         })
         SetNuiFocus(true, true)
         CurrentVehicleshop = k
     end
+end
+
+function OpenComplaintForm(k)
+    SendNUIMessage({
+        action = 'OpenComplaintForm',
+        vehicleshop = k,
+    })
+    SetNuiFocus(true, true)
 end
 
 function AcceptedBuyCompany(data)
@@ -180,6 +189,18 @@ function SaveNewPermissions(data)
     TriggerServerEvent('real-vehicleshop:SaveNewPermissions', data)
 end
 
+function SendComplaint(data)
+    TriggerServerEvent('real-vehicleshop:SendComplaint', data)
+end
+
+function RemoveComplaint(data)
+    TriggerServerEvent('real-vehicleshop:RemoveComplaint', data)
+end
+
+function RemoveFeedback(data)
+    TriggerServerEvent('real-vehicleshop:RemoveFeedback', data)
+end
+
 RegisterNetEvent('real-vehicleshop:UpdateUI', function()
     local data = Callback('real-vehicleshop:GetPlayerInformation', CurrentVehicleshop)
     if data then
@@ -197,7 +218,8 @@ RegisterNetEvent('real-vehicleshop:UpdateUI', function()
             transactions = Config.Vehicleshops[CurrentVehicleshop].Transactions,
             perms = Config.Vehicleshops[CurrentVehicleshop].Perms,
             discount = Config.Vehicleshops[CurrentVehicleshop].Discount,
-            categories = Config.Vehicleshops[CurrentVehicleshop].Categories
+            categories = Config.Vehicleshops[CurrentVehicleshop].Categories,
+            complaints = Config.Vehicleshops[CurrentVehicleshop].Complaints
         })
     end
 end)
@@ -275,3 +297,6 @@ RegisterNUICallback('BuyVehicle', BuyVehicle)
 RegisterNUICallback('CreatePermission', CreatePermission)
 RegisterNUICallback('RemovePerm', RemovePerm)
 RegisterNUICallback('SaveNewPermissions', SaveNewPermissions)
+RegisterNUICallback('SendComplaint', SendComplaint)
+RegisterNUICallback('RemoveComplaint', RemoveComplaint)
+RegisterNUICallback('RemoveFeedback', RemoveFeedback)

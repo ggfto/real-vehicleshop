@@ -23,7 +23,7 @@
                     </div>
                     <div class="w-[5%] h-full"></div>
                     <div class="w-[30.5%] h-full flex items-center justify-between">
-                        <div class="w-[48%] h-[55%] flex items-center justify-center bg-[#5D5D5D] rounded-[.17vw] cursor-pointer" @click="$root.RemoveFeedbackComplaint(k, v.name, v.message)">
+                        <div class="w-[48%] h-[55%] flex items-center justify-center bg-[#5D5D5D] rounded-[.17vw] cursor-pointer" @click="$root.RemoveFeedbackComplaint(k, v.name, v.message, v.type)">
                             <div class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{ $root.Language['remove'] }}</div>
                         </div>
                         <div class="w-[48%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.17vw] cursor-pointer" @click="$root.FeedbackComplaintScreen = k">

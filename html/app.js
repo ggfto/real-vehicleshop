@@ -218,13 +218,7 @@ const app = Vue.createApp({
         ComplaintCharacters: {},
 
         // Tables
-        ComplainTable: [
-            {
-                name: "Oph3Z Test",
-                pfp: "./img/background.png",
-                message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. At assumenda praesentium in similique commodi nihil ut debitis, consequatur consectetur possimus dolor fugit quo quae dolorem reprehenderit vel sapiente. Pariatur voluptas, natus ex tempora cumque quidem ipsam, laborum possimus, nihil culpa minima sapiente dolorem beatae libero totam! Excepturi illum, necessitatibus deleniti laboriosam hic quidem id fugiat perspiciatis est fuga dolor sunt quod beatae ut. Quod voluptate culpa, veritatis praesentium nobis nostrum."
-            },
-        ],
+        ComplainTable: [],
 
         Inputs: {
             SoldVehiclesInput: '', // Satılmış araçlar arama input
@@ -553,16 +547,16 @@ const app = Vue.createApp({
                 this.NormalPopupSettings.HeaderTwo = ''
                 this.NormalPopupSettings.Description = ''
                 this.NormalPopupSettings.Function = null
-            } else if (type == 'feedback') {
-                this.FeedbackPopupSettings.Show = false
-                this.FeedbackPopupSettings.Rating = null
-                this.FeedbackPopupSettings.Message = ''
-                // postNUI('CloseUI')
-            } else if (type == 'complaint') {
-                this.ComplaintPopupSettings.Show = false
-                this.ComplaintPopupSettings.Message = ''
-                // postNUI('CloseUI')
             }
+        },
+
+        CloseComplaintAndFeedback() {
+            this.FeedbackPopupSettings.Show = false
+            this.FeedbackPopupSettings.Rating = null
+            this.FeedbackPopupSettings.Message = ''
+            this.ComplaintPopupSettings.Show = false
+            this.ComplaintPopupSettings.Message = ''
+            postNUI('SetNuiFocus', false)
         },
 
         SendFeedback() {
@@ -574,19 +568,31 @@ const app = Vue.createApp({
                             if (SearchProfanities.length == 0) {
                                 // Table Insert (this.Feedbacks)
                             } else {
-                                this.ShowNotify('error', this.Language['feedback_stop_using_bad_words'], 8000)
+                                postNUI('SendNormalNotify', {
+                                    text: this.Language['feedback_stop_using_bad_words'],
+                                    type: 'error'
+                                })
                             }
                         } else {
                             // Table Insert (this.Feedbacks)
                         }
                     } else {
-                        this.ShowNotify('error', this.Language['feedback_maximum_character'], 4000)
+                        postNUI('SendNormalNotify', {
+                            text: this.Language['feedback_maximum_character'],
+                            type: 'error'
+                        })
                     }
                 } else {
-                    this.ShowNotify('error', this.Language['feedback_minimum_character'], 4000)
+                    postNUI('SendNormalNotify', {
+                        text: this.Language['feedback_minimum_character'],
+                        type: 'error'
+                    })
                 }
             } else {
-                this.ShowNotify('error', this.Language['choose_point'], 4000)
+                postNUI('SendNormalNotify', {
+                    text: this.Language['choose_point'],
+                    type: 'error'
+                })
             }
         },
 
@@ -596,18 +602,35 @@ const app = Vue.createApp({
                     if (this.CheckProfanities) {
                         const SearchProfanities = this.Profanities.filter(v => this.ComplaintPopupSettings.Message.includes(v))
                         if (SearchProfanities.length == 0) {
-                            // Table Insert (this.ComplainTable)
+                            postNUI('SendComplaint', {
+                                id: this.CurrentVehicleshop,
+                                message: this.ComplaintPopupSettings.Message
+                            })
+                            this.CloseComplaintAndFeedback()
                         } else {
-                            this.ShowNotify('error', this.Language['complaint_stop_using_bad_words'], 8000)
+                            postNUI('SendNormalNotify', {
+                                text: this.Language['complaint_stop_using_bad_words'],
+                                type: 'error'
+                            })
                         }
                     } else {
-                        // Table Insert (this.ComplainTable)
+                        postNUI('SendComplaint', {
+                            id: this.CurrentVehicleshop,
+                            message: this.ComplaintPopupSettings.Message
+                        })
+                        this.CloseComplaintAndFeedback()
                     }
                 } else {
-                    this.ShowNotify('error', this.Language['complaint_maximum_character'], 4000)
+                    postNUI('SendNormalNotify', {
+                        text: this.Language['complaint_maximum_character'],
+                        type: 'error'
+                    })
                 }
             } else {
-                this.ShowNotify('error', this.Language['complaint_minimum_character'], 4000)
+                postNUI('SendNormalNotify', {
+                    text: this.Language['complaint_minimum_character'],
+                    type: 'error'
+                })
             }
         },
 
@@ -733,10 +756,26 @@ const app = Vue.createApp({
         },
 
         // Feedback & Complaint
-        RemoveFeedbackComplaint(k, name, message) {
-            // NOTE: Perm check
-            // k = table number | name = player name (For check) | message = player message (For check) | Vehicleshop: this.CurrentVehicleshop
-            // this.FeedbackComplaintScreen = -1
+        RemoveFeedbackComplaint(k, name, message, type) {
+            if (type == 'complaint') {
+                if (this.PermCheck(this.PlayerRank, 'removecomplaints')) {
+                    postNUI('RemoveComplaint', {
+                        id: this.CurrentVehicleshop,
+                        name: name,
+                        message: message
+                    })
+                    this.FeedbackComplaintScreen = -1
+                }
+            } else {
+                if (this.PermCheck(this.PlayerRank, 'removefeedback')) {
+                    postNUI('RemoveFeedback', {
+                        id: this.CurrentVehicleshop,
+                        name: name,
+                        message: message
+                    })
+                    this.FeedbackComplaintScreen = -1
+                }
+            }
         },
 
         // Edit Vehicle
@@ -769,17 +808,21 @@ const app = Vue.createApp({
             if (this.BossMenuFilterVehicles[this.VehicleEditScreen].label == this.EditVehicleInputs.Name && this.BossMenuFilterVehicles[this.VehicleEditScreen].model == this.EditVehicleInputs.Model && this.BossMenuFilterVehicles[this.VehicleEditScreen].img == this.EditVehicleInputs.Img && this.BossMenuFilterVehicles[this.VehicleEditScreen].discount == this.EditVehicleInputs.Discount && this.BossMenuFilterVehicles[this.VehicleEditScreen].price == this.EditVehicleInputs.Price && this.BossMenuFilterVehicles[this.VehicleEditScreen].category == this.NewCategoryList[this.SelectedVehicleEditCategory].name) {
                 this.ShowNotify('error', this.Language['vehicle_edit_no_change'], 3000)
             } else {
-                if (this.EditVehicleInputs.Name.length > 0 && this.EditVehicleInputs.Model.length > 0 && this.EditVehicleInputs.Img.length > 0 && this.EditVehicleInputs.Discount > 0 || this.EditVehicleInputs.Discount == '' && this.EditVehicleInputs.Price > 0) {
-                    postNUI('EditVehicle', {
-                        id: this.CurrentVehicleshop,
-                        hash: this.BossMenuFilterVehicles[this.VehicleEditScreen].name,
-                        name: this.EditVehicleInputs.Name,
-                        model: this.EditVehicleInputs.Model,
-                        img: this.EditVehicleInputs.Img,
-                        category: this.NewCategoryList[this.SelectedVehicleEditCategory].name,
-                        discount: this.EditVehicleInputs.Discount,
-                        price: this.EditVehicleInputs.Price
-                    })
+                if (this.EditVehicleInputs.Name.length > 0 && this.EditVehicleInputs.Model.length > 0 && this.EditVehicleInputs.Img.length > 0 && this.EditVehicleInputs.Price > 0) {
+                    if (this.EditVehicleInputs.Discount > 0 && this.Discount > 0) {
+                        this.ShowNotify('error', this.Language['already_has_a_discount'], 3000)
+                    } else {
+                        postNUI('EditVehicle', {
+                            id: this.CurrentVehicleshop,
+                            hash: this.BossMenuFilterVehicles[this.VehicleEditScreen].name,
+                            name: this.EditVehicleInputs.Name,
+                            model: this.EditVehicleInputs.Model,
+                            img: this.EditVehicleInputs.Img,
+                            category: this.NewCategoryList[this.SelectedVehicleEditCategory].name,
+                            discount: this.EditVehicleInputs.Discount,
+                            price: this.EditVehicleInputs.Price
+                        })
+                    }
                 } else {
                     this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
                 }
@@ -1414,6 +1457,17 @@ const app = Vue.createApp({
               return price
             }
         },
+
+        DiscountPriceWithValue2(v, vprice) {
+            let price = vprice
+      
+
+            if (v > 0) {
+                return price - (price * v / 100)
+            } else {
+                return price
+            }
+        },
     },  
     
     computed: {
@@ -1739,6 +1793,7 @@ const app = Vue.createApp({
                     this.PermsTable = data.perms
                     this.Discount = data.discount
                     this.CategoryList = data.categories
+                    this.ComplainTable = data.complaints
                     this.FilterNewCategoryForBoss()
                     if (this.Discount > 0) {
                         this.Inputs.DiscountInput = data.discount
@@ -1758,6 +1813,7 @@ const app = Vue.createApp({
                     this.PermsTable = data.perms
                     this.Discount = data.discount
                     this.CategoryList = data.categories
+                    this.ComplainTable = data.complaints
                     if (this.Discount > 0) {
                         this.Inputs.DiscountInput = data.discount
                     }
@@ -1778,6 +1834,10 @@ const app = Vue.createApp({
                     this.JobReqSalary = data.salary
                     this.JobReqSender = data.sender
                     this.JobReqTarget = data.target
+                    break;
+                case 'OpenComplaintForm':
+                    this.CurrentVehicleshop = data.vehicleshop
+                    this.ComplaintPopupSettings.Show = true
                     break;
                 case 'CloseJobReq':
                     this.CloseJobReq('normal')
@@ -1801,6 +1861,9 @@ const app = Vue.createApp({
         
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
+                if (this.ComplaintPopupSettings.Show || this.FeedbackPopupSettings.Show) {
+                    this.CloseComplaintAndFeedback()
+                }
                 if (this.Show && this.MainPage != 'Bossmenu' && this.activePage != 'preview' && this.activePage != 'companystaffsettings' && this.activePage != 'companysettings' && this.activePage != 'buyvehicle' && !this.ShowPopupScrren && !this.ShowBossPopup && !this.ShowPlateChange && !this.ShowColorPicker) {
                     this.CloseUI(true)
                 }

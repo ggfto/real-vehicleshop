@@ -100,6 +100,28 @@ Citizen.CreateThread(function()
     end
 end)
 
+-- Complaint Form
+Citizen.CreateThread(function()
+    while true do
+        local sleep = 2000
+        local Player = PlayerPedId()
+        local PlayerCoords = GetEntityCoords(Player)
+        for k, v in pairs(Config.Vehicleshops) do
+            if v.Owner ~= "" then
+                local Distance = #(PlayerCoords - v.ComplaintForm)
+                if Distance < 2.0 then
+                    sleep = 3
+                    DrawText3D(Language('complaint_form'), v.ComplaintForm)
+                    if IsControlJustReleased(0, 38) then
+                        OpenComplaintForm(k)
+                    end
+                end
+            end
+        end
+        Citizen.Wait(sleep)
+    end
+end)
+
 RegisterNetEvent('real-vehicleshop:SendMailToOnlinePlayer', function(sender, subject, message)
     TriggerServerEvent(Config.PhoneMailOnline, {
         sender = sender,

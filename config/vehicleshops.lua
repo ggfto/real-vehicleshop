@@ -14,7 +14,7 @@ Config.Vehicleshops = {
         Vehicles = {}, -- Dont touch
         Categories = {}, -- Dont touch
         Feedbacks = {}, -- Dont touch
-        Complains = {}, -- Dont touch
+        Complaints = {}, -- Dont touch
         Preorders = {}, -- Dont touch
         Employees = {}, -- Dont touch
         SoldVehicles = {}, -- Dont touch
@@ -37,6 +37,7 @@ Config.Vehicleshops = {
             Coords = vector3(806.75, -3000.08, -69.0), -- Cam Coords
         },
         TestDriveLocation = vector4(-1331.59, -2202.41, 13.32, 149.94),
+        ComplaintForm = vector3(-57.09, -1097.23, 26.42),
     },
     {
         Manageable = true, 
@@ -53,7 +54,7 @@ Config.Vehicleshops = {
         Vehicles = {}, -- Dont touch
         Categories = {}, -- Dont touch
         Feedbacks = {}, -- Dont touch
-        Complains = {}, -- Dont touch
+        Complaints = {}, -- Dont touch
         Preorders = {}, -- Dont touch
         Employees = {}, -- Dont touch
         SoldVehicles = {}, -- Dont touch
@@ -77,6 +78,7 @@ Config.Vehicleshops = {
             Coords = vector3(-710.27, -1336.03, 1.46), -- Cam Coords
         },
         TestDriveLocation = vector4(-727.55, -1367.86, 0.52, 136.62),
+        ComplaintForm = vector3(1, 1, 1),
     },
     {
         Manageable = false, 
@@ -93,7 +95,7 @@ Config.Vehicleshops = {
         Vehicles = {}, -- Dont touch
         Categories = {}, -- Dont touch
         Feedbacks = {}, -- Dont touch
-        Complains = {}, -- Dont touch
+        Complaints = {}, -- Dont touch
         Preorders = {}, -- Dont touch
         Employees = {}, -- Dont touch
         SoldVehicles = {}, -- Dont touch
@@ -117,5 +119,6 @@ Config.Vehicleshops = {
             Coords = vector3(-739.79, -1435.5, 5.0), -- Cam Coords
         },
         TestDriveLocation = vector4(-734.18, -1457.19, 5.66, 47.75),
+        ComplaintForm = vector3(1, 1, 1),
     }
 }

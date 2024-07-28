@@ -181,13 +181,13 @@ function StartScript()
             Discount = 0,
         }
         if next(result) == nil and #result == 0 then
-            ExecuteSql("INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complains, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complains, @preorders, @employees, @soldvehicles, @transactions, @perms)", {
+            ExecuteSql("INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complaints, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complaints, @preorders, @employees, @soldvehicles, @transactions, @perms)", {
                 ['@id'] = k,
                 ['@information'] = json.encode(Information),
                 ['@vehicles'] = json.encode(Config.BeginningVehicles[v.Type]),
                 ['@categories'] = json.encode(Config.Categories[v.Type]),
                 ['@feedbacks'] = json.encode(v.Feedbacks),
-                ['@complains'] = json.encode(v.Complains),
+                ['@complaints'] = json.encode(v.Complaints),
                 ['@preorders'] = json.encode(v.Preorders),
                 ['@employees'] = json.encode(v.Employees),
                 ['@soldvehicles'] = json.encode(v.SoldVehicles),
@@ -219,7 +219,7 @@ function LoadData()
         Config.Vehicleshops[k].Vehicles = json.decode(v.vehicles)
         Config.Vehicleshops[k].Categories = json.decode(v.categories)
         Config.Vehicleshops[k].Feedbacks = json.decode(v.feedbacks)
-        Config.Vehicleshops[k].Complains = json.decode(v.complains)
+        Config.Vehicleshops[k].Complaints = json.decode(v.complaints)
         Config.Vehicleshops[k].Preorders = json.decode(v.preorders)
         Config.Vehicleshops[k].Employees = json.decode(v.employees)
         Config.Vehicleshops[k].SoldVehicles = json.decode(v.soldvehicles)

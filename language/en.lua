@@ -240,11 +240,15 @@ Locales['en'] = {
     ['perm_deleted'] = "Perm was successfully deleted.",
     ['no_change'] = "No changes have been made.",
     ['perm_settings_saved'] = "Perm settings saved.",
+    ['complaint_deleted'] = "Complaint successfully deleted.",
+    ['feedback_deleted'] = "Feedback successfully deleted.",
+    ['already_has_a_discount'] = "The company already has a discount campaign.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",
     ['bossmenu_marker'] = "~INPUT_PICKUP~ - Open Bossmenu",
     ['buy_company_marker'] = "~INPUT_PICKUP~ - Buy This Company",
+    ['complaint_form'] = "~INPUT_PICKUP~ - Send Complaint Form",
 
     -- Notify
     ['not_allowed_to_open_vs'] = "You don't have permission to access to this shop.",
@@ -256,6 +260,7 @@ Locales['en'] = {
     ['got_job'] = "You got a job. Congratulations.",
     ['rejected_job_offer'] = "The person rejected your job offer.",
     ['same_player_error_second'] = "You can't enter your own id.",
+    ['complaint_sent'] = "Your complaint form has been successfully submitted.",
 
     -- Mail
     ['salary_subject'] = 'Your salary has been paid!',

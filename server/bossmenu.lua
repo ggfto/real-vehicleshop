@@ -868,6 +868,70 @@ RegisterNetEvent('real-vehicleshop:SaveNewPermissions', function(data)
     end
 end)
 
+RegisterNetEvent('real-vehicleshop:SendComplaint', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `complaints` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local complaints = json.decode(result[1].complaints)
+        table.insert(complaints, {
+            name = GetName(src),
+            pfp = GetDiscordAvatar(src),
+            message = data.message
+        })
+        Config.Vehicleshops[data.id].Complaints = complaints
+        ExecuteSql("UPDATE `real_vehicleshop` SET `complaints` = '"..json.encode(complaints).."' WHERE `id` = '"..data.id.."'")
+        TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+        UpdateForAllSrcTable(data.id)
+        Config.Notification(Language('complaint_sent'), 'success', true, src)
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:RemoveComplaint', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `complaints` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local complaints = json.decode(result[1].complaints)
+        local Check = false
+        for k, v in ipairs(complaints) do
+            if v.name == data.name and v.message == data.message then
+                table.remove(complaints, k)
+                Check = true
+                break
+            end
+        end
+        if Check then
+            Config.Vehicleshops[data.id].Complaints = complaints
+            ExecuteSql("UPDATE `real_vehicleshop` SET `complaints` = '"..json.encode(complaints).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('complaint_deleted'), 3000)
+        end
+    end
+end)
+
+RegisterNetEvent('real-vehicleshop:RemoveFeedback', function(data)
+    local src = source
+    local result = ExecuteSql("SELECT `feedbacks` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    if #result > 0 then
+        local feedbacks = json.decode(result[1].feedbacks)
+        local Check = false
+        for k, v in ipairs(feedbacks) do
+            if v.name == data.name and v.message == data.message then
+                table.remove(feedbacks, k)
+                Check = true
+                break
+            end
+        end
+        if Check then
+            Config.Vehicleshops[data.id].Feedbacks = feedbacks
+            ExecuteSql("UPDATE `real_vehicleshop` SET `feedbacks` = '"..json.encode(feedbacks).."' WHERE `id` = '"..data.id.."'")
+            TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
+            UpdateForAllSrcTable(data.id)
+            TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'success', Language('feedback_deleted'), 3000)
+        end
+    end
+end)
+
 function RemoveFromSrcTable(id, src)
     if SrcTable[id] then
         for k, v in ipairs(SrcTable[id]) do
