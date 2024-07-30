@@ -251,6 +251,7 @@ Locales['tr'] = {
     ['preorder_request_sent'] = "İstek gönderildi.",
     ['preorder_declined'] = "Ön sipariş reddedildi.",
     ['preorder_accepted'] = "Ön sipariş kabul edildi",
+    ['couldnt_remove_perm'] = "Silmeye çalıştığınız perme sahip bir oyuncu var. Bu yüzden perm silinemedi.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Test Sürüşünü İptal Et",

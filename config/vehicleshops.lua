@@ -26,7 +26,7 @@ Config.Vehicleshops = {
             Enable = true,
             Sprite = 227,
             Scale = 0.8,
-            Color = 2
+            Color = 0
         },
         SpawnCoords = vector4(-13.99, -1093.8, 26.05, 160.17), -- The place to spawn when you buy the vehicle
         ShopOpenCoords = vector3(-33.21, -1103.69, 26.42), -- Coordinate to open Vehicleshop menu
@@ -87,7 +87,7 @@ Config.Vehicleshops = {
         Marker = "~INPUT_PICKUP~ - Open Aircraft",
 
         Owner = "",
-        CompanyName = "Real Boatshop",
+        CompanyName = "Real Aircraft",
         CompanyDescriptionText = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat illum aperiam neque nisi nemo itaque error voluptatem, ut minus, eaque ex similique maxime!",
         CompanyMoney = 10000,
         Rating = 0,
@@ -104,9 +104,9 @@ Config.Vehicleshops = {
 
         BlipSettings = {
             Enable = true,
-            Sprite = 410,
+            Sprite = 64,
             Scale = 0.8,
-            Color = 2
+            Color = 3
         },
         SpawnCoords = vector4(-763.14, -1452.73, 5.0, 53.69),
         ShopOpenCoords = vector3(-753.48, -1512.23, 5.02),

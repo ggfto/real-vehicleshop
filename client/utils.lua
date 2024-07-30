@@ -64,16 +64,22 @@ end
 -------------------------- Plate Shit End --------------------------
 
 ------------------------------ Start ------------------------------
+Blips = {}
+
 RegisterNetEvent("esx:playerLoaded")
 AddEventHandler("esx:playerLoaded", function()
     Wait(1300)
     TriggerServerEvent('real-vehicleshop:RequestData')
+    ClearBlips()
+    CreateBlips()
 end)
 
 RegisterNetEvent("QBCore:Client:OnPlayerLoaded")
 AddEventHandler("QBCore:Client:OnPlayerLoaded", function()
     Wait(1300)
     TriggerServerEvent('real-vehicleshop:RequestData')
+    ClearBlips()
+    CreateBlips()
 end)
 
 AddEventHandler('onResourceStart', function(resourceName) -- Silinecek
@@ -82,15 +88,32 @@ AddEventHandler('onResourceStart', function(resourceName) -- Silinecek
     end
 end)
 
-function ClearBlips()
-    for k,v in pairs(Blips) do
-        RemoveBlip(v)
-    end
-end
-
 RegisterNetEvent('real-vehicleshop:Update', function(table)
     Config.Vehicleshops = table
     Wait(1000)
     ClearBlips()
     CreateBlips()
 end)
+
+function ClearBlips()
+    for k, v in pairs(Blips) do
+        RemoveBlip(v)
+    end
+end
+
+function CreateBlips()
+    for k, v in pairs(Config.Vehicleshops) do
+        if v.BlipSettings.Enable then
+            blip = AddBlipForCoord(v.ShopOpenCoords)
+            SetBlipSprite(blip, v.BlipSettings.Sprite)
+            SetBlipDisplay(blip, 4)
+            SetBlipScale(blip, v.BlipSettings.Scale)
+            SetBlipColour(blip, v.BlipSettings.Color)
+            SetBlipAsShortRange(blip, true)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString(v.CompanyName)
+            EndTextCommandSetBlipName(blip)
+            table.insert(Blips, blip)
+        end
+    end
+end

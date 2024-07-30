@@ -251,6 +251,7 @@ Locales['en'] = {
     ['preorder_request_sent'] = "Request Sent.",
     ['preorder_declined'] = "Pre-order denied.",
     ['preorder_accepted'] = "Pre-order accepted",
+    ['couldnt_remove_perm'] = "There is a player with the perm you are trying to delete. That's why the perm could not be deleted.",
 
     -- Drawtext
     ['cancel_testdrive'] = "~INPUT_SCRIPTED_FLY_ZDOWN~ - Cancel Test Drive",

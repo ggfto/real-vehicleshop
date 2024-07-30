@@ -316,7 +316,7 @@ function StartTestDrive(data)
                     local TimeLeft = Config.TestDriveTime - ((RightNow - RealTime) / 1000)
                     ShowHelpNotification(Language('cancel_testdrive'))
                     if TimeLeft > 0 then
-                        if TimeLeft <= 15 then
+                        if TimeLeft <= Config.TestDriveTime then
                             SendNUIMessage({
                                 action = 'ShowTestDriveTime',
                                 time = math.ceil(TimeLeft)

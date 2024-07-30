@@ -470,6 +470,7 @@ const app = Vue.createApp({
                 this.SelectedVehicleTable.VehicleHandling = v.information.Handling
                 postNUI('CreateSelectedVehicle', this.SelectedVehicleTable.VehicleHash)
             }
+            this.ChangedPlate = false
         },
 
         SelectVehicleColor(k) {
@@ -482,9 +483,9 @@ const app = Vue.createApp({
         ShowMoreCar(type) {
             const div = this.$refs.vc
             if (type == 'left') {
-                div.scrollBy({ left: -window.innerWidth * 1.7, behavior: 'smooth' })
+                div.scrollBy({ left: -window.innerWidth * 0.4, behavior: 'smooth' })
             } else if (type == 'right') {
-                div.scrollBy({ left: window.innerWidth * 1.7, behavior: 'smooth' })
+                div.scrollBy({ left: window.innerWidth * 0.4, behavior: 'smooth' })
             }
         },
 
@@ -873,7 +874,7 @@ const app = Vue.createApp({
             if (this.BossMenuFilterVehicles[this.VehicleEditScreen].label == this.EditVehicleInputs.Name && this.BossMenuFilterVehicles[this.VehicleEditScreen].model == this.EditVehicleInputs.Model && this.BossMenuFilterVehicles[this.VehicleEditScreen].img == this.EditVehicleInputs.Img && this.BossMenuFilterVehicles[this.VehicleEditScreen].discount == this.EditVehicleInputs.Discount && this.BossMenuFilterVehicles[this.VehicleEditScreen].price == this.EditVehicleInputs.Price && this.BossMenuFilterVehicles[this.VehicleEditScreen].category == this.NewCategoryList[this.SelectedVehicleEditCategory].name) {
                 this.ShowNotify('error', this.Language['vehicle_edit_no_change'], 3000)
             } else {
-                if (this.EditVehicleInputs.Name.length > 0 && this.EditVehicleInputs.Model.length > 0 && this.EditVehicleInputs.Img.length > 0 && this.EditVehicleInputs.Price > 0) {
+                if (this.EditVehicleInputs.Name.length > 0 && this.EditVehicleInputs.Img.length > 0 && this.EditVehicleInputs.Price > 0) {
                     if (this.EditVehicleInputs.Discount > 0 && this.Discount > 0) {
                         this.ShowNotify('error', this.Language['already_has_a_discount'], 3000)
                     } else {
@@ -1378,6 +1379,7 @@ const app = Vue.createApp({
             this.IsSearching = false
             this.ShowFeedback = false
             this.ShowPopupScrren = false
+            this.ChangedPlate = false
             this.NormalPopupSettings = {
                 Show: false,
                 HeaderOne: '',
@@ -1540,6 +1542,15 @@ const app = Vue.createApp({
                 return price
             }
         },
+
+        AverageRating2() {
+            if (this.Feedbacks.length == 0) {
+                return 0;
+            }
+        
+            const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
+            return parseFloat((rating / this.Feedbacks.length).toFixed(1));
+        },   
     },  
     
     computed: {
@@ -1591,7 +1602,7 @@ const app = Vue.createApp({
 
             const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
             return (rating / this.Feedbacks.length).toFixed(1);
-        },
+        },     
 
         PreordersPage() {
             const s = (this.BossmenuPageSettings.PreorderPage - 1) * 7
@@ -1793,11 +1804,11 @@ const app = Vue.createApp({
                     this.CurrentVehicleshop = data.vehicleshop
                     this.VehicleShopName = data.vehicleshopname
                     this.VehicleshopDescription = data.vehicleshopdescription
-                    this.VehicleShopStar = data.vehicleshoprating
                     this.VehiclesTable = data.vehicles
                     this.CategoryList = data.categories
                     this.Feedbacks = data.feedbacks
                     this.Discount = data.discount
+                    this.VehicleShopStar = this.AverageRating2()
                     break;
                 case 'UpdateCreateSelectedVehicle':
                     this.SelectedVehicleTable.VehicleTopSpeed = data.speed
@@ -1887,6 +1898,7 @@ const app = Vue.createApp({
                     this.CategoryList = data.categories
                     this.ComplainTable = data.complaints
                     this.Inputs.DiscountInput = data.discount
+                    this.FilterNewCategoryForBoss()
                     break;
                 case 'SendTransferRequest':
                     this.ShowPopupToTarget = 'TransferRequest'

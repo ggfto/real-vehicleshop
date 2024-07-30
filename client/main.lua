@@ -1,5 +1,4 @@
 frameworkObject = nil
-Blips = {}
 
 Citizen.CreateThread(function()
     frameworkObject, Config.Framework = GetCore()

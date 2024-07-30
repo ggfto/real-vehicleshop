@@ -681,7 +681,7 @@ RegisterNetEvent('real-vehicleshop:EditVehicle', function(data)
                 v.img = data.img
                 v.category = data.category
                 v.discount = data.discount
-                v.price = data.price
+                v.price = tonumber(data.price)
                 Check = true
                 break
             end
@@ -725,7 +725,7 @@ RegisterNetEvent('real-vehicleshop:BuyVehicle', function(data)
             else
                 if data.price ~= '' and tonumber(data.price) > 0 and data.category ~= '' then
                     local hash = data.hash
-                    local price = data.price
+                    local price = tonumber(data.price)
                     local category = data.category
                     local stock = data.stock
                     local label = ''
@@ -824,15 +824,26 @@ end)
 
 RegisterNetEvent('real-vehicleshop:RemovePerm', function(data)
     local src = source
-    local result = ExecuteSql("SELECT `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
+    local result = ExecuteSql("SELECT `employees`, `perms` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
     if #result > 0 then
+        local employees = json.decode(result[1].employees)
         local perms = json.decode(result[1].perms)
         local Check = false
         for k, v in ipairs(perms) do
-            if v.name == data.name then
-                table.remove(perms, k)
-                Check = true
-                break
+            local Found = false
+            for a, b in ipairs(employees) do
+                if b.rank == data.name then
+                    TriggerClientEvent('real-vehicleshop:SendUINotify', src, 'error', Language('couldnt_remove_perm'), 3000)
+                    Found = true
+                    break
+                end
+            end
+            if not Found then
+                if v.name == data.name then
+                    table.remove(perms, k)
+                    Check = true
+                    break
+                end
             end
         end
         if Check then

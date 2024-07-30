@@ -12,37 +12,6 @@ function ShowHelpNotification(text)
     EndTextCommandDisplayHelp(0, false, true, -1)
 end
 
-for k, v in pairs(Config.Vehicleshops) do
-    if v.BlipSettings.Enable then
-        blip = AddBlipForCoord(v.ShopOpenCoords.x, v.ShopOpenCoords.y, v.ShopOpenCoords.z)
-        SetBlipSprite(blip, v.BlipSettings.Sprite)
-        SetBlipDisplay(blip, 4)
-        SetBlipScale(blip, v.BlipSettings.Scale)
-        SetBlipColour(blip, v.BlipSettings.Color)
-        SetBlipAsShortRange(blip, true)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(v.CompanyName)
-        EndTextCommandSetBlipName(blip)
-    end
-end
-
-function CreateBlips()
-    for k, v in pairs(Config.Vehicleshops) do
-        if v.BlipSettings.Enable then
-            blip = AddBlipForCoord(v.ShopOpenCoords)
-            SetBlipSprite(blip, v.BlipSettings.Sprite)
-            SetBlipDisplay(blip, 4)
-            SetBlipScale(blip, v.BlipSettings.Scale)
-            SetBlipColour(blip, v.BlipSettings.Color)
-            SetBlipAsShortRange(blip, true)
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentString(v.CompanyName)
-            EndTextCommandSetBlipName(blip)
-            table.insert(Blips, blip)
-        end
-    end
-end
-
 -- Vehicleshop
 Citizen.CreateThread(function()
     while true do

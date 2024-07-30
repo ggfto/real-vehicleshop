@@ -45,9 +45,10 @@ CreateThread(function()
         local src = source
         local PlayerBank = GetPlayerMoneyOnline(src, 'bank')
         local identifier = GetIdentifier(src)
-        if PlayerBank >= data.price then
+        local vehicleprice = tonumber(data.price)
+        if PlayerBank >= vehicleprice then
             if Config.Vehicleshops[data.id].Owner == "" then
-                RemoveAddBankMoneyOnline('remove', data.price, src)
+                RemoveAddBankMoneyOnline('remove', vehicleprice, src)
                 if Config.Framework == 'qb' or Config.Framework == 'oldqb' then
                     local Player = frameworkObject.Functions.GetPlayer(src)
                     ExecuteSql("INSERT INTO `player_vehicles` (license, citizenid, vehicle, hash, mods, plate, garage, state) VALUES (@license, @citizenid, @vehicle, @hash, @mods, @plate, @garage, @state)", {
@@ -98,7 +99,7 @@ CreateThread(function()
                                 ['@state'] = 0
                             })
                             cb(true)
-                            AddSoldVehicles(GetName(src), data.id, data.model, data.price)
+                            AddSoldVehicles(GetName(src), data.id, data.model, vehicleprice)
                             TriggerClientEvent('real-vehicleshop:ShowFeedbackScreen', src, data.id)
                         else
                             ExecuteSql("INSERT INTO `owned_vehicles` (owner, plate, vehicle) VALUES (@owner, @plate, @vehicle)", {
@@ -107,12 +108,12 @@ CreateThread(function()
                                 ['@vehicle'] = json.encode(data.props),
                             })
                             cb(true)
-                            AddSoldVehicles(GetName(src), data.id, data.model, data.price)
+                            AddSoldVehicles(GetName(src), data.id, data.model, vehicleprice)
                             TriggerClientEvent('real-vehicleshop:ShowFeedbackScreen', src, data.id)
                         end
-                        RemoveAddBankMoneyOnline('remove', data.price, src)
-                        information.Money = information.Money + data.price
-                        Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + data.price
+                        RemoveAddBankMoneyOnline('remove', vehicleprice, src)
+                        information.Money = information.Money + vehicleprice
+                        Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + vehicleprice
                         Config.Vehicleshops[data.id].Vehicles = vehicles
                         ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `vehicles` = '"..json.encode(vehicles).."' WHERE `id` = '"..data.id.."'")
                         TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
@@ -143,22 +144,23 @@ RegisterNetEvent('real-vehicleshop:PreOrderVehicle', function(data, props)
     local result = ExecuteSql("SELECT `information`, `preorders` FROM `real_vehicleshop` WHERE `id` = '"..data.id.."'")
     local PlayerBank = GetPlayerMoneyOnline(src, 'bank')
     if #result > 0 then
-        if PlayerBank >= data.price then
+        local vehicleprice = tonumber(data.price)
+        if PlayerBank >= vehicleprice then
             local information = json.decode(result[1].information)
             local preorders = json.decode(result[1].preorders)
-            RemoveAddBankMoneyOnline('remove', data.price, src)
+            RemoveAddBankMoneyOnline('remove', vehicleprice, src)
             table.insert(preorders, {
                 identifier = GetIdentifier(src),
                 requestor = GetName(src),
                 vehiclehash = data.model,
                 vehiclemodel = data.model,
-                price = data.price,
+                price = vehicleprice,
                 props = props,
                 plate = data.plate,
                 expiretime = os.time() + (24 * 60 * 60)
             })
-            information.Money = information.Money + data.price
-            Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + data.price
+            information.Money = information.Money + vehicleprice
+            Config.Vehicleshops[data.id].CompanyMoney = Config.Vehicleshops[data.id].CompanyMoney + vehicleprice
             Config.Vehicleshops[data.id].Preorders = preorders
             ExecuteSql("UPDATE `real_vehicleshop` SET `information` = '"..json.encode(information).."', `preorders` = '"..json.encode(preorders).."' WHERE `id` = '"..data.id.."'")
             TriggerClientEvent('real-vehicleshop:Update', -1, Config.Vehicleshops)
