@@ -46,4 +46,4 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua', --⚠️PLEASE READ⚠️; Uncomment this line if you use 'oxmysql'.⚠️
 }
 
-lua54 'yes'
+lua54 'yes' -- Test
