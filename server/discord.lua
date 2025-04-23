@@ -3,9 +3,15 @@ local Avatars = {}
 local FormattedToken = "Bot " .. Config.DiscordBotToken
 function DiscordRequest(method, endpoint, jsondata)
     local data = nil
-    PerformHttpRequest("https://discordapp.com/api/"..endpoint, function(errorCode, resultData, resultHeaders)
-        data = {data=resultData, code=errorCode, headers=resultHeaders}
-    end, method, #jsondata > 0 and json.encode(jsondata) or "", {["Content-Type"] = "application/json", ["Authorization"] = FormattedToken})
+    PerformHttpRequest(
+        "https://discordapp.com/api/" .. endpoint,
+        function(errorCode, resultData, resultHeaders)
+            data = {data = resultData, code = errorCode, headers = resultHeaders}
+        end,
+        method,
+        #jsondata > 0 and json.encode(jsondata) or "",
+        {["Content-Type"] = "application/json", ["Authorization"] = FormattedToken}
+    )
 
     while data == nil do
         Citizen.Wait(0)
@@ -16,7 +22,7 @@ end
 
 function GetDiscordAvatar(user)
     local discordId = nil
-    local imgURL = nil;
+    local imgURL = nil
     for _, id in ipairs(GetPlayerIdentifiers(user)) do
         if string.match(id, "discord:") then
             discordId = string.gsub(id, "discord:", "")
@@ -32,8 +38,7 @@ function GetDiscordAvatar(user)
                 local data = json.decode(member.data)
                 if data ~= nil and data.avatar ~= nil then
                     if (data.avatar:sub(1, 1) and data.avatar:sub(2, 2) == "_") then
-
-                        imgURL = "https://media.discordapp.net/avatars/" .. discordId .. "/" .. data.avatar .. ".gif";
+                        imgURL = "https://media.discordapp.net/avatars/" .. discordId .. "/" .. data.avatar .. ".gif"
                     else
                         imgURL = "https://media.discordapp.net/avatars/" .. discordId .. "/" .. data.avatar .. ".png"
                     end
@@ -41,12 +46,12 @@ function GetDiscordAvatar(user)
             else
                 return Config.DefaultProfilePicture
             end
-            Avatars[discordId] = imgURL;
+            Avatars[discordId] = imgURL
         else
-            imgURL = Avatars[discordId];
+            imgURL = Avatars[discordId]
         end
     else
         return Config.DefaultProfilePicture
     end
-    return imgURL;
+    return imgURL
 end

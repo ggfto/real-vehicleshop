@@ -1,15 +1,21 @@
 function Trim(value)
-    if not value then return nil end
-    return (string.gsub(value, '^%s*(.-)%s*$', '%1'))
+    if not value then
+        return nil
+    end
+    return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
 end
 
 function GetPlate(vehicle)
-    if vehicle == 0 then return end
+    if vehicle == 0 then
+        return
+    end
     return Trim(GetVehicleNumberPlateText(vehicle))
 end
 
 function Round(value, numDecimalPlaces)
-    if not numDecimalPlaces then return math.floor(value + 0.5) end
+    if not numDecimalPlaces then
+        return math.floor(value + 0.5)
+    end
     local power = 10 ^ numDecimalPlaces
     return math.floor((value * power) + 0.5) / (power)
 end
@@ -49,7 +55,7 @@ function GetVehicleProperties(vehicle)
 
         local tireBurstState = {}
         for i = 0, 5 do
-           tireBurstState[i] = IsVehicleTyreBurst(vehicle, i, false)
+            tireBurstState[i] = IsVehicleTyreBurst(vehicle, i, false)
         end
 
         local tireBurstCompletely = {}
@@ -155,7 +161,7 @@ function GetVehicleProperties(vehicle)
             modKit47 = GetVehicleMod(vehicle, 47),
             modLivery = modLivery,
             modKit49 = GetVehicleMod(vehicle, 49),
-            liveryRoof = GetVehicleRoofLivery(vehicle),
+            liveryRoof = GetVehicleRoofLivery(vehicle)
         }
     else
         return
@@ -258,7 +264,9 @@ function SetVehicleProperties(vehicle, props, plate)
         end
         if props.windowStatus then
             for windowIndex, smashWindow in pairs(props.windowStatus) do
-                if not smashWindow then SmashVehicleWindow(vehicle, windowIndex) end
+                if not smashWindow then
+                    SmashVehicleWindow(vehicle, windowIndex)
+                end
             end
         end
         if props.doorStatus then

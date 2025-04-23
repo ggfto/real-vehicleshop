@@ -9,15 +9,17 @@ InsideCameraZ = 0.5
 IsInteriorView = false
 TestDriveActive = false
 
-Citizen.CreateThread(function()
-    frameworkObject, Config.Framework = GetCore()
-    while not frameworkObject do
-        Citizen.Wait(0)
+Citizen.CreateThread(
+    function()
+        frameworkObject, Config.Framework = GetCore()
+        while not frameworkObject do
+            Citizen.Wait(0)
+        end
     end
-end)
+)
 
 function OpenVehicleshop(k)
-    local data = Callback('real-vehicleshop:GetVehicleshopData', k)
+    local data = Callback("real-vehicleshop:GetVehicleshopData", k)
     local OwnerStatus = nil
     if Config.Vehicleshops[k].Owner == "" then
         OwnerStatus = false
@@ -29,60 +31,77 @@ function OpenVehicleshop(k)
         DisplayRadar(false)
         DisplayHud(false)
         SetEntityCoords(PlayerPedId(), Config.Vehicleshops[k].CamSettings.PlayerPos)
-        cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Vehicleshops[k].CamSettings.Coords.x, Config.Vehicleshops[k].CamSettings.Coords.y,Config.Vehicleshops[k].CamSettings.Coords.z, 0.00, 0.00, 120.00, 50.00, false, 0)
+        cam =
+            CreateCamWithParams(
+            "DEFAULT_SCRIPTED_CAMERA",
+            Config.Vehicleshops[k].CamSettings.Coords.x,
+            Config.Vehicleshops[k].CamSettings.Coords.y,
+            Config.Vehicleshops[k].CamSettings.Coords.z,
+            0.00,
+            0.00,
+            120.00,
+            50.00,
+            false,
+            0
+        )
         SetCamActive(cam, true)
         RenderScriptCams(true, false, 1, true, true)
         SetEntityVisible(PlayerPedId(), false)
-        SendNUIMessage({
-            action = 'OpenVehicleshop',
-            allvehiclestable = Config.VehiclesData[Config.Vehicleshops[k].Type],
-            hasowner = OwnerStatus,
-            playername = data.Name,
-            playermoney = data.Money,
-            playerpfp = data.Pfp,
-            vehicleshop = k,
-            vehicleshopname = Config.Vehicleshops[k].CompanyName,
-            vehicleshopdescription = Config.Vehicleshops[k].CompanyDescriptionText,
-            vehicleshoprating = Config.Vehicleshops[k].Rating,
-            vehicles = OwnerStatus and Config.Vehicleshops[k].Vehicles or Config.VehiclesData[Config.Vehicleshops[k].Type],
-            categories = OwnerStatus and Config.Vehicleshops[k].Categories or Config.Categories[Config.Vehicleshops[k].Type],
-            feedbacks = Config.Vehicleshops[k].Feedbacks,
-            discount = Config.Vehicleshops[k].Discount,
-            raise = Config.Vehicleshops[k].Raise,
-        })
+        SendNUIMessage(
+            {
+                action = "OpenVehicleshop",
+                allvehiclestable = Config.VehiclesData[Config.Vehicleshops[k].Type],
+                hasowner = OwnerStatus,
+                playername = data.Name,
+                playermoney = data.Money,
+                playerpfp = data.Pfp,
+                vehicleshop = k,
+                vehicleshopname = Config.Vehicleshops[k].CompanyName,
+                vehicleshopdescription = Config.Vehicleshops[k].CompanyDescriptionText,
+                vehicleshoprating = Config.Vehicleshops[k].Rating,
+                vehicles = OwnerStatus and Config.Vehicleshops[k].Vehicles or
+                    Config.VehiclesData[Config.Vehicleshops[k].Type],
+                categories = OwnerStatus and Config.Vehicleshops[k].Categories or
+                    Config.Categories[Config.Vehicleshops[k].Type],
+                feedbacks = Config.Vehicleshops[k].Feedbacks,
+                discount = Config.Vehicleshops[k].Discount,
+                raise = Config.Vehicleshops[k].Raise
+            }
+        )
         SetNuiFocus(true, true)
         CurrentVehicleshop = k
     end
 end
 
 local function f(n)
-	return (n + 0.00001)
+    return (n + 0.00001)
 end
 
-function MoveCam(pos,x,y,z)
-	SetCamActive(cam, true)
-	local veh = GetVehiclePedIsIn(PlayerPedId(), false)
-	local vx,vy,vz = table.unpack(GetEntityCoords(veh))
-	local d = GetModelDimensions(GetEntityModel(veh))
-	local length,width,height = d.y*-2, d.x*-2, d.z*-2
-	local ox,oy,oz
-	if pos == 'front' then
-		ox,oy,oz= table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), (length/2)+ f(y), f(z)))
-	elseif pos == "front-top" then
-		ox,oy,oz= table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), (length/2) + f(y),(height) + f(z)))
-	elseif pos == "back" then
-		ox,oy,oz= table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), -(length/2) + f(y),f(z)))
-	elseif pos == "back-top" then
-		ox,oy,oz= table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), -(length/2) + f(y),(height/2) + f(z)))
-	end
-	SetCamCoord(cam, ox, oy, oz)
-	PointCamAtCoord(cam,GetOffsetFromEntityInWorldCoords(veh, 0, 0, f(0)))
-	RenderScriptCams( 1, 0, 1000, 0, 0)
+function MoveCam(pos, x, y, z)
+    SetCamActive(cam, true)
+    local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+    local vx, vy, vz = table.unpack(GetEntityCoords(veh))
+    local d = GetModelDimensions(GetEntityModel(veh))
+    local length, width, height = d.y * -2, d.x * -2, d.z * -2
+    local ox, oy, oz
+    if pos == "front" then
+        ox, oy, oz = table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), (length / 2) + f(y), f(z)))
+    elseif pos == "front-top" then
+        ox, oy, oz = table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), (length / 2) + f(y), (height) + f(z)))
+    elseif pos == "back" then
+        ox, oy, oz = table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), -(length / 2) + f(y), f(z)))
+    elseif pos == "back-top" then
+        ox, oy, oz =
+            table.unpack(GetOffsetFromEntityInWorldCoords(veh, f(x), -(length / 2) + f(y), (height / 2) + f(z)))
+    end
+    SetCamCoord(cam, ox, oy, oz)
+    PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, 0, 0, f(0)))
+    RenderScriptCams(1, 0, 1000, 0, 0)
 end
 
 function CamControl(c)
-	if c == "back" then
-		MoveCam('back', 0, -2, 1)
+    if c == "back" then
+        MoveCam("back", 0, -2, 1)
     elseif c == "reset" then
         ResetCam()
         MoveCamAroundVehicle()
@@ -90,7 +109,19 @@ function CamControl(c)
 end
 
 function ResetCam()
-    cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.x, Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.y, Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.z, 0.00, 0.00, 90.00, 50.00, false, 0)
+    cam =
+        CreateCamWithParams(
+        "DEFAULT_SCRIPTED_CAMERA",
+        Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.x,
+        Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.y,
+        Config.Vehicleshops[CurrentVehicleshop].CamSettings.Coords.z,
+        0.00,
+        0.00,
+        90.00,
+        50.00,
+        false,
+        0
+    )
     SetCamActive(cam, true)
     RenderScriptCams(true, false, 1000, true, true)
     MoveCamAroundVehicle()
@@ -105,11 +136,12 @@ function CreateSelectedVehicle(vehiclehash)
     if CreatedSelectedVehicle then
         DeleteVehicle(CreatedSelectedVehicle)
     end
-    CreatedSelectedVehicle = CreateVehicle(vehiclehash, Config.Vehicleshops[CurrentVehicleshop].CamSettings.VehiclePos, false, true)
+    CreatedSelectedVehicle =
+        CreateVehicle(vehiclehash, Config.Vehicleshops[CurrentVehicleshop].CamSettings.VehiclePos, false, true)
     TaskWarpPedIntoVehicle(Player, CreatedSelectedVehicle, -1)
     local Heading = GetEntityHeading(CreatedSelectedVehicle)
     SetPedIntoVehicle(Player, CreatedSelectedVehicle, -1)
-    CamControl('reset')
+    CamControl("reset")
     SetEntityHeading(Player, Heading)
     local plate = GeneratePlate()
     SetVehicleNumberPlateText(CreatedSelectedVehicle, plate)
@@ -118,34 +150,57 @@ function CreateSelectedVehicle(vehiclehash)
     SetVehicleDirtLevel(CreatedSelectedVehicle, 0.1)
     FreezeEntityPosition(CreatedSelectedVehicle, true)
     SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
-    SendNUIMessage({
-        action = 'UpdateCreateSelectedVehicle',
-        speed = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel')),
-        brake = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeForce") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeBiasFront") * 100 + 0.5),
-        acceleration = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel") * GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveForce") + 0.5),
-        suspension = math.floor(GetVehicleHandlingFloat(CreatedSelectedVehicle, 'CHandlingData', 'fSuspensionForce') + 0.5),
-        handling = math.floor((GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fSteeringLock") + GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionBiasFront") - GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionLossMult")) * 2 + 0.5),
-        plate = plate,
-        color = GetVehicleColours(CreatedSelectedVehicle)
-    })
+    SendNUIMessage(
+        {
+            action = "UpdateCreateSelectedVehicle",
+            speed = math.floor(
+                GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel")
+            ),
+            brake = math.floor(
+                GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeForce") *
+                    GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fBrakeBiasFront") *
+                    100 +
+                    0.5
+            ),
+            acceleration = math.floor(
+                GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveMaxFlatVel") *
+                    GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fInitialDriveForce") +
+                    0.5
+            ),
+            suspension = math.floor(
+                GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fSuspensionForce") + 0.5
+            ),
+            handling = math.floor(
+                (GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fSteeringLock") +
+                    GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionBiasFront") -
+                    GetVehicleHandlingFloat(CreatedSelectedVehicle, "CHandlingData", "fTractionLossMult")) *
+                    2 +
+                    0.5
+            ),
+            plate = plate,
+            color = GetVehicleColours(CreatedSelectedVehicle)
+        }
+    )
 end
 
 function ChangeVehicleColor(color)
     color = tonumber(color)
     SetVehicleColours(CreatedSelectedVehicle, color, color)
     SetVehicleExtraColours(CreatedSelectedVehicle, 0, 0)
-    SendNUIMessage({
-        action = 'ChangeCurrentVehicleColorStatus',
-        color = GetVehicleColours(CreatedSelectedVehicle)
-    })
+    SendNUIMessage(
+        {
+            action = "ChangeCurrentVehicleColorStatus",
+            color = GetVehicleColours(CreatedSelectedVehicle)
+        }
+    )
 end
 
 function ShowPlateCamera()
-    CamControl('back')
+    CamControl("back")
 end
 
 function ChangePlate(plate)
-    local result = Callback('real-vehicleshop:CheckPlateStatus', plate)
+    local result = Callback("real-vehicleshop:CheckPlateStatus", plate)
     if not result then
         SetVehicleNumberPlateText(CreatedSelectedVehicle, plate)
         SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
@@ -153,11 +208,11 @@ function ChangePlate(plate)
 end
 
 function CheckNewPlateStatus(plate)
-    local result = Callback('real-vehicleshop:CheckPlateStatus', plate)
+    local result = Callback("real-vehicleshop:CheckPlateStatus", plate)
     if not result then
-        SendNUIMessage({ action = 'ChangePlateAccepted' })
+        SendNUIMessage({action = "ChangePlateAccepted"})
     else
-        TriggerEvent('real-vehicleshop:SendUINotify', 'error', Language('plate_already_exist'), 2000)
+        TriggerEvent("real-vehicleshop:SendUINotify", "error", Language("plate_already_exist"), 2000)
     end
 end
 
@@ -181,22 +236,22 @@ function MoveCamAroundVehicle()
     local veh = GetVehiclePedIsIn(PlayerPedId(), false)
     local vehCoords = GetEntityCoords(veh)
     local radius
-    if Config.Vehicleshops[CurrentVehicleshop].Type == 'car' then
+    if Config.Vehicleshops[CurrentVehicleshop].Type == "car" then
         radius = 7.0
-    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'boat' then
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == "boat" then
         radius = 11.0
-    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'aircraft' then
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == "aircraft" then
         radius = 16.0
     end
 
     local camX = vehCoords.x + radius * math.cos(camAngle)
     local camY = vehCoords.y + radius * math.sin(camAngle)
     local camZ  -- Camera height
-    if Config.Vehicleshops[CurrentVehicleshop].Type == 'car' then
+    if Config.Vehicleshops[CurrentVehicleshop].Type == "car" then
         camZ = vehCoords.z + 0.5
-    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'boat' then
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == "boat" then
         camZ = vehCoords.z + 1.5
-    elseif Config.Vehicleshops[CurrentVehicleshop].Type == 'aircraft' then
+    elseif Config.Vehicleshops[CurrentVehicleshop].Type == "aircraft" then
         camZ = vehCoords.z + 2.0
     end
 
@@ -270,21 +325,23 @@ function ResetCameraAngle()
 end
 
 function ResetCameraToNormal()
-    CamControl('reset')
+    CamControl("reset")
 end
 
 function GenerateNewPlate()
     local plate = GeneratePlate()
     SetVehicleNumberPlateText(CreatedSelectedVehicle, plate)
-    SendNUIMessage({
-        action = 'UpdatePlateInput',
-        value = plate
-    })
+    SendNUIMessage(
+        {
+            action = "UpdatePlateInput",
+            value = plate
+        }
+    )
     SelectedVehicleProps = GetVehicleProperties(CreatedSelectedVehicle)
 end
 
 function StartTestDrive(data)
-    local CheckPlayerMoney = Callback('real-vehicleshop:RemoveMoneyForTestDrive')
+    local CheckPlayerMoney = Callback("real-vehicleshop:RemoveMoneyForTestDrive")
     if CheckPlayerMoney then
         if CreatedSelectedVehicle then
             DeleteVehicle(CreatedSelectedVehicle)
@@ -306,47 +363,51 @@ function StartTestDrive(data)
         SetPedIntoVehicle(PlayerPedId(), veh, -1)
         SetEntityVisible(PlayerPedId(), true, 0)
         Config.GiveVehicleKeys(GetVehicleNumberPlateText(veh), data.vehicle, veh)
-        TriggerServerEvent('real-vehicleshop:TestDrive', true, NetworkGetNetworkIdFromEntity(veh))
+        TriggerServerEvent("real-vehicleshop:TestDrive", true, NetworkGetNetworkIdFromEntity(veh))
         local RealTime = GetGameTimer()
-        Citizen.CreateThread(function()
-            while TestDriveActive do
-                if DoesEntityExist(veh) then
-                    DisableControlAction(0, 75, true)
-                    local RightNow = GetGameTimer()
-                    local TimeLeft = Config.TestDriveTime - ((RightNow - RealTime) / 1000)
-                    ShowHelpNotification(Language('cancel_testdrive'))
-                    if TimeLeft > 0 then
-                        if TimeLeft <= Config.TestDriveTime then
-                            SendNUIMessage({
-                                action = 'ShowTestDriveTime',
-                                time = math.ceil(TimeLeft)
-                            })
+        Citizen.CreateThread(
+            function()
+                while TestDriveActive do
+                    if DoesEntityExist(veh) then
+                        DisableControlAction(0, 75, true)
+                        local RightNow = GetGameTimer()
+                        local TimeLeft = Config.TestDriveTime - ((RightNow - RealTime) / 1000)
+                        ShowHelpNotification(Language("cancel_testdrive"))
+                        if TimeLeft > 0 then
+                            if TimeLeft <= Config.TestDriveTime then
+                                SendNUIMessage(
+                                    {
+                                        action = "ShowTestDriveTime",
+                                        time = math.ceil(TimeLeft)
+                                    }
+                                )
+                            end
+                        else
+                            DeleteEntity(veh)
+                            DeleteVehicle(veh)
+                            SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
+                            TriggerServerEvent("real-vehicleshop:TestDrive", false)
+                            TestDriveActive = false
+                            SendNUIMessage({action = "CloseTimer"})
+                        end
+                        if IsControlJustReleased(0, 11) then
+                            DeleteEntity(veh)
+                            DeleteVehicle(veh)
+                            SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
+                            TriggerServerEvent("real-vehicleshop:TestDrive", false)
+                            TestDriveActive = false
+                            SendNUIMessage({action = "CloseTimer"})
                         end
                     else
-                        DeleteEntity(veh)
-                        DeleteVehicle(veh)
                         SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
-                        TriggerServerEvent('real-vehicleshop:TestDrive', false)
+                        TriggerServerEvent("real-vehicleshop:TestDrive", false)
                         TestDriveActive = false
-                        SendNUIMessage({ action = 'CloseTimer' })
+                        SendNUIMessage({action = "CloseTimer"})
                     end
-                    if IsControlJustReleased(0, 11) then
-                        DeleteEntity(veh)
-                        DeleteVehicle(veh)
-                        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
-                        TriggerServerEvent('real-vehicleshop:TestDrive', false)
-                        TestDriveActive = false
-                        SendNUIMessage({ action = 'CloseTimer' })
-                    end
-                else
-                    SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
-                    TriggerServerEvent('real-vehicleshop:TestDrive', false)
-                    TestDriveActive = false
-                    SendNUIMessage({ action = 'CloseTimer' })
+                    Wait(0)
                 end
-                Wait(0)
             end
-        end)
+        )
     end
 end
 
@@ -368,9 +429,9 @@ function BuyPlayerVehicle(data)
         color = color,
         props = props
     }
-    local datas = Callback('real-vehicleshop:BuyPlayerVehicle', SendData)
+    local datas = Callback("real-vehicleshop:BuyPlayerVehicle", SendData)
     if datas then
-        SendNUIMessage({ action = 'CloseUI', status = false })
+        SendNUIMessage({action = "CloseUI", status = false})
         Citizen.Wait(100)
         SetEntityCoords(Player, Config.Vehicleshops[vehicleshop].SpawnCoords, true)
         local Vehicle = CreateVehicle(model, Config.Vehicleshops[vehicleshop].SpawnCoords, true, true)
@@ -383,25 +444,25 @@ function BuyPlayerVehicle(data)
 end
 
 function PreOrderVehicle(data)
-    TriggerServerEvent('real-vehicleshop:PreOrderVehicle', data, SelectedVehicleProps)
+    TriggerServerEvent("real-vehicleshop:PreOrderVehicle", data, SelectedVehicleProps)
 end
 
-RegisterNUICallback('CreateSelectedVehicle', CreateSelectedVehicle)
-RegisterNUICallback('ChangeVehicleColor', ChangeVehicleColor)
-RegisterNUICallback('ShowPlateCamera', ShowPlateCamera)
-RegisterNUICallback('ChangePlate', ChangePlate)
-RegisterNUICallback('ZoomIn', ZoomIn)
-RegisterNUICallback('ZoomOut', ZoomOut)
-RegisterNUICallback('RotateCameraLeft', RotateCameraLeft)
-RegisterNUICallback('RotateCameraRight', RotateCameraRight)
-RegisterNUICallback('MoveCamToInterior', MoveCamToInterior)
-RegisterNUICallback('MoveCamToExterior', MoveCamToExterior)
-RegisterNUICallback('ResetCameraAngle', ResetCameraAngle)
-RegisterNUICallback('RotateCameraUp', RotateCameraUp)
-RegisterNUICallback('RotateCameraDown', RotateCameraDown)
-RegisterNUICallback('ResetCameraToNormal', ResetCameraToNormal)
-RegisterNUICallback('GenerateNewPlate', GenerateNewPlate)
-RegisterNUICallback('CheckNewPlateStatus', CheckNewPlateStatus)
-RegisterNUICallback('StartTestDrive', StartTestDrive)
-RegisterNUICallback('BuyPlayerVehicle', BuyPlayerVehicle)
-RegisterNUICallback('PreOrderVehicle', PreOrderVehicle)
+RegisterNUICallback("CreateSelectedVehicle", CreateSelectedVehicle)
+RegisterNUICallback("ChangeVehicleColor", ChangeVehicleColor)
+RegisterNUICallback("ShowPlateCamera", ShowPlateCamera)
+RegisterNUICallback("ChangePlate", ChangePlate)
+RegisterNUICallback("ZoomIn", ZoomIn)
+RegisterNUICallback("ZoomOut", ZoomOut)
+RegisterNUICallback("RotateCameraLeft", RotateCameraLeft)
+RegisterNUICallback("RotateCameraRight", RotateCameraRight)
+RegisterNUICallback("MoveCamToInterior", MoveCamToInterior)
+RegisterNUICallback("MoveCamToExterior", MoveCamToExterior)
+RegisterNUICallback("ResetCameraAngle", ResetCameraAngle)
+RegisterNUICallback("RotateCameraUp", RotateCameraUp)
+RegisterNUICallback("RotateCameraDown", RotateCameraDown)
+RegisterNUICallback("ResetCameraToNormal", ResetCameraToNormal)
+RegisterNUICallback("GenerateNewPlate", GenerateNewPlate)
+RegisterNUICallback("CheckNewPlateStatus", CheckNewPlateStatus)
+RegisterNUICallback("StartTestDrive", StartTestDrive)
+RegisterNUICallback("BuyPlayerVehicle", BuyPlayerVehicle)
+RegisterNUICallback("PreOrderVehicle", PreOrderVehicle)

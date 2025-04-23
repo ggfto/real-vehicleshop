@@ -57,7 +57,7 @@ const app = Vue.createApp({
         buyvehicle,
         bosspopup
     },
-    
+
     data: () => ({
         Show: false,
         ShowTestDriveTime: false,
@@ -681,9 +681,9 @@ const app = Vue.createApp({
             if (type == 'preorder') {
                 return Math.ceil(this.Preorders.length / 7)
             } else if (type == 'soldvehicles') {
-                return Math.ceil(this.FilterSoldVehiclesPage.length / 7)  
+                return Math.ceil(this.FilterSoldVehiclesPage.length / 7)
             } else if (type == 'transaction') {
-                return Math.ceil(this.FilterTransactionsPage.length / 8) 
+                return Math.ceil(this.FilterTransactionsPage.length / 8)
             } else if (type == 'employeewithpenalty') {
                 return Math.ceil(this.FilterEmployeesWithPenaltyTable.length / 1)
             } else if (type == 'employee') {
@@ -1112,7 +1112,7 @@ const app = Vue.createApp({
                         })
                         this.ShowNotify('success', this.Language['successfully_launched_discount'], 3000)
                     } else {
-                        this.ShowNotify('error', this.Language['same_discount'], 3000)          
+                        this.ShowNotify('error', this.Language['same_discount'], 3000)
                     }
                 } else {
                     this.ShowNotify('error', this.Language['dont_leave_empty'], 3000)
@@ -1143,7 +1143,7 @@ const app = Vue.createApp({
             if (this.Inputs.BonusesInput > 0) {
                 if (this.PermCheck(this.PlayerRank, 'bonus')) {
                     postNUI('SendBonusToStaff', {
-                        id:  this.CurrentVehicleshop,
+                        id: this.CurrentVehicleshop,
                         value: this.Inputs.BonusesInput
                     })
                     this.Inputs.BonusesInput = ''
@@ -1522,19 +1522,19 @@ const app = Vue.createApp({
         // Important Functions
         DiscountedPriceWithValue(vprice) {
             let price = vprice
-      
+
             if (this.Discount > 0) {
-              return price - (price * this.Discount / 100)
+                return price - (price * this.Discount / 100)
             } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
-              return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
+                return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
             } else {
-              return price
+                return price
             }
         },
 
         DiscountPriceWithValue2(v, vprice) {
             let price = vprice
-      
+
 
             if (v > 0) {
                 return price - (price * v / 100)
@@ -1547,12 +1547,12 @@ const app = Vue.createApp({
             if (this.Feedbacks.length == 0) {
                 return 0;
             }
-        
+
             const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
             return parseFloat((rating / this.Feedbacks.length).toFixed(1));
-        },   
-    },  
-    
+        },
+    },
+
     computed: {
         FilterVehicles() {
             let x = this.VehiclesTable
@@ -1581,13 +1581,13 @@ const app = Vue.createApp({
         NotifyColor() {
             switch (this.NotifySettings.Type) {
                 case 'success':
-                  return '#00F0FF';
+                    return '#00F0FF';
                 case 'information':
-                  return '#00FFB7';
+                    return '#00FFB7';
                 case 'error':
-                  return '#FF0004';
+                    return '#FF0004';
                 default:
-                  return '';
+                    return '';
             }
         },
 
@@ -1602,7 +1602,7 @@ const app = Vue.createApp({
 
             const rating = this.Feedbacks.reduce((k, v) => k + v.stars, 0);
             return (rating / this.Feedbacks.length).toFixed(1);
-        },     
+        },
 
         PreordersPage() {
             const s = (this.BossmenuPageSettings.PreorderPage - 1) * 7
@@ -1613,7 +1613,7 @@ const app = Vue.createApp({
         FilterSoldVehiclesPage() {
             if (!this.Inputs.SoldVehiclesInput) {
                 return this.SoldVehiclesLog
-            } 
+            }
             return this.SoldVehiclesLog.filter(v => {
                 return (
                     v.buyer.toLowerCase().includes(this.Inputs.SoldVehiclesInput.toLowerCase()) ||
@@ -1702,31 +1702,31 @@ const app = Vue.createApp({
 
         FeedbackAndComplaintsTable() {
             const complaints = this.ComplainTable.map(item => ({
-              ...item,
-              type: 'complaint'
+                ...item,
+                type: 'complaint'
             }));
-      
+
             const feedbacks = this.Feedbacks.map(item => ({
-              ...item,
-              type: 'feedback'
+                ...item,
+                type: 'feedback'
             }));
-      
+
             return [...complaints, ...feedbacks];
         },
 
         TotalProfit() {
             let total = 0
-      
+
             this.SoldVehiclesLog.forEach(v => {
-              total += v.price
+                total += v.price
             })
-      
+
             this.Transactions.forEach(v => {
                 if (v.type === 'deposit') {
-                  total += v.amount
+                    total += v.amount
                 }
             })
-      
+
             return total
         },
 
@@ -1734,22 +1734,22 @@ const app = Vue.createApp({
             let total = 0
             this.Transactions.forEach(v => {
                 if (v.type === 'withdraw') {
-                  total += v.amount
+                    total += v.amount
                 }
             })
-      
+
             return total
         },
 
         DiscountedPrice() {
             let price = this.SelectedVehicleTable.VehiclePrice
-      
+
             if (this.Discount > 0) {
-              return price - (price * this.Discount / 100)
+                return price - (price * this.Discount / 100)
             } else if (this.SelectedVehicleTable.VehicleDiscount > 0) {
-              return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
+                return price - (price * this.SelectedVehicleTable.VehicleDiscount / 100)
             } else {
-              return price
+                return price
             }
         },
     },
@@ -1776,7 +1776,7 @@ const app = Vue.createApp({
         window.removeEventListener('keydown', this.HandleKeyDown);
         window.removeEventListener('keyup', this.HandleKeyUp);
     },
-    
+
     mounted() {
         window.addEventListener("message", event => {
             const data = event.data;
@@ -1944,7 +1944,7 @@ const app = Vue.createApp({
                     break;
             }
         });
-        
+
         window.addEventListener('keydown', (event) => {
             if (event.key == 'Escape') {
                 if (this.ComplaintPopupSettings.Show || this.FeedbackPopupSettings.Show) {

@@ -6,7 +6,7 @@
 @font-face {
     src: url("../html/fonts/Poppins-Medium.ttf");
     font-family: "medium";
-} 
+}
 
 @font-face {
     src: url("../html/fonts/Poppins-Bold.ttf");
@@ -18,14 +18,14 @@
     font-family: 'Creattion';
 }
 
-*{
+* {
     overflow: hidden !important;
 }
 
 html {
-    user-select: none;  
+    user-select: none;
 }
-  
+
 body {
     overflow: hidden;
 }
@@ -46,13 +46,13 @@ body {
 }
 
 .feedback-container::-webkit-scrollbar-thumb {
-    background: white; 
+    background: white;
     border-radius: 1vw;
 }
 
 .feedback-container::-webkit-scrollbar-thumb:hover {
-  background: white; 
-  border-radius: 1vw;
+    background: white;
+    border-radius: 1vw;
 }
 
 .colorstable-container::-webkit-scrollbar {
@@ -66,13 +66,13 @@ body {
 }
 
 .colorstable-container::-webkit-scrollbar-thumb {
-    background: white; 
+    background: white;
     border-radius: 1vw;
 }
 
 .colorstable-container::-webkit-scrollbar-thumb:hover {
-  background: white; 
-  border-radius: 1vw;
+    background: white;
+    border-radius: 1vw;
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -126,7 +126,7 @@ input[type=number]::-webkit-outer-spin-button {
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    opacity:  0.74;
+    opacity: 0.74;
 }
 
 .timer {
@@ -155,14 +155,17 @@ input[type=number]::-webkit-outer-spin-button {
         background: #535353;
         -webkit-transform: rotate(0deg);
     }
+
     50% {
         background: #535353;
         -webkit-transform: rotate(-180deg);
     }
+
     50.01% {
         background: var(--background-color);
         -webkit-transform: rotate(0deg);
     }
+
     100% {
         background: var(--background-color);
         -webkit-transform: rotate(-180deg);
@@ -193,7 +196,8 @@ input[type=number]::-webkit-outer-spin-button {
     opacity: .8;
 }
 
-.bossmenu-classic-search-input, .bossmenu-classic-search-input::placeholder {
+.bossmenu-classic-search-input,
+.bossmenu-classic-search-input::placeholder {
     color: #868686;
     font-family: Poppins;
     font-size: .7292vw;
@@ -202,7 +206,8 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: normal;
 }
 
-.company-input, .company-input::placeholder {
+.company-input,
+.company-input::placeholder {
     color: #000;
     text-align: center;
     font-family: Poppins;
@@ -212,7 +217,8 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: normal;
 }
 
-.company-second-input, .company-second-input::placeholder {
+.company-second-input,
+.company-second-input::placeholder {
     color: #A8A8A8;
     text-align: center;
     font-family: Poppins;
@@ -222,7 +228,8 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: normal;
 }
 
-.depositwithdrawinput, .depositwithdrawinput::placeholder {
+.depositwithdrawinput,
+.depositwithdrawinput::placeholder {
     color: #7EF7FF;
     text-align: center;
     font-family: Poppins;
@@ -256,7 +263,8 @@ input[type=number]::-webkit-outer-spin-button {
     margin-right: 0 !important;
 }
 
-.search-input-second, .search-input-second::placeholder {
+.search-input-second,
+.search-input-second::placeholder {
     color: #868686;
     font-family: Poppins;
     font-size: .7292vw;
@@ -287,7 +295,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 select::-webkit-scrollbar {
     display: none;
-} 
+}
 
 select option {
     background-color: #D9D9D9;
