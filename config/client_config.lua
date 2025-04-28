@@ -1,98 +1,110 @@
-function DrawText3D(msg, coords)
-    AddTextEntry("esxFloatingHelpNotification", msg)
-    SetFloatingHelpTextWorldPosition(1, coords)
-    SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-    BeginTextCommandDisplayHelp("esxFloatingHelpNotification")
-    EndTextCommandDisplayHelp(2, false, false, -1)
+local Zones = lib.require("client/interaction/zones")
+
+local function openShop(key)
+    if CheckPlayerJob(key) then
+        if IsControlJustReleased(0, 38) then
+            OpenVehicleshop(key)
+        end
+    else
+        Config.Notification(Language("not_allowed_to_open_vs"), "error", false)
+    end
 end
 
-function ShowHelpNotification(text)
-    BeginTextCommandDisplayHelp("STRING")
-    AddTextComponentSubstringPlayerName(text)
-    EndTextCommandDisplayHelp(0, false, true, -1)
-end
-
--- Vehicleshop
-Citizen.CreateThread(
-    function()
-        while true do
-            local sleep = 2000
-            local Player = PlayerPedId()
-            local PlayerCoords = GetEntityCoords(Player)
-            for k, v in pairs(Config.Vehicleshops) do
-                local Distance = #(PlayerCoords - v.ShopOpenCoords)
-                if Distance < 2.0 then
-                    sleep = 3
-                    DrawText3D(v.Marker, v.ShopOpenCoords)
-                    if CheckPlayerJob(k) then
-                        if IsControlJustReleased(0, 38) then
-                            OpenVehicleshop(k)
-                        end
-                    else
-                        Config.Notification(Language("not_allowed_to_open_vs"), "error", false)
-                    end
-                end
+local function openBossmenu(key)
+    if IsControlJustReleased(0, 38) then
+        if Config.Vehicleshops[key].Owner == "" then
+            BuyCompany(key)
+        else
+            if CheckAccess(key) then
+                OpenBossmenu(key)
             end
-            Citizen.Wait(sleep)
         end
     end
-)
+end
 
--- Boss menu
-Citizen.CreateThread(
-    function()
-        while true do
-            local sleep = 2000
-            local Player = PlayerPedId()
-            local PlayerCoords = GetEntityCoords(Player)
+local function openComplaintForm(key)
+    if IsControlJustReleased(0, 38) then
+        OpenComplaintForm(key)
+    end
+end
+
+RegisterNetEvent(
+    "onResourceStart",
+    function(resName)
+        if resName == GetCurrentResourceName() then
             for k, v in pairs(Config.Vehicleshops) do
+                local zoneName = string.format("vehicleshop-%s", k)
+                Zones.add(
+                    {
+                        name = zoneName,
+                        data = {
+                            coords = v.ShopOpenCoords,
+                            size = vector3(1.0, 1.0, 1.0),
+                            debug = Config.Debug,
+                            onEnter = function()
+                                lib.showTextUI((v.Marker:gsub("~INPUT_PICKUP~", "[E]")))
+                            end,
+                            inside = function()
+                                openShop(k)
+                            end,
+                            onExit = function()
+                                lib.hideTextUI()
+                            end
+                        }
+                    }
+                )
                 if v.Manageable then
-                    local Distance = #(PlayerCoords - v.BossmenuCoords)
-                    if Distance < 2.0 then
-                        sleep = 3
-                        if v.Owner ~= "" then
-                            if CheckAccess(k) then
-                                DrawText3D(Language("bossmenu_marker"), v.BossmenuCoords)
-                                if IsControlJustReleased(0, 38) then
-                                    OpenBossmenu(k)
+                    local zoneName = string.format("bossmenu-%s", k)
+                    Zones.add(
+                        {
+                            name = zoneName,
+                            data = {
+                                coords = v.BossmenuCoords,
+                                size = vector3(1.0, 1.0, 1.0),
+                                debug = Config.Debug,
+                                onEnter = function()
+                                    local message =
+                                        ((v.Owner == "" and Language("buy_company_marker") or
+                                        Language("bossmenu_marker")):gsub("~INPUT_PICKUP~", "[E]"))
+                                    lib.showTextUI(message)
+                                end,
+                                inside = function()
+                                    openBossmenu(k)
+                                end,
+                                onExit = function()
+                                    lib.hideTextUI()
                                 end
-                            end
-                        else
-                            if v.Owner == "" then
-                                DrawText3D(Language("buy_company_marker"), v.BossmenuCoords)
-                                if IsControlJustReleased(0, 38) then
-                                    BuyCompany(k)
+                            }
+                        }
+                    )
+                end
+                zoneName = string.format("complaintform-%s", k)
+                Zones.add(
+                    {
+                        name = zoneName,
+                        data = {
+                            coords = v.ComplaintForm,
+                            size = vector3(1.0, 1.0, 1.0),
+                            debug = Config.Debug,
+                            onEnter = function()
+                                if Config.Vehicleshops[k].Owner == "" then
+                                   return
                                 end
+                                lib.showTextUI((Language("complaint_form_marker"):gsub("~INPUT_PICKUP~", "[E]")))
+                            end,
+                            inside = function()
+                                if Config.Vehicleshops[k].Owner == "" then
+                                    return
+                                 end
+                                openComplaintForm(k)
+                            end,
+                            onExit = function()
+                                lib.hideTextUI()
                             end
-                        end
-                    end
-                end
+                        }
+                    }
+                )
             end
-            Citizen.Wait(sleep)
-        end
-    end
-)
-
--- Complaint Form
-Citizen.CreateThread(
-    function()
-        while true do
-            local sleep = 2000
-            local Player = PlayerPedId()
-            local PlayerCoords = GetEntityCoords(Player)
-            for k, v in pairs(Config.Vehicleshops) do
-                if v.Owner ~= "" then
-                    local Distance = #(PlayerCoords - v.ComplaintForm)
-                    if Distance < 2.0 then
-                        sleep = 3
-                        DrawText3D(Language("complaint_form"), v.ComplaintForm)
-                        if IsControlJustReleased(0, 38) then
-                            OpenComplaintForm(k)
-                        end
-                    end
-                end
-            end
-            Citizen.Wait(sleep)
         end
     end
 )

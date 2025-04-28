@@ -13,20 +13,25 @@ files {
     "html/**/*"
 }
 
-shared_script {
+shared_scripts {
+    "@ox_lib/init.lua",
+    "shared/*.lua",
     "config/config.lua",
-    "locales.lua",
     "config/vehicleshops.lua",
-    "language/*.lua",
-    "GetFrameworkObject.lua"
+    "language/*.lua"
 }
 
 client_scripts {
     "config/client_config.lua",
-    "client/*.lua"
+    "client/**/*.lua"
 }
 server_scripts {
     "@oxmysql/lib/MySQL.lua",
     "config/server_config.lua",
-    "server/*.lua"
+    "server/**/*.lua"
+}
+
+dependencies {
+    "ox_lib",
+    "oxmysql"
 }

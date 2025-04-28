@@ -1,3 +1,12 @@
+local function fileExists(name)
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    end
+    return false
+end
+
 local function splitStr(inputstr, sep)
     if sep == nil then
         sep = "%s"
@@ -41,6 +50,9 @@ end
 -- Função para criar as tabelas no banco de dados
 local function createTables()
     local filePath = "database.sql"
+    if not fileExists(filePath) then
+        return
+    end
     local queries = splitStr(LoadResourceFile(GetCurrentResourceName(), filePath), ";")
     executeQueries(
         queries,

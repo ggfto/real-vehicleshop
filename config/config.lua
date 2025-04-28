@@ -1,5 +1,6 @@
 Config = {}
 
+Config.Debug = true -- Debug mode. If you want to see the debug messages, set it to true.
 Config.Framework = "qb" -- qb, oldqb, esx, oldesx or autodetect
 Config.MySQL = "oxmysql" -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
 Config.Language = "pt-br" -- en, tr

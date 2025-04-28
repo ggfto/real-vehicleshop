@@ -41,7 +41,8 @@ function CloseUI(status)
         DeleteVehicle(CreatedSelectedVehicle)
     end
     if status then
-        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords, true)
+        local coords = Config.Vehicleshops[CurrentVehicleshop].ShopOpenCoords
+        SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z, true)
     end
     CurrentVehicleshop = nil
 end

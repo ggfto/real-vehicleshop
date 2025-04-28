@@ -19,6 +19,8 @@ Citizen.CreateThread(
 )
 
 function OpenVehicleshop(k)
+    local loc = GetEntityCoords(PlayerPedId())
+    local head = GetEntityHeading(PlayerPedId())
     local data = Callback("real-vehicleshop:GetVehicleshopData", k)
     local OwnerStatus = nil
     if Config.Vehicleshops[k].Owner == "" then
@@ -30,7 +32,8 @@ function OpenVehicleshop(k)
     if data then
         DisplayRadar(false)
         DisplayHud(false)
-        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[k].CamSettings.PlayerPos)
+        local coords = Config.Vehicleshops[k].CamSettings.PlayerPos
+        SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z, true)
         cam =
             CreateCamWithParams(
             "DEFAULT_SCRIPTED_CAMERA",
@@ -136,8 +139,8 @@ function CreateSelectedVehicle(vehiclehash)
     if CreatedSelectedVehicle then
         DeleteVehicle(CreatedSelectedVehicle)
     end
-    CreatedSelectedVehicle =
-        CreateVehicle(vehiclehash, Config.Vehicleshops[CurrentVehicleshop].CamSettings.VehiclePos, false, true)
+    local vehPos = Config.Vehicleshops[CurrentVehicleshop].CamSettings.VehiclePos
+    CreatedSelectedVehicle = CreateVehicle(vehiclehash, vehPos.x, vehPos.y, vehPos.z, vehPos.w, false, true)
     TaskWarpPedIntoVehicle(Player, CreatedSelectedVehicle, -1)
     local Heading = GetEntityHeading(CreatedSelectedVehicle)
     SetPedIntoVehicle(Player, CreatedSelectedVehicle, -1)
@@ -262,18 +265,21 @@ end
 function MoveCamInsideVehicle()
     local veh = GetVehiclePedIsIn(PlayerPedId(), false)
     local vehCoords = GetEntityCoords(veh)
-    local camX, camY, camZ = table.unpack(GetOffsetFromEntityInWorldCoords(veh, -0.4, -0.4, 0.6))
+    local offset = GetOffsetFromEntityInWorldCoords(veh, -0.4, -0.4, 0.6)
+    local camX, camY, camZ = offset.x, offset.y, offset.z
 
     SetCamCoord(cam, camX, camY, camZ)
     SetCamRot(cam, 0.0, 0.0, camAngle, 2)
-    PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, -0.2, 1.0, 0.5))
+    offset = GetOffsetFromEntityInWorldCoords(veh, -0.2, 1.0, 0.5)
+    PointCamAtCoord(cam, offset.x, offset.y, offset.z)
 end
 
 function RotateCameraLeft()
     if IsInteriorView then
         local veh = GetVehiclePedIsIn(PlayerPedId(), false)
         InsideCameraX = InsideCameraX - 0.05
-        PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ))
+        local offset = GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ)
+        PointCamAtCoord(cam, offset.x, offset.y, offset.z)
     else
         camAngle = camAngle - math.rad(2.0)
         MoveCamAroundVehicle()
@@ -284,7 +290,8 @@ function RotateCameraRight()
     if IsInteriorView then
         local veh = GetVehiclePedIsIn(PlayerPedId(), false)
         InsideCameraX = InsideCameraX + 0.05
-        PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ))
+        local offset = GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ)
+        PointCamAtCoord(cam, offset.x, offset.y, offset.z)
     else
         camAngle = camAngle + math.rad(2.0)
         MoveCamAroundVehicle()
@@ -294,13 +301,15 @@ end
 function RotateCameraUp()
     local veh = GetVehiclePedIsIn(PlayerPedId(), false)
     InsideCameraZ = InsideCameraZ + 0.05
-    PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ))
+    local offset = GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ)
+    PointCamAtCoord(cam, offset.x, offset.y, offset.z)
 end
 
 function RotateCameraDown()
     local veh = GetVehiclePedIsIn(PlayerPedId(), false)
     InsideCameraZ = InsideCameraZ - 0.05
-    PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ))
+    local offset = GetOffsetFromEntityInWorldCoords(veh, InsideCameraX, 1.0, InsideCameraZ)
+    PointCamAtCoord(cam, offset.x, offset.y, offset.z)
 end
 
 function MoveCamToInterior()
@@ -347,7 +356,8 @@ function StartTestDrive(data)
             DeleteVehicle(CreatedSelectedVehicle)
         end
         TestDriveActive = true
-        local veh = CreateVehicle(data.vehicle, Config.Vehicleshops[data.vehicleshop].TestDriveLocation, true, false)
+        local coords = Config.Vehicleshops[data.vehicleshop].TestDriveLocation
+        local veh = CreateVehicle(data.vehicle, coords.x, coords.y, coords.z, true, false)
         while not DoesEntityExist(veh) do
             Wait(10)
         end
@@ -372,7 +382,7 @@ function StartTestDrive(data)
                         DisableControlAction(0, 75, true)
                         local RightNow = GetGameTimer()
                         local TimeLeft = Config.TestDriveTime - ((RightNow - RealTime) / 1000)
-                        ShowHelpNotification(Language("cancel_testdrive"))
+                        -- Texts.add(Language("cancel_testdrive"))
                         if TimeLeft > 0 then
                             if TimeLeft <= Config.TestDriveTime then
                                 SendNUIMessage(
@@ -385,7 +395,8 @@ function StartTestDrive(data)
                         else
                             DeleteEntity(veh)
                             DeleteVehicle(veh)
-                            SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
+                            local coords = Config.Vehicleshops[data.vehicleshop].ShopOpenCoords
+                            SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z, true)
                             TriggerServerEvent("real-vehicleshop:TestDrive", false)
                             TestDriveActive = false
                             SendNUIMessage({action = "CloseTimer"})
@@ -393,13 +404,15 @@ function StartTestDrive(data)
                         if IsControlJustReleased(0, 11) then
                             DeleteEntity(veh)
                             DeleteVehicle(veh)
-                            SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
+                            local coords = Config.Vehicleshops[data.vehicleshop].ShopOpenCoords
+                            SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z, true)
                             TriggerServerEvent("real-vehicleshop:TestDrive", false)
                             TestDriveActive = false
                             SendNUIMessage({action = "CloseTimer"})
                         end
                     else
-                        SetEntityCoords(PlayerPedId(), Config.Vehicleshops[data.vehicleshop].ShopOpenCoords)
+                        local coords = Config.Vehicleshops[data.vehicleshop].ShopOpenCoords
+                        SetEntityCoords(PlayerPedId(), coords.x, coords.y, coords.z, true)
                         TriggerServerEvent("real-vehicleshop:TestDrive", false)
                         TestDriveActive = false
                         SendNUIMessage({action = "CloseTimer"})
