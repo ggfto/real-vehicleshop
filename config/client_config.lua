@@ -63,9 +63,11 @@ RegisterNetEvent(
                                 size = vector3(1.0, 1.0, 1.0),
                                 debug = Config.Debug,
                                 onEnter = function()
-                                    local message =
-                                        ((v.Owner == "" and Language("buy_company_marker") or
-                                        Language("bossmenu_marker")):gsub("~INPUT_PICKUP~", "[E]"))
+                                    local message = Language("bossmenu_marker")
+                                    if Config.Vehicleshops[k].Owner == "" then
+                                        message = Language("buy_company_marker")
+                                    end
+                                    message = message:gsub("~INPUT_PICKUP~", "[E]")
                                     lib.showTextUI(message)
                                 end,
                                 inside = function()
