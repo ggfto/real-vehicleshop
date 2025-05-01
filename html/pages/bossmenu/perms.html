@@ -2,7 +2,8 @@
     <div class="w-[34.3%] h-[98%] flex flex-col bg-[#000000BF] rounded-[.2604vw]">
         <div class="w-full h-[12%] bg-[#000000DE] rounded-t-[.2604vw] relative">
             <img src="./img/bossmenu/bg-effect.png" class="w-[12.5vw] h-full right-0 absolute">
-            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#00F0FF] rounded-[.17vw] right-[1vw] top-[1.2vw] absolute cursor-pointer"
+            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center rounded-[.17vw] right-[1vw] top-[1.2vw] absolute cursor-pointer"
+                :style="{ background: $theme.primaryColor }"
                 @click="$root.PermCheck($root.PlayerRank, 'administration') && ($root.ShowBossPopup = 'createperm')">
                 <span class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['create'] }}</span>
@@ -30,8 +31,9 @@
                             <div class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['remove'] }}</div>
                         </div>
-                        <div class="w-[48%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.17vw] cursor-pointer"
-                            v-if="v.editable" @click="$root.ResetPermsToggle(); $root.SelectedPerm = k;">
+                        <div class="w-[48%] h-[55%] flex items-center justify-center rounded-[.17vw] cursor-pointer"
+                            :style="{ background: $theme.primaryColor }" v-if="v.editable"
+                            @click="$root.ResetPermsToggle(); $root.SelectedPerm = k;">
                             <div class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['edit'] }}</div>
                         </div>
@@ -76,24 +78,26 @@
                             <div class="w-full h-[1.5104vw] flex items-center bg-[#4B4B4B] rounded-[2vw] relative cursor-pointer toggle-perm"
                                 :class="{ 'active': v.value }" @click="$root.TogglePerms(k)">
                                 <div class="w-[1.0938vw] h-[1.0938vw] rounded-[50%] left-[.2083vw] absolute toggle-circle"
-                                    :class="{ 'bg-[#00F0FF]': v.value, 'bg-white': !v.value }"></div>
+                                    :style="v.value ? { background: $theme.primaryColor } : {background: 'bg-white' }">
+                                </div>
                             </div>
-                            <input type="checkbox" class="w-full h-[1.5104vw] rounded-[2vw] absolute hidden"
-                                :checked="v.value">
                         </div>
-                        <div class="w-[3.1%] h-full"></div>
+                        <input type="checkbox" class="w-full h-[1.5104vw] rounded-[2vw] absolute hidden"
+                            :checked="v.value">
                     </div>
+                    <div class="w-[3.1%] h-full"></div>
                 </div>
-                <div class="w-full h-[4%]"></div>
-                <div class="w-full h-[8%] flex justify-start">
-                    <div class="w-[18.5%] h-full flex items-center justify-center bg-[#00F0FF] rounded-[.2083vw] cursor-pointer"
-                        @click="$root.SaveNewPermissions()">
-                        <span class="w-full text-black text-[.7292vw] text-center font-semibold font-['Poppins']">{{
-                            $root.Language['save'] }}</span>
-                    </div>
-                    <div class="w-[81.5%] h-full"></div>
+            </div>
+            <div class="w-full h-[4%]"></div>
+            <div class="w-full h-[8%] flex justify-start">
+                <div class="w-[18.5%] h-full flex items-center justify-center rounded-[.2083vw] cursor-pointer"
+                    :style="{ background: $theme.primaryColor }" @click="$root.SaveNewPermissions()">
+                    <span class="w-full text-black text-[.7292vw] text-center font-semibold font-['Poppins']">{{
+                        $root.Language['save'] }}</span>
                 </div>
+                <div class="w-[81.5%] h-full"></div>
             </div>
         </div>
     </div>
+</div>
 </div>

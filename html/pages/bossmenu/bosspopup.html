@@ -17,13 +17,15 @@
         <div class="w-full h-[61.5%] flex items-center justify-center relative">
             <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                 <div class="w-[70.5%] h-full flex flex-col">
-                    <div class="w-full h-[58%] flex items-center justify-center bg-[#00F0FF] mb-[1%]">
+                    <div class="w-full h-[58%] flex items-center justify-center mb-[1%]"
+                        :style="{ background: $theme.primaryColor }">
                         <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                             $root.Language['enter_an_amount'] }}</span>
                     </div>
                     <input type="number"
                         class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]"
-                        placeholder="$10.000" v-model="$root.Inputs.DepositInput">
+                        :style="{ color: $theme.primaryColor }" placeholder="$10.000"
+                        v-model="$root.Inputs.DepositInput">
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
                     <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer"
@@ -58,13 +60,15 @@
         <div class="w-full h-[61.5%] flex items-center justify-center relative">
             <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                 <div class="w-[70.5%] h-full flex flex-col">
-                    <div class="w-full h-[58%] flex items-center justify-center bg-[#00F0FF] mb-[1%]">
+                    <div class="w-full h-[58%] flex items-center justify-center mb-[1%]"
+                        :style="{ background: $theme.primaryColor }">
                         <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                             $root.Language['enter_an_amount'] }}</span>
                     </div>
                     <input type="number"
                         class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]"
-                        placeholder="$10.000" v-model="$root.Inputs.WithdrawInput">
+                        :style="{ color: $theme.primaryColor }" placeholder="$10.000"
+                        v-model="$root.Inputs.WithdrawInput">
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
                     <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer"
@@ -101,12 +105,14 @@
                 <div class="w-[70.5%] h-full flex flex-col">
                     <div class="w-full h-[58%] mb-[1%]">
                         <input type="text"
-                            class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                            class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                            :style="{ background: $theme.primaryColor }"
                             :placeholder="$root.Language['enter_perm_name']" v-model="$root.Inputs.PermNameInput">
                     </div>
                     <input type="text"
                         class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]"
-                        :placeholder="$root.Language['enter_perm_label']" v-model="$root.Inputs.PermLabelInput">
+                        :style="{ color: $theme.primaryColor }" :placeholder="$root.Language['enter_perm_label']"
+                        v-model="$root.Inputs.PermLabelInput">
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
                     <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer"
@@ -139,20 +145,23 @@
             <img src="./img/bossmenu/dashboard/dollar.png" class="w-[11.8755vw] h-full right-0 top-0 absolute">
         </div>
         <div class="w-full h-[.4vw]"></div>
-        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input"
-            :placeholder="$root.Language['enter_vehicle_name']" v-model="$root.EditVehicleInputs.Name">
+        <input type="text" class="w-full h-[2.7083vw] outline-none vehicles-screen-input"
+            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['enter_vehicle_name']"
+            v-model="$root.EditVehicleInputs.Name">
         <div class="w-full h-[.4vw]"></div>
         <input type="text" class="w-full h-[1.8229vw] bg-[#000000DE] outline-none vehicles-screen-second-input"
             :placeholder="$root.Language['enter_vehicle_model']" v-model="$root.EditVehicleInputs.Model">
         <div class="w-full h-[.4vw]"></div>
-        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input"
-            :placeholder="$root.Language['enter_vehicle_img']" v-model="$root.EditVehicleInputs.Img">
+        <input type="text" class="w-full h-[2.7083vw] outline-none vehicles-screen-input"
+            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['enter_vehicle_img']"
+            v-model="$root.EditVehicleInputs.Img">
         <div class="w-full h-[.4vw]"></div>
         <input type="text" class="w-full h-[1.8229vw] bg-[#000000DE] outline-none vehicles-screen-second-input"
             :placeholder="$root.Language['enter_vehicle_discount']" v-model="$root.EditVehicleInputs.Discount">
         <div class="w-full h-[.4vw]"></div>
-        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input"
-            :placeholder="$root.Language['enter_vehicle_price']" v-model="$root.EditVehicleInputs.Price">
+        <input type="text" class="w-full h-[2.7083vw] outline-none vehicles-screen-input"
+            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['enter_vehicle_price']"
+            v-model="$root.EditVehicleInputs.Price">
         <div class="w-full h-[.4vw]"></div>
         <div class="w-full h-[1.8229vw] flex items-center justify-center bg-[#000000DE] select-wrapper relative">
             <div class="w-full h-full flex items-center justify-center absolute">
@@ -179,8 +188,8 @@
                 <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['cancel'] }}</div>
             </div>
-            <div class="w-[10.3125vw] h-full flex items-center justify-center bg-[#00F0FF] cursor-pointer"
-                @click="$root.SaveEditVehicleSection()">
+            <div class="w-[10.3125vw] h-full flex items-center justify-center cursor-pointer"
+                :style="{ background: $theme.primaryColor }" @click="$root.SaveEditVehicleSection()">
                 <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['save'] }}</span>
             </div>
@@ -206,12 +215,14 @@
                 <div class="w-[70.5%] h-full flex flex-col">
                     <div class="w-full h-[58%] mb-[1%]">
                         <input type="text"
-                            class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
-                            :placeholder="$root.Language['category_name']" v-model="$root.Inputs.CategoryNameInput">
+                            class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['category_name']"
+                            v-model="$root.Inputs.CategoryNameInput">
                     </div>
                     <input type="text"
                         class="w-full h-[43.5%] bg-[#000000DE] outline-none depositwithdrawinput placeholder:opacity-[.55]"
-                        :placeholder="$root.Language['category_label']" v-model="$root.Inputs.CategoryLabelInput">
+                        :style="{ color: $theme.primaryColor }" :placeholder="$root.Language['category_label']"
+                        v-model="$root.Inputs.CategoryLabelInput">
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
                     <div class="w-full h-[55.5%] flex items-center justify-center bg-[#000000DE] cursor-pointer"
@@ -248,8 +259,9 @@
                 <div class="w-[70.5%] h-full flex items-center justify-center">
                     <div class="w-full h-[58%] mb-[1%]">
                         <input type="text"
-                            class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
-                            :placeholder="$root.Language['category_label']" v-model="$root.Inputs.CategoryLabelInput">
+                            class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['category_label']"
+                            v-model="$root.Inputs.CategoryLabelInput">
                     </div>
                 </div>
                 <div class="w-[29.5%] h-full flex flex-col items-start">
@@ -282,7 +294,7 @@
             <img src="./img/bossmenu/car-bg.png" class="w-[14.5vw] h-full right-0 bottom-0 absolute">
         </div>
         <div class="w-full h-[.4vw]"></div>
-        <div class="w-full h-[2.7083vw] flex items-center justify-center bg-cyan-400">
+        <div class="w-full h-[2.7083vw] flex items-center justify-center" :style="{ background: $theme.primaryColor }">
             <span class="w-full text-[#FF0000] text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                 $root.Language['total_price'] + ': $' +
                 $root.FormatMoney($root.AllVehicleData[$root.SelectedBuyVehicle].price * $root.BuyVehicleInputs.Stock)
@@ -292,8 +304,9 @@
         <input type="text" class="w-full h-[1.8229vw] bg-[#000000DE] outline-none vehicles-screen-second-input"
             :placeholder="$root.Language['enter_stock']" v-model="$root.BuyVehicleInputs.Stock">
         <div class="w-full h-[.4vw]"></div>
-        <input type="text" class="w-full h-[2.7083vw] bg-cyan-400 outline-none vehicles-screen-input"
-            :placeholder="$root.Language['enter_a_price']" v-model="$root.BuyVehicleInputs.Price">
+        <input type="text" class="w-full h-[2.7083vw] outline-none vehicles-screen-input"
+            :style="{ background: $theme.primaryColor }" :placeholder="$root.Language['enter_a_price']"
+            v-model="$root.BuyVehicleInputs.Price">
         <div class="w-full h-[.4vw]"></div>
         <div class="w-full h-[2vw] flex items-center justify-center bg-[#000000DE] select-wrapper relative">
             <div v-if="$root.BuyVehicleInputs.SelectedCategoryIndex < 0"
@@ -321,8 +334,8 @@
                 <div class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['cancel'] }}</div>
             </div>
-            <div class="w-[10.3125vw] h-full flex items-center justify-center bg-[#00F0FF] cursor-pointer"
-                @click="$root.BuyVehicleSection()">
+            <div class="w-[10.3125vw] h-full flex items-center justify-center cursor-pointer"
+                :style="{ background: $theme.primaryColor }" @click="$root.BuyVehicleSection()">
                 <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['buy'] }}</span>
             </div>

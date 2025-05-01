@@ -39,14 +39,15 @@ export default {
             return `
                 <svg xmlns="http://www.w3.org/2000/svg" width="348" height="57" viewBox="0 0 348 57" fill="none" class="h-full w-full" preserveAspectRatio="none">
                     ${this.value >= 100 ? `
-                        <path d="M0 0H600V57H0V0Z" fill="#00F0FF" fill-opacity="0.73"/>
-                        <path d="M0 0H600V57H0V0Z" fill="#00F0FF"/>
+                        <path d="M0 0H600V57H0V0Z" fill="${this.$theme.primaryColor}" fill-opacity="0.73"/>
+                        <path d="M0 0H600V57H0V0Z" fill="${this.$theme.primaryColor}"/>
                     ` : `
-                        <path d="M0 0H347.5L305 57H0V0Z" fill="#00F0FF" fill-opacity="0.73"/>
-                        <path d="M0 0H347.5L305 57H0V0Z" fill="#00F0FF"/>
+                        <path d="M0 0H347.5L305 57H0V0Z" fill="${this.$theme.primaryColor}" fill-opacity="0.73"/>
+                        <path d="M0 0H347.5L305 57H0V0Z" fill="${this.$theme.primaryColor}"/>
                     `}
                 </svg>
-            `
+                `
+
         }
     },
     template: `

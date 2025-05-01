@@ -10,7 +10,8 @@
                         <div class="w-full bottom-[.55vw] absolute">
                             <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins'] mr-[.3vw]">{{
                                 $root.Language['current_company_name'] }}:</span>
-                            <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins']">{{
+                            <span class="text-[.6771vw] font-semibold font-['Poppins']" :style="{
+                                color: $theme.primaryColor}">{{
                                 $root.VehicleShopName }}</span>
                         </div>
                     </div>
@@ -19,8 +20,9 @@
                 </div>
                 <div class="w-full h-[51%] flex items-start justify-center">
                     <input type="text"
-                        class="w-[69%] h-[70%] bg-[#00F0FF] mt-[.4vw] px-[1vw] outline-none placeholder:opacity-[.85] company-input"
-                        :placeholder="$root.VehicleShopName" v-model="$root.Inputs.CompanyNameInput">
+                        class="w-[69%] h-[70%] mt-[.4vw] px-[1vw] outline-none placeholder:opacity-[.85] company-input"
+                        :style="{ background: $theme.primaryColor }" :placeholder="$root.VehicleShopName"
+                        v-model="$root.Inputs.CompanyNameInput">
                     <div class="w-[29%] h-[70%] flex items-center justify-center bg-[#000000DE] mt-[.4vw] cursor-pointer"
                         @click="$root.ChangeCompanyName()">
                         <span class="w-full text-white text-[.7813vw] text-center font-semibold font-['Poppins']">{{
@@ -33,10 +35,10 @@
                     <div class="w-[70%] h-full flex flex-col items-start justify-center left-[.5vw] absolute">
                         <span
                             class="w-full text-stone-300 text-base font-semibold font-['Poppins'] top-[.775vw] absolute">{{
-                            $root.Language['trasnfer_company'] }}</span>
+                            $root.Language['transfer_company'] }}</span>
                         <div class="w-full bottom-[.55vw] absolute">
                             <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{
-                                $root.Language['trasnfer_company_description'] }}</span>
+                                $root.Language['transfer_company_description'] }}</span>
                         </div>
                     </div>
                     <img src="./img/bossmenu/dashboard/dollar.png"
@@ -47,7 +49,8 @@
                         <div class="w-[70.5%] h-full flex flex-col">
                             <div class="w-full h-[58%] mb-[1%]">
                                 <input type="number"
-                                    class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    :style="{ background: $theme.primaryColor }"
                                     :placeholder="$root.Language['enter_player_id']"
                                     v-model="$root.Inputs.TransferIdInput">
                             </div>
@@ -85,7 +88,8 @@
                 <div class="w-full h-[61.5%] flex items-center justify-center relative">
                     <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                         <div class="w-[70.5%] h-full flex flex-col">
-                            <div class="w-full h-[58%] flex items-center justify-center bg-[#00F0FF] mb-[1%]">
+                            <div class="w-full h-[58%] flex items-center justify-center mb-[1%]"
+                                :style="{ background: $theme.primaryColor }">
                                 <span
                                     class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                                     $root.Language['discount_description'] }}</span>
@@ -132,7 +136,8 @@
                         class="w-[13.3333vw] h-full right-0 bottom-0 absolute">
                 </div>
                 <div class="w-full h-[51%] flex items-start justify-center">
-                    <div class="w-[69%] h-[70%] flex items-center justify-center bg-[#00F0FF] mt-[.4vw]">
+                    <div class="w-[69%] h-[70%] flex items-center justify-center mt-[.4vw]"
+                        :style="{ background: $theme.primaryColor }">
                         <span class="company-input">{{ $root.Language['delete_all_logs_information_text'] }}</span>
                     </div>
                     <div class="w-[29%] h-[70%] flex items-center justify-center bg-[#000000DE] mt-[.4vw] cursor-pointer"
@@ -160,7 +165,8 @@
                     <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                         <div class="w-[70.5%] h-full flex flex-col">
                             <div class="w-full h-[58%] mb-[1%]">
-                                <div class="w-full h-full flex items-center justify-center bg-[#00F0FF] ">
+                                <div class="w-full h-full flex items-center justify-center"
+                                    :style="{ background: $theme.primaryColor }">
                                     <span class="company-input">{{ $root.Language['bonuses_information'] }}</span>
                                 </div>
                             </div>
@@ -198,7 +204,8 @@
                 <div class="w-full h-[61.5%] flex items-center justify-center relative">
                     <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                         <div class="w-[70.5%] h-full flex flex-col">
-                            <div class="w-full h-[58%] flex items-center justify-center bg-[#00F0FF] mb-[1%]">
+                            <div class="w-full h-[58%] flex items-center justify-center mb-[1%]"
+                                :style="{ background: $theme.primaryColor }">
                                 <span
                                     class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                                     $root.Language['raise_information'] }}</span>

@@ -8,7 +8,8 @@
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.5vw] absolute">{{
                     $root.Language['number_of_employeer'] }}</span>
                 <div class="w-full bottom-[.8vw] absolute">
-                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{
+                    <span class="text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]"
+                    :style="{ color: $theme.primaryColor }">{{
                         $root.EmployeesTable.length }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{
                         $root.Language['employee'] }}</span>
@@ -23,7 +24,8 @@
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.5vw] absolute">{{
                     $root.Language['vehicles_in_stock'] }}</span>
                 <div class="w-full bottom-[.8vw] absolute">
-                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{
+                    <span class="text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]"
+                    :style="{ color: $theme.primaryColor }">{{
                         $root.AvailableVehiclesCount }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{
                         $root.Language['vehicle'] }}</span>
@@ -38,7 +40,8 @@
                 <span class="w-full text-stone-300 text-[.8vw] font-semibold font-['Poppins'] top-[.5vw] absolute">{{
                     $root.Language['vehicles_sold'] }}</span>
                 <div class="w-full bottom-[.8vw] absolute">
-                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{
+                    <span class="text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]"
+                    :style="{ color: $theme.primaryColor }">{{
                         $root.SoldVehiclesLog.length }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins']">{{
                         $root.Language['vehicle'] }}</span>
@@ -53,7 +56,8 @@
                 <span class="w-full text-stone-300 text-[.8333vw] font-semibold font-['Poppins'] top-[.5vw] absolute">{{
                     $root.Language['company_rating'] }}</span>
                 <div class="w-full bottom-[.8vw] absolute">
-                    <span class="text-cyan-400 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]"
+                    <span class="text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]"
+                    :style="{ color: $theme.primaryColor }"
                         :class="{ 'text-[#FF0004]': $root.AverageRating < 3 && $root.AverageRating > 0 }">{{
                         $root.AverageRating }}</span>
                     <span class="text-zinc-600 text-[.6771vw] font-semibold font-['Poppins'] mr-[.2vw]">{{
@@ -107,7 +111,8 @@
                                 $root.Language['price'] }}</span>
                             <div class="w-full flex items-start justify-center mb-[.25vw]">
                                 <span
-                                    class="text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins']">$</span>
+                                    class="text-[.5208vw] text-center font-semibold font-['Poppins']"
+                                    :style="{ color: $theme.primaryColor }">$</span>
                                 <span
                                     class="text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                     $root.FormatMoney(v.price) }}</span>
@@ -121,7 +126,8 @@
                                     class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                     $root.Language['decline'] }}</span>
                             </div>
-                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#00F0FF] rounded-[.1042vw] cursor-pointer ml-[.125vw]"
+                            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center rounded-[.1042vw] cursor-pointer ml-[.125vw]"
+                            :style="{ background: $theme.primaryColor }"
                                 @click="$root.AcceptPreorder(v.requestor, v.vehiclemodel, v.price)">
                                 <span
                                     class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
@@ -198,7 +204,8 @@
                                 $root.Language['price'] }}</span>
                             <div class="w-full flex items-start justify-center mb-[.3vw]">
                                 <span
-                                    class="text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins']">$</span>
+                                    class="text-[.5208vw] text-center font-semibold font-['Poppins']"
+                                    :style="{ color: $theme.primaryColor }">$</span>
                                 <span
                                     class="text-neutral-400 text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                     $root.FormatMoney(v.price) }}</span>
@@ -210,7 +217,8 @@
                                 class="w-full text-white text-[.7vw] text-center font-medium font-['Poppins'] mt-[.25vw]">{{
                                 $root.Language['date'] }}</span>
                             <div
-                                class="w-full text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.3vw]">
+                                class="w-full text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.3vw]"
+                                :style="{ color: $theme.primaryColor }">
                                 {{ v.date }}</div>
                         </div>
                     </div>

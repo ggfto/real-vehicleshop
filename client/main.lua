@@ -31,6 +31,7 @@ Citizen.CreateThread(
                 testdriveprice = Config.TestDrivePrice,
                 platechange = Config.PlateChange,
                 platechangeprice = Config.PlateChangePrice,
+                theme = Config.Theme
             }
         )
     end

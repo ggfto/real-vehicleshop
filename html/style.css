@@ -172,10 +172,6 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
-.active-star path {
-    fill: #00F0FF;
-}
-
 .feedback-input {
     color: #B1B1B1;
     font-family: Poppins;
@@ -230,7 +226,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 .depositwithdrawinput,
 .depositwithdrawinput::placeholder {
-    color: #7EF7FF;
     text-align: center;
     font-family: Poppins;
     font-size: .7813vw;

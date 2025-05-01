@@ -20,7 +20,8 @@
             <div class="w-[70%] h-full flex items-center justify-center right-0 top-0 absolute">
                 <img :src="v.img" class="w-full h-auto">
             </div>
-            <div class="w-[26%] h-[13%] flex items-center justify-center bg-[#00F0FF] rounded-[.1vw] left-[.45vw] bottom-[1vw] absolute cursor-pointer"
+            <div class="w-[26%] h-[13%] flex items-center justify-center rounded-[.1vw] left-[.45vw] bottom-[1vw] absolute cursor-pointer"
+                :style="{ background: $theme.primaryColor }"
                 @click="$root.OpenEditVehicleScreen(k, v.label, v.model, v.img, v.discount, v.price, v.category)">
                 <span class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['edit'] }}</span>

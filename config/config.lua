@@ -1,17 +1,21 @@
 Config = {}
 
+Config.Theme = {
+    primaryColor = GetConvar("inventory:color", "#FF00FF"),
+}
+
 Config.Debug = true -- Debug mode. If you want to see the debug messages, set it to true.
 Config.Framework = "qb" -- qb, oldqb, esx, oldesx or autodetect
 Config.MySQL = "oxmysql" -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
-Config.Language = "pt-br" -- en, tr
+Config.Language = "pt-br" -- en, tr, pt-br
 
 Config.TestDriveTime = 60 -- Seconds
 Config.TestDrivePrice = 7500 -- Test drive price
-Config.TestDrivePlate = "TESTDRIVE" -- Test drive plate
+Config.TestDrivePlate = "SPXDRIVE" -- Test drive plate
 Config.PlateChange = true -- If true, players can change the plate
 Config.PlateChangePrice = 1000 -- Plate cost
 
-Config.DefaultGarage = "pillboxgarage" -- The place to be written in the 'garage' section of the database when the vehicle is purchased.
+Config.DefaultGarage = "Pillbox Garage Parking" -- The place to be written in the 'garage' section of the database when the vehicle is purchased.
 Config.PhoneMailOnline = "qb-phone:server:sendNewMail" -- Event to send mail to active players. Customize it for your phone.
 
 Config.CheckSalaryStatus = {

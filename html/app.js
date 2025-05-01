@@ -2,6 +2,13 @@ import importTemplate from './utils/importTemplate.js';
 import inlinesvg from './utils/inlineSvg.js';
 import { FormatMoney, CalculateVehicleStatistic, ShowNotify } from './utils/functions.js';
 
+const theme = Vue.reactive({
+    primaryColor: '#FF0000',
+    secondaryColor: '#000000',
+    backgroundColor: '#000000',
+    textColor: '#FFFFFF',
+});
+
 const preview = {
     template: await importTemplate('./pages/preview.html')
 }
@@ -255,6 +262,7 @@ const app = Vue.createApp({
 
         // Extras
         CurrentVehicleColor: null,
+        Theme: theme,
     }),
 
     methods: {
@@ -1792,6 +1800,11 @@ const app = Vue.createApp({
                     this.TestDrivePrice = data.testdriveprice
                     this.AllowPlateChange = data.platechange
                     this.PlateChangePrice = data.platechangeprice
+                    theme.primaryColor = data.theme.primaryColor
+                    theme.secondaryColor = data.theme.secondaryColor
+                    theme.backgroundColor = data.theme.backgroundColor
+                    theme.textColor = data.theme.textColor
+
                     break;
                 case 'OpenVehicleshop':
                     this.Show = true
@@ -1997,6 +2010,7 @@ const app = Vue.createApp({
     },
 });
 
+app.config.globalProperties.$theme = theme;
 app.component('inlinesvg', inlinesvg);
 app.use(store).mount("#app");
 

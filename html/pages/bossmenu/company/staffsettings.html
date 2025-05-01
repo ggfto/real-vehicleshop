@@ -20,7 +20,8 @@
                         <div class="w-[70.5%] h-full flex flex-col">
                             <div class="w-full h-[58%] mb-[1%]">
                                 <input type="number"
-                                    class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    :style="{ background: $theme.primaryColor }"
                                     :placeholder="$root.Language['enter_player_id']"
                                     v-model="$root.Inputs.EmployeeIdInput">
                             </div>
@@ -61,7 +62,8 @@
                         <div class="w-[70.5%] h-full flex flex-col">
                             <div class="w-full h-[58%] mb-[1%]">
                                 <input type="number"
-                                    class="w-full h-full bg-[#00F0FF] px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    class="w-full h-full px-[1w] outline-none placeholder:opacity-[.85] company-input"
+                                    :style="{ background: $theme.primaryColor }"
                                     :placeholder="$root.Language['enter_player_id']"
                                     v-model="$root.Inputs.SalaryPenaltyIdInput">
                             </div>
@@ -106,7 +108,8 @@
                                 <div class="w-[20.8%] h-full flex flex-wrap">
                                     <div class="w-[31.3%] h-full flex items-center justify-end">
                                         <div
-                                            class="w-[80%] h-[72%] rounded-[50%] border-[.0521vw] border-[#00F0FF] mr-[.1vw]">
+                                            class="w-[80%] h-[72%] rounded-[50%] border-[.0521vw] mr-[.1vw]" :style="{
+                                                borderColor: $theme.primaryColor }">
                                             <img :src="$root.PlayerPfp" class="w-full h-full">
                                         </div>
                                     </div>
@@ -133,8 +136,9 @@
                                     <span
                                         class="w-full text-white text-[.7292vw] text-center font-medium font-['Poppins']">{{
                                         $root.Language['salary'] }}</span>
-                                    <span
-                                        class="w-full text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins']">${{
+                                    <span class="w-full text-[.5208vw] text-center font-semibold font-['Poppins']"
+                                        :style="{
+                                            color: $theme.primaryColor}">${{
                                         v.salary }}</span>
                                 </div>
                                 <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
@@ -148,7 +152,8 @@
                                 </div>
                                 <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
                                 <div class="w-[23.7%] h-full flex flex-col items-center justify-center">
-                                    <div class="w-[80%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.15vw] cursor-pointer"
+                                    <div class="w-[80%] h-[55%] flex items-center justify-center rounded-[.15vw] cursor-pointer"
+                                        :style="{ background: $theme.primaryColor }"
                                         @click="$root.EndThePunishment(v.identifier)">
                                         <span
                                             class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{
@@ -211,7 +216,7 @@
                     class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
                     <div class="w-[21.5%] h-full flex flex-wrap justify-between">
                         <div class="w-[27.5%] h-full flex items-center justify-center">
-                            <div class="w-[76%] h-[75%] border-[.0521vw] border-[#00F0FF] rounded-[50%]">
+                            <div class="w-[76%] h-[75%] border-[.0521vw] rounded-[50%]" :style="{ borderColor: $theme.primaryColor }">
                                 <img :src="v.pp" class="w-full h-full">
                             </div>
                         </div>
@@ -237,8 +242,8 @@
                         <span
                             class="w-full text-white text-[.7292vw] text-center font-medium font-['Poppins'] mt-[.3vw]">{{
                             $root.Language['salary'] }}</span>
-                        <div
-                            class="w-full text-cyan-400 text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]">
+                        <div class="w-full text-[.5208vw] text-center font-semibold font-['Poppins'] mb-[.4vw]"
+                            :style="{ color: $theme.primaryColor}">
                             ${{ $root.FormatMoney(v.salary) }}</div>
                     </div>
                     <div class="w-[.1%] h-[38%] bg-[#636363]"></div>
@@ -254,7 +259,8 @@
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['reduce_rank'] }}</span>
                         </div>
-                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] bg-[#00F0FF] cursor-pointer"
+                        <div class="w-[31%] h-[53%] flex items-center justify-center rounded-[.1vw] cursor-pointer"
+                            :style="{ background: $theme.primaryColor }"
                             @click="$root.FireEmployee(v.identifier)">
                             <span class="w-full text-white text-[.49vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['fire'] }}</span>

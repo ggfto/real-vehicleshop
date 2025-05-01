@@ -16,12 +16,14 @@
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98%] h-[86%] flex flex-wrap top-[.3vw] absolute">
                     <div class="w-[70.5%] h-full flex flex-col">
-                        <div class="w-full h-[58%] flex items-center justify-center bg-[#00F0FF] mb-[1%]">
+                        <div class="w-full h-[58%] flex items-center justify-center mb-[1%]"
+                            :style="{ background: $theme.primaryColor }">
                             <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['company_balance'] }}</span>
                         </div>
                         <div class="w-full h-[43.5%] flex items-center justify-center bg-[#000000DE]">
-                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">${{
+                            <span class="text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]"
+                                :style="{ color: $theme.primaryColor }">${{
                                 $root.FormatMoney($root.CompanyMoney) }}</span>
                             <span class="text-white text-[.7813vw] font-semibold font-['Poppins']">{{
                                 $root.Language['available'] }}</span>
@@ -59,14 +61,16 @@
             </div>
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98.5%] h-[86%] flex flex-col left-[.3vw] top-[.25vw] absolute">
-                    <div class="w-full h-[55%] flex items-center justify-center bg-[#00F0FF]">
+                    <div class="w-full h-[55%] flex items-center justify-center"
+                        :style="{ background: $theme.primaryColor }">
                         <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                             $root.Language['profit_information'] }}</span>
                     </div>
                     <div class="w-full h-[5%]"></div>
                     <div class="w-full h-[40%] flex items-center bg-[#000000DE]">
                         <div class="w-full flex items-center justify-center">
-                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">${{
+                            <span class="text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]"
+                            :style="{ color: $theme.primaryColor }">${{
                                 $root.FormatMoney($root.TotalProfit) }}</span>
                             <span class="text-white text-[.7813vw] font-semibold font-['Poppins']">{{
                                 $root.Language['earned'] }}</span>
@@ -91,14 +95,16 @@
             </div>
             <div class="w-full h-[61.5%] flex items-center justify-center relative">
                 <div class="w-[98.5%] h-[86%] flex flex-col left-[.3vw] top-[.25vw] absolute">
-                    <div class="w-full h-[55%] flex items-center justify-center bg-[#00F0FF]">
+                    <div class="w-full h-[55%] flex items-center justify-center"
+                        :style="{ background: $theme.primaryColor }">
                         <span class="w-full text-black text-[.7813vw] text-center font-semibold font-['Poppins']">{{
                             $root.Language['payout_information'] }}</span>
                     </div>
                     <div class="w-full h-[5%]"></div>
                     <div class="w-full h-[40%] flex items-center bg-[#000000DE]">
                         <div class="w-full flex items-center justify-center">
-                            <span class="text-cyan-300 text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]">${{
+                            <span class="text-[.7813vw] font-semibold font-['Poppins'] mr-[.3vw]"
+                            :style="{ color: $theme.primaryColor }">${{
                                 $root.FormatMoney($root.TotalPayout) }}</span>
                             <span class="text-white text-[.7813vw] font-semibold font-['Poppins']">{{
                                 $root.Language['was_spent'] }}</span>
@@ -124,7 +130,8 @@
                 class="w-[99%] h-[10%] flex flex-wrap flex items-center bg-[#000000DE] rounded-[.1563vw] mt-[.3vw] mb-[.25vw]">
                 <div class="w-[21.5%] h-full flex flex-wrap justify-between">
                     <div class="w-[27.5%] h-full flex items-center justify-center">
-                        <div class="w-[76%] h-[75%] border-[.0521vw] border-[#00F0FF] rounded-[50%]">
+                        <div class="w-[76%] h-[75%] border-[.0521vw] rounded-[50%]"
+                            :style="{ borderColor: $theme.primaryColor }">
                             <img :src="v.pfp" class="w-full h-full">
                         </div>
                     </div>
@@ -149,11 +156,12 @@
                         $root.Language['amount'] }}</span>
                     <div class="w-full flex item-center justify-center mb-[.4vw]">
                         <span class="text-[.5208vw] font-semibold font-['Poppins']"
-                            :class="{ 'text-[#00F0FF]': v.type == 'deposit', 'text-red-600': v.type == 'withdraw' }">$</span>
+                            :style="v.type == 'deposit' ? { color: $theme.primaryColor } : {color: $theme.dangerColor }">$</span>
                         <span class="text-neutral-400 text-[.5208vw] font-semibold font-['Poppins'] mr-[.3vw]">{{
                             $root.FormatMoney(v.amount) }}</span>
-                        <span class="text-[#00F0FF] text-[.5208vw] font-semibold font-['Poppins']"
-                            v-if="v.type == 'deposit'">{{ $root.Language['deposited'] }}</span>
+                        <span class="text-[.5208vw] font-semibold font-['Poppins']"
+                            :style="{ color: $theme.primaryColor }" v-if="v.type == 'deposit'">{{
+                            $root.Language['deposited'] }}</span>
                         <span class="text-red-600 text-[.5208vw] font-semibold font-['Poppins']" v-else>{{
                             $root.Language['withdrawn'] }}</span>
                     </div>

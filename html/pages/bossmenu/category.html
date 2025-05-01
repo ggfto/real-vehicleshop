@@ -2,8 +2,8 @@
     <div class="w-[34.3%] h-[98%] flex flex-col bg-[#000000BF] rounded-[.2604vw]">
         <div class="w-full h-[12%] bg-[#000000DE] rounded-t-[.2604vw] relative">
             <img src="./img/bossmenu/bg-effect.png" class="w-[12.5vw] h-full right-0 absolute">
-            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center bg-[#00F0FF] rounded-[.17vw] right-[1vw] top-[1.2vw] absolute cursor-pointer"
-                @click="$root.ShowBossPopup = 'createcategory'">
+            <div class="w-[4.4792vw] h-[1.1458vw] flex items-center justify-center rounded-[.17vw] right-[1vw] top-[1.2vw] absolute cursor-pointer"
+                :style="{ background: $theme.primaryColor }" @click="$root.ShowBossPopup = 'createcategory'">
                 <span class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                     $root.Language['create'] }}</span>
             </div>
@@ -35,7 +35,8 @@
                             <div class="w-full text-white text-[.5208vw] text-center font-semibold font-['Poppins']">{{
                                 $root.Language['remove'] }}</div>
                         </div>
-                        <div class="w-[32%] h-[55%] flex items-center justify-center bg-[#00F0FF] rounded-[.17vw] cursor-pointer ml-[1%]"
+                        <div class="w-[32%] h-[55%] flex items-center justify-center rounded-[.17vw] cursor-pointer ml-[1%]"
+                            :style="{ background: $theme.primaryColor }"
                             @click="$root.ShowBossPopup = 'editcategory'; $root.Inputs.CategoryLabelInput = v.label; $root.SelectedEditCategoryName = v.name;"
                             v-if="v.name != 'all'">
                             <div class="w-full text-black text-[.5208vw] text-center font-semibold font-['Poppins']">{{
