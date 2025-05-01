@@ -1,5 +1,16 @@
 frameworkObject = nil
 
+local function translateCategories(categories)
+    local translatedCategories = {}
+    for k, v in pairs(categories) do
+        translatedCategories[k] = {
+            name = v.name,
+            label = Locales[Config.Language][v.name] or v.label,
+        }
+    end
+    return translatedCategories
+end
+
 Citizen.CreateThread(
     function()
         frameworkObject, Config.Framework = GetCore()
@@ -12,14 +23,14 @@ Citizen.CreateThread(
                 action = "Setup",
                 language = Locales[Config.Language],
                 colorstable = Config.Colors,
-                bossmenucategories = Config.BossmenuCategories,
+                bossmenucategories = translateCategories(Config.BossmenuCategories),
                 checkprofanities = Config.CheckProfanities,
                 profanities = Config.Profanities,
                 feedbackcharacters = Config.FeedbackCharacterCheck,
                 complaintcharacters = Config.ComplaintCharacterCheck,
                 testdriveprice = Config.TestDrivePrice,
                 platechange = Config.PlateChange,
-                platechangeprice = Config.PlateChangePrice
+                platechangeprice = Config.PlateChangePrice,
             }
         )
     end
