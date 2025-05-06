@@ -1,74 +1,69 @@
-local function fileExists(name)
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    end
-    return false
+local function sanitizeSQL(content)
+    -- Remove comentários de bloco: /* ... */
+    content = content:gsub("/%*.-%*/", "")
+    -- Remove comentários de linha: -- até o fim da linha
+    content = content:gsub("%-%-.-\n", "\n")
+    return content
 end
 
+-- Função utilitária para dividir string
 local function splitStr(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
+    sep = sep or "%s"
     local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        str = string.gsub(str, "^%s*(.-)%s*$", "%1")
-        if not (str == nil or str == "") then
+    for str in string.gmatch(inputstr, "[^" .. sep .. "]+") do
+        str = str:match("^%s*(.-)%s*$")
+        if str and str ~= "" then
             table.insert(t, str)
         end
     end
     return t
 end
 
--- Função auxiliar para executar queries em ordem
+-- Executa queries SQL em sequência com feedback e tratamento de erro
 local function executeQueries(queries, callback)
     local index = 1
 
     local function executeNextQuery()
         if index > #queries then
-            if callback then
-                callback()
-            end
+            if callback then callback() end
             return
         end
 
-        MySQL.Async.execute(
-            queries[index],
-            {},
-            function()
-                print("Tabela verificada/criada: " .. index)
-                index = index + 1
-                executeNextQuery()
-            end
-        )
+        local query = queries[index]
+
+        MySQL.Async.execute(query, {}, function(rowsChanged)
+            print(("Query %d executada com sucesso (%d linhas afetadas)."):format(index, rowsChanged or 0))
+            index = index + 1
+            executeNextQuery()
+        end, function(err)
+            print(("Erro ao executar a query %d: %s\nQuery: %s"):format(index, err or "erro desconhecido", query))
+        end)
     end
 
     executeNextQuery()
 end
 
--- Função para criar as tabelas no banco de dados
+-- Lê o arquivo SQL e inicia a execução das queries
 local function createTables()
     local filePath = "database.sql"
-    if not fileExists(filePath) then
+    local content = LoadResourceFile(GetCurrentResourceName(), filePath)
+
+    if not content then
+        print("Erro: arquivo " .. filePath .. " não encontrado.")
         return
     end
-    local queries = splitStr(LoadResourceFile(GetCurrentResourceName(), filePath), ";")
-    executeQueries(
-        queries,
-        function()
-            print("Todas as tabelas foram verificadas/criadas.")
-        end
-    )
+
+    content = sanitizeSQL(content) -- Remove comentários
+    local queries = splitStr(content, ";")
+    executeQueries(queries, function()
+        print("Todas as tabelas foram verificadas/criadas.")
+    end)
 end
 
--- Evento que é disparado quando o recurso é iniciado
-AddEventHandler(
-    "onResourceStart",
-    function(resourceName)
-        if GetCurrentResourceName() == resourceName then
-            print("Recurso " .. resourceName .. " iniciado. Verificando/criando tabelas...")
-            createTables()
-        end
+-- Dispara a criação das tabelas ao iniciar o recurso
+AddEventHandler("onResourceStart", function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        print("Recurso " .. resourceName .. " iniciado. Verificando/criando tabelas...")
+        createTables()
     end
-)
+end)
