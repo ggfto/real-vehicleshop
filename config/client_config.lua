@@ -28,86 +28,97 @@ local function openComplaintForm(key)
     end
 end
 
+local function init()
+    for k, v in pairs(Config.Vehicleshops) do
+        local zoneName = string.format("vehicleshop-%s", k)
+        Zones.add(
+            {
+                name = zoneName,
+                data = {
+                    coords = v.ShopOpenCoords,
+                    size = vector3(1.0, 1.0, 1.0),
+                    debug = Config.Debug,
+                    onEnter = function()
+                        lib.showTextUI((v.Marker:gsub("~INPUT_PICKUP~", "[E]")))
+                    end,
+                    inside = function()
+                        openShop(k)
+                    end,
+                    onExit = function()
+                        lib.hideTextUI()
+                    end
+                }
+            }
+        )
+        if v.Manageable then
+            local zoneName = string.format("bossmenu-%s", k)
+            Zones.add(
+                {
+                    name = zoneName,
+                    data = {
+                        coords = v.BossmenuCoords,
+                        size = vector3(1.0, 1.0, 1.0),
+                        debug = Config.Debug,
+                        onEnter = function()
+                            local message = Language("bossmenu_marker")
+                            if Config.Vehicleshops[k].Owner == "" then
+                                message = Language("buy_company_marker")
+                            end
+                            message = message:gsub("~INPUT_PICKUP~", "[E]")
+                            lib.showTextUI(message)
+                        end,
+                        inside = function()
+                            openBossmenu(k)
+                        end,
+                        onExit = function()
+                            lib.hideTextUI()
+                        end
+                    }
+                }
+            )
+        end
+        zoneName = string.format("complaintform-%s", k)
+        Zones.add(
+            {
+                name = zoneName,
+                data = {
+                    coords = v.ComplaintForm,
+                    size = vector3(1.0, 1.0, 1.0),
+                    debug = Config.Debug,
+                    onEnter = function()
+                        if Config.Vehicleshops[k].Owner == "" then
+                            return
+                        end
+                        lib.showTextUI((Language("complaint_form_marker"):gsub("~INPUT_PICKUP~", "[E]")))
+                    end,
+                    inside = function()
+                        if Config.Vehicleshops[k].Owner == "" then
+                            return
+                        end
+                        openComplaintForm(k)
+                    end,
+                    onExit = function()
+                        lib.hideTextUI()
+                    end
+                }
+            }
+        )
+    end
+end
+
 RegisterNetEvent(
     "onResourceStart",
     function(resName)
         if resName == GetCurrentResourceName() then
-            for k, v in pairs(Config.Vehicleshops) do
-                local zoneName = string.format("vehicleshop-%s", k)
-                Zones.add(
-                    {
-                        name = zoneName,
-                        data = {
-                            coords = v.ShopOpenCoords,
-                            size = vector3(1.0, 1.0, 1.0),
-                            debug = Config.Debug,
-                            onEnter = function()
-                                lib.showTextUI((v.Marker:gsub("~INPUT_PICKUP~", "[E]")))
-                            end,
-                            inside = function()
-                                openShop(k)
-                            end,
-                            onExit = function()
-                                lib.hideTextUI()
-                            end
-                        }
-                    }
-                )
-                if v.Manageable then
-                    local zoneName = string.format("bossmenu-%s", k)
-                    Zones.add(
-                        {
-                            name = zoneName,
-                            data = {
-                                coords = v.BossmenuCoords,
-                                size = vector3(1.0, 1.0, 1.0),
-                                debug = Config.Debug,
-                                onEnter = function()
-                                    local message = Language("bossmenu_marker")
-                                    if Config.Vehicleshops[k].Owner == "" then
-                                        message = Language("buy_company_marker")
-                                    end
-                                    message = message:gsub("~INPUT_PICKUP~", "[E]")
-                                    lib.showTextUI(message)
-                                end,
-                                inside = function()
-                                    openBossmenu(k)
-                                end,
-                                onExit = function()
-                                    lib.hideTextUI()
-                                end
-                            }
-                        }
-                    )
-                end
-                zoneName = string.format("complaintform-%s", k)
-                Zones.add(
-                    {
-                        name = zoneName,
-                        data = {
-                            coords = v.ComplaintForm,
-                            size = vector3(1.0, 1.0, 1.0),
-                            debug = Config.Debug,
-                            onEnter = function()
-                                if Config.Vehicleshops[k].Owner == "" then
-                                   return
-                                end
-                                lib.showTextUI((Language("complaint_form_marker"):gsub("~INPUT_PICKUP~", "[E]")))
-                            end,
-                            inside = function()
-                                if Config.Vehicleshops[k].Owner == "" then
-                                    return
-                                 end
-                                openComplaintForm(k)
-                            end,
-                            onExit = function()
-                                lib.hideTextUI()
-                            end
-                        }
-                    }
-                )
-            end
+            init()
         end
+    end
+)
+
+RegisterNetEvent(
+    "QBCore:Client:OnPlayerLoaded",
+    function(data)
+        init()
     end
 )
 
