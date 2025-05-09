@@ -223,8 +223,8 @@ end
 
 ------------------------------ Start ------------------------------
 function StartScript()
+    local result = ExecuteSql("SELECT * FROM real_vehicleshop")
     for k, v in pairs(Config.Vehicleshops) do
-        local result = ExecuteSql("SELECT * FROM `real_vehicleshop` WHERE id = '" .. k .. "'")
         local Information = {
             Owner = "",
             Name = v.CompanyName,
@@ -232,7 +232,7 @@ function StartScript()
             Rating = 0,
             Discount = 0
         }
-        if next(result) == nil and #result == 0 then
+        if not result[k] then
             ExecuteSql(
                 "INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complaints, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complaints, @preorders, @employees, @soldvehicles, @transactions, @perms)",
                 {
@@ -250,8 +250,8 @@ function StartScript()
                 }
             )
         end
-        LoadData()
     end
+    LoadData()
 end
 
 function RequestNewData()
@@ -263,7 +263,7 @@ end
 RegisterNetEvent("real-vehicleshop:RequestData", RequestNewData)
 
 function LoadData()
-    local result = ExecuteSql("SELECT * FROM `real_vehicleshop`")
+    local result = ExecuteSql("SELECT * FROM real_vehicleshop")
     for k, v in ipairs(result) do
         local information = json.decode(v.information)
         Config.Vehicleshops[k].Owner = information.Owner
@@ -283,4 +283,4 @@ function LoadData()
     end
 end
 
-Citizen.CreateThread(StartScript)
+RegisterNetEvent("onResourceStart", StartScript)

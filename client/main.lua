@@ -5,35 +5,45 @@ local function translateCategories(categories)
     for k, v in pairs(categories) do
         translatedCategories[k] = {
             name = v.name,
-            label = Locales[Config.Language][v.name] or v.label,
+            label = Locales[Config.Language][v.name] or v.label
         }
     end
     return translatedCategories
 end
 
-Citizen.CreateThread(
-    function()
-        frameworkObject, Config.Framework = GetCore()
-        while not frameworkObject do
-            Citizen.Wait(0)
+local function init()
+    SendNUIMessage(
+        {
+            action = "Setup",
+            language = Locales[Config.Language],
+            colorstable = Config.Colors,
+            bossmenucategories = translateCategories(Config.BossmenuCategories),
+            checkprofanities = Config.CheckProfanities,
+            profanities = Config.Profanities,
+            feedbackcharacters = Config.FeedbackCharacterCheck,
+            complaintcharacters = Config.ComplaintCharacterCheck,
+            testdriveprice = Config.TestDrivePrice,
+            platechange = Config.PlateChange,
+            platechangeprice = Config.PlateChangePrice,
+            theme = Config.Theme
+        }
+    )
+end
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    init()
+end)
+
+RegisterNetEvent(
+    "onResourceStart",
+    function(resourceName)
+        if resourceName == GetCurrentResourceName() then
+            init()
+            frameworkObject, Config.Framework = GetCore()
+            while not frameworkObject do
+                Citizen.Wait(0)
+            end
         end
-        Citizen.Wait(1500)
-        SendNUIMessage(
-            {
-                action = "Setup",
-                language = Locales[Config.Language],
-                colorstable = Config.Colors,
-                bossmenucategories = translateCategories(Config.BossmenuCategories),
-                checkprofanities = Config.CheckProfanities,
-                profanities = Config.Profanities,
-                feedbackcharacters = Config.FeedbackCharacterCheck,
-                complaintcharacters = Config.ComplaintCharacterCheck,
-                testdriveprice = Config.TestDrivePrice,
-                platechange = Config.PlateChange,
-                platechangeprice = Config.PlateChangePrice,
-                theme = Config.Theme
-            }
-        )
     end
 )
 
