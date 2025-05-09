@@ -232,7 +232,14 @@ function StartScript()
             Rating = 0,
             Discount = 0
         }
-        if not result[k] then
+        local found = false
+        for k2, v2 in pairs(result) do
+            if v2.id == k then
+                found = true
+                break
+            end
+        end
+        if not found then
             ExecuteSql(
                 "INSERT INTO `real_vehicleshop` (id, information, vehicles, categories, feedbacks, complaints, preorders, employees, soldvehicles, transactions, perms) VALUES (@id, @information, @vehicles, @categories, @feedbacks, @complaints, @preorders, @employees, @soldvehicles, @transactions, @perms)",
                 {
