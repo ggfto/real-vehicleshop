@@ -446,8 +446,9 @@ function BuyPlayerVehicle(data)
     if datas then
         SendNUIMessage({action = "CloseUI", status = false})
         Citizen.Wait(100)
-        SetEntityCoords(Player, Config.Vehicleshops[vehicleshop].SpawnCoords, true)
-        local Vehicle = CreateVehicle(model, Config.Vehicleshops[vehicleshop].SpawnCoords, true, true)
+        local spawnCoords = Config.Vehicleshops[vehicleshop].SpawnCoords
+        SetEntityCoords(Player, spawnCoords.x, spawnCoords.y, spawnCoords.z, true)
+        local Vehicle = CreateVehicle(model, spawnCoords.x, spawnCoords.y, spawnCoords.z, true, true)
         SetVehicleProperties(Vehicle, props)
         SetVehicleColours(Vehicle, color, color)
         SetVehicleExtraColours(Vehicle, 0, 0)
